@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GambePlayerMovement : MonoBehaviour
+public class GambePlayerController : MonoBehaviour
 {
      [Header( "Movement" )]
      [SerializeField] private float speed = 2f;

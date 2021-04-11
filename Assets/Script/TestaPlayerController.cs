@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestaPlayerMovement : MonoBehaviour
+public class TestaPlayerController : MonoBehaviour
 {
      [Header( "References" )]
      [SerializeField] private Transform _camera;
@@ -13,11 +13,14 @@ public class TestaPlayerMovement : MonoBehaviour
      [SerializeField] private float sensitivityY = 2f;
 
      private float _xRot = 0;
+     private Weapon _weapon = null;
 
      void Start()
      {
           Cursor.lockState = CursorLockMode.Locked;
           Cursor.visible = false;
+
+          _weapon = GetComponentInChildren<Weapon>();
      }
 
      void Update()
@@ -27,7 +30,12 @@ public class TestaPlayerMovement : MonoBehaviour
           _xRot -= deltaY;
           _xRot = Mathf.Clamp( _xRot, -90, 90 );
 
+          bool fire = Input.GetButtonDown( "Fire" );
+                 
           _camera.localRotation = Quaternion.Euler( _xRot, 90f, 0f );
           _body.Rotate( Vector3.up * deltaX );
+
+          if( fire )
+               _weapon.Fire();
      }
 }
