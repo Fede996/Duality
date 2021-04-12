@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class TestaPlayerController : MonoBehaviour
+public class TestaPlayerController : NetworkBehaviour
 {
-     [Header( "References" )]
-     [SerializeField] private Transform _camera;
-     [SerializeField] private Transform _body;
+     public Transform Camera;
+     public Transform Body;
 
      [Header( "Movement" )]
      [SerializeField] private float sensitivityX = 2f;
@@ -15,25 +15,28 @@ public class TestaPlayerController : MonoBehaviour
      private float _xRot = 0;
      private Weapon _weapon = null;
 
-     void Start()
+     public void Init()
      {
           Cursor.lockState = CursorLockMode.Locked;
           Cursor.visible = false;
 
-          _weapon = GetComponentInChildren<Weapon>();
+          //_weapon = GetComponentInChildren<Weapon>();
+          Camera.GetComponent<Camera>().enabled = true;
      }
 
      void Update()
      {
+          if( !isLocalPlayer ) return;
+
           float deltaX = Input.GetAxis( "Mouse X" ) * sensitivityX * Time.deltaTime;
           float deltaY = Input.GetAxis( "Mouse Y" ) * sensitivityY * Time.deltaTime;
           _xRot -= deltaY;
           _xRot = Mathf.Clamp( _xRot, -90, 90 );
 
           bool fire = Input.GetButtonDown( "Fire" );
-                 
-          _camera.localRotation = Quaternion.Euler( _xRot, 90f, 0f );
-          _body.Rotate( Vector3.up * deltaX );
+
+          Camera.localRotation = Quaternion.Euler( _xRot, 90f, 0f );
+          Body.Rotate( Vector3.up * deltaX );
 
           if( fire )
                _weapon.Fire();

@@ -105,8 +105,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8291749506869361799}
   - component: {fileID: 8291749506869361798}
-  - component: {fileID: 8291749506869361801}
-  - component: {fileID: 8291749506869361800}
+  - component: {fileID: 2977293532427440583}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -148,7 +147,7 @@ CharacterController:
   m_SkinWidth: 0.01
   m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &8291749506869361801
+--- !u!114 &2977293532427440583
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -157,26 +156,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 8291749506869361797}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2e91f6fba46e745a51fff6a1a739f1, type: 3}
+  m_Script: {fileID: 11500000, guid: e6758d7cf5b4d824e8f17cf1e82b95ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 12
---- !u!114 &8291749506869361800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8291749506869361797}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df41cb3a4fa7f8546af960d32905df57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _camera: {fileID: 8291749507319685162}
-  _body: {fileID: 8291749507669871762}
-  sensitivityX: 200
-  sensitivityY: 200
+  Controller: {fileID: 8291749506869361798}
+  TestaCamera: {fileID: 8291749507319685162}
+  GambeCamera: {fileID: 8291749507040416694}
+  Body: {fileID: 8291749507669871762}
 --- !u!1 &8291749507040416691
 GameObject:
   m_ObjectHideFlags: 0
@@ -300,7 +286,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8291749507319685161}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -343,7 +329,7 @@ AudioListener:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8291749507319685161}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1 &8291749507669871761
 GameObject:
   m_ObjectHideFlags: 0
@@ -550,4 +536,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86faab1699e0f78448154c62af4a6d72, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 8291749507319685162}
   range: 100
