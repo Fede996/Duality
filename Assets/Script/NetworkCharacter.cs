@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class NetworkCharacter : MonoBehaviour
+public class NetworkCharacter : NetworkBehaviour
 {
      [Header( "References" )]
-     [SerializeField] public CharacterController Controller;
-     [SerializeField] public Transform TestaCamera;
-     [SerializeField] public Camera GambeCamera;
-     [SerializeField] public Transform Body;
+     public CharacterController Controller;
+     public Transform TestaCamera;
+     public Camera GambeCamera;
+     public Transform Body;
+
+     public TestaPlayerController TestaController;
+     public GambePlayerController GambeController;
 }

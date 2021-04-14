@@ -195,7 +195,7 @@ Mesh:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: pb_Mesh16290
+  m_Name: pb_Mesh28282
   serializedVersion: 10
   m_SubMeshes:
   - serializedVersion: 2
@@ -734,6 +734,14 @@ PrefabInstance:
       propertyPath: playerPrefab
       value: 
       objectReference: {fileID: 6361658201887365474, guid: c87673a1fd5e26247981ce2d728da460, type: 3}
+    - target: {fileID: 3349809013027893414, guid: 07932c0eaa57d6a4f95d2a51f7576b97, type: 3}
+      propertyPath: spawnPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3349809013027893414, guid: 07932c0eaa57d6a4f95d2a51f7576b97, type: 3}
+      propertyPath: spawnPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 8291749506869361797, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
     - target: {fileID: 3349809013027893415, guid: 07932c0eaa57d6a4f95d2a51f7576b97, type: 3}
       propertyPath: m_RootOrder
       value: 4

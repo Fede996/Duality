@@ -13,7 +13,7 @@ public class TestaPlayerController : NetworkBehaviour
      [SerializeField] private float sensitivityY = 2f;
 
      private float _xRot = 0;
-     private Weapon _weapon = null;
+     //private Weapon _weapon = null;
 
      public void Init()
      {
@@ -22,6 +22,8 @@ public class TestaPlayerController : NetworkBehaviour
 
           //_weapon = GetComponentInChildren<Weapon>();
           Camera.GetComponent<Camera>().enabled = true;
+
+          CmdInitPlayer();
      }
 
      void Update()
@@ -35,10 +37,41 @@ public class TestaPlayerController : NetworkBehaviour
 
           bool fire = Input.GetButtonDown( "Fire" );
 
-          Camera.localRotation = Quaternion.Euler( _xRot, 90f, 0f );
-          Body.Rotate( Vector3.up * deltaX );
+          CmdRotate( _xRot, deltaX );
 
-          if( fire )
-               _weapon.Fire();
+          //if( fire )
+          //     _weapon.Fire();
+     }
+
+     [Command]
+     private void CmdRotate( float xRot, float deltaX )
+     {
+          Camera.localRotation = Quaternion.Euler( xRot, 90f, 0f );
+          Body.Rotate( Vector3.up * deltaX );
+          
+          RpcRotate( xRot, deltaX );
+     }
+
+     [ClientRpc]
+     private void RpcRotate( float xRot, float deltaX )
+     {
+          Camera.localRotation = Quaternion.Euler( xRot, 90f, 0f );
+          Body.Rotate( Vector3.up * deltaX );
+     }
+
+     [Command]
+     private void CmdInitPlayer()
+     {
+          RpcInitPlayer( Body.GetComponentInParent<NetworkCharacter>().Controller.transform.position,
+                         Body.rotation,
+                         Camera.localRotation );
+     }
+
+     [ClientRpc]
+     private void RpcInitPlayer( Vector3 position, Quaternion bodyRotation, Quaternion cameraLocalRotation )
+     {
+          Body.GetComponentInParent<NetworkCharacter>().Controller.transform.position = position;
+          Body.rotation = bodyRotation;
+          Camera.localRotation = cameraLocalRotation;
      }
 }

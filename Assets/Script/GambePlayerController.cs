@@ -13,7 +13,12 @@ public class GambePlayerController : NetworkBehaviour
 
      public void Init()
      {
+          Cursor.lockState = CursorLockMode.Locked;
+          Cursor.visible = false;
+
           Camera.enabled = true;
+
+          CmdInitPlayer();
      }
 
      void Update()
@@ -25,6 +30,36 @@ public class GambePlayerController : NetworkBehaviour
 
           Vector3 movement = new Vector3( xAxis, 0, zAxis ).normalized * speed * Time.deltaTime;
 
+          CmdMove( movement );
+     }
+
+     [Command]
+     private void CmdMove( Vector3 movement )
+     {
           Controller.Move( movement );
+
+          RpcMove( movement );
+     }
+
+     [ClientRpc]
+     private void RpcMove( Vector3 movement )
+     {
+          Controller.Move( movement );
+     }
+
+     [Command]
+     private void CmdInitPlayer()
+     {
+          RpcInitPlayer( Controller.transform.position, 
+                         Controller.GetComponent<NetworkCharacter>().Body.rotation,
+                         Controller.GetComponent<NetworkCharacter>().TestaCamera.localRotation );
+     }
+
+     [ClientRpc]
+     private void RpcInitPlayer( Vector3 position, Quaternion bodyRotation, Quaternion cameraLocalRotation )
+     {
+          Controller.transform.position = position;
+          Controller.GetComponent<NetworkCharacter>().Body.rotation = bodyRotation;
+          Controller.GetComponent<NetworkCharacter>().TestaCamera.localRotation = cameraLocalRotation;
      }
 }

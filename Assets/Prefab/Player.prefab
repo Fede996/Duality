@@ -106,6 +106,7 @@ GameObject:
   - component: {fileID: 8291749506869361799}
   - component: {fileID: 8291749506869361798}
   - component: {fileID: 2977293532427440583}
+  - component: {fileID: 4777729751643027747}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -159,10 +160,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6758d7cf5b4d824e8f17cf1e82b95ea, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
   Controller: {fileID: 8291749506869361798}
   TestaCamera: {fileID: 8291749507319685162}
   GambeCamera: {fileID: 8291749507040416694}
   Body: {fileID: 8291749507669871762}
+  TestaController: {fileID: 0}
+  GambeController: {fileID: 0}
+--- !u!114 &4777729751643027747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8291749506869361797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
 --- !u!1 &8291749507040416691
 GameObject:
   m_ObjectHideFlags: 0
