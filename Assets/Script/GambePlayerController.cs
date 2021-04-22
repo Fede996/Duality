@@ -17,49 +17,30 @@ public class GambePlayerController : NetworkBehaviour
           Cursor.visible = false;
 
           Camera.enabled = true;
-
-          CmdInitPlayer();
      }
 
      void Update()
      {
-          if( !isLocalPlayer ) return;
+          try
+          {
+               if( !isLocalPlayer ) return;
 
-          float xAxis = Input.GetAxis( "Horizontal" );
-          float zAxis = Input.GetAxis( "Vertical" );
+               float xAxis = Input.GetAxis( "Horizontal" );
+               float zAxis = Input.GetAxis( "Vertical" );
 
-          Vector3 movement = new Vector3( xAxis, 0, zAxis ).normalized * speed * Time.deltaTime;
+               Vector3 movement = new Vector3( xAxis, 0, zAxis ).normalized * speed * Time.deltaTime;
 
-          CmdMove( movement );
+               CmdMove( movement );
+          }
+          catch( System.Exception ex )
+          {
+               Debug.LogError( $"{ex.Message} in {ex.Source}" );
+          }
      }
 
      [Command]
      private void CmdMove( Vector3 movement )
      {
           Controller.Move( movement );
-
-          RpcMove( movement );
-     }
-
-     [ClientRpc]
-     private void RpcMove( Vector3 movement )
-     {
-          Controller.Move( movement );
-     }
-
-     [Command]
-     private void CmdInitPlayer()
-     {
-          RpcInitPlayer( Controller.transform.position, 
-                         Controller.GetComponent<NetworkCharacter>().Body.rotation,
-                         Controller.GetComponent<NetworkCharacter>().TestaCamera.localRotation );
-     }
-
-     [ClientRpc]
-     private void RpcInitPlayer( Vector3 position, Quaternion bodyRotation, Quaternion cameraLocalRotation )
-     {
-          Controller.transform.position = position;
-          Controller.GetComponent<NetworkCharacter>().Body.rotation = bodyRotation;
-          Controller.GetComponent<NetworkCharacter>().TestaCamera.localRotation = cameraLocalRotation;
      }
 }

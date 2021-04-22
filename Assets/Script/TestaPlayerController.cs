@@ -22,56 +22,36 @@ public class TestaPlayerController : NetworkBehaviour
 
           //_weapon = GetComponentInChildren<Weapon>();
           Camera.GetComponent<Camera>().enabled = true;
-
-          CmdInitPlayer();
      }
 
      void Update()
      {
-          if( !isLocalPlayer ) return;
+          try
+          {
+               if( !isLocalPlayer ) return;
 
-          float deltaX = Input.GetAxis( "Mouse X" ) * sensitivityX * Time.deltaTime;
-          float deltaY = Input.GetAxis( "Mouse Y" ) * sensitivityY * Time.deltaTime;
-          _xRot -= deltaY;
-          _xRot = Mathf.Clamp( _xRot, -90, 90 );
+               float deltaX = Input.GetAxis( "Mouse X" ) * sensitivityX * Time.deltaTime;
+               float deltaY = Input.GetAxis( "Mouse Y" ) * sensitivityY * Time.deltaTime;
+               _xRot -= deltaY;
+               _xRot = Mathf.Clamp( _xRot, -90, 90 );
 
-          bool fire = Input.GetButtonDown( "Fire" );
+               bool fire = Input.GetButtonDown( "Fire" );
 
-          CmdRotate( _xRot, deltaX );
+               Camera.localRotation = Quaternion.Euler( _xRot, 90f, 0f );
+               CmdRotate( deltaX );
 
-          //if( fire )
-          //     _weapon.Fire();
+               //if( fire )
+               //     _weapon.Fire();
+          }
+          catch( System.Exception ex )
+          {
+               Debug.LogError( $"{ex.Message} in {ex.Source}" );
+          }
      }
 
      [Command]
-     private void CmdRotate( float xRot, float deltaX )
+     private void CmdRotate( float deltaX )
      {
-          Camera.localRotation = Quaternion.Euler( xRot, 90f, 0f );
           Body.Rotate( Vector3.up * deltaX );
-          
-          RpcRotate( xRot, deltaX );
-     }
-
-     [ClientRpc]
-     private void RpcRotate( float xRot, float deltaX )
-     {
-          Camera.localRotation = Quaternion.Euler( xRot, 90f, 0f );
-          Body.Rotate( Vector3.up * deltaX );
-     }
-
-     [Command]
-     private void CmdInitPlayer()
-     {
-          RpcInitPlayer( Body.GetComponentInParent<NetworkCharacter>().Controller.transform.position,
-                         Body.rotation,
-                         Camera.localRotation );
-     }
-
-     [ClientRpc]
-     private void RpcInitPlayer( Vector3 position, Quaternion bodyRotation, Quaternion cameraLocalRotation )
-     {
-          Body.GetComponentInParent<NetworkCharacter>().Controller.transform.position = position;
-          Body.rotation = bodyRotation;
-          Camera.localRotation = cameraLocalRotation;
      }
 }
