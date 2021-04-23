@@ -5,15 +5,12 @@ using Mirror;
 using UnityEngine.UI;
 using System.Linq;
 
-public class RoomPlayer : NetworkRoomPlayer
+public class LobbyRoomPlayer : NetworkRoomPlayer
 {
-     [SyncVar( hook = nameof( OnNameChanged ) )]
+     [SyncVar]
      public string playerName = null;
-     [SyncVar( hook = nameof( OnRoleChanged ) )]
+     [SyncVar]
      public string playerRole = null;
-
-     public void OnNameChanged( string oldValue, string newValue ) { }
-     public void OnRoleChanged( string oldValue, string newValue ) { }
 
      // =====================================================================
 
@@ -42,7 +39,7 @@ public class RoomPlayer : NetworkRoomPlayer
 
      void DrawPlayerState()
      {
-          GUILayout.BeginArea( new Rect( 100f + ( index * 100 ), 350f, 90f, 130f ) );
+          GUILayout.BeginArea( new Rect( 100 + ( index * 120 ), 350, 120, 130 ) );
 
           GUILayout.Label( $"Player [{index + 1}]" );
 
@@ -69,7 +66,7 @@ public class RoomPlayer : NetworkRoomPlayer
      {
           if( NetworkClient.active && isLocalPlayer )
           {
-               GUILayout.BeginArea( new Rect( 100f, 500f, 120f, 100f ) );
+               GUILayout.BeginArea( new Rect( 100, 500, 120, 100 ) );
 
                if( readyToBegin )
                {
@@ -85,18 +82,8 @@ public class RoomPlayer : NetworkRoomPlayer
                if( GUILayout.Button( "Toggle Role" ) )
                     CmdTogglePlayerRole();
 
-               if( GUILayout.Button( "Leave" ) )
-                    LeaveRoom();
-
                GUILayout.EndArea();
           }
-     }
-
-     // =====================================================================
-
-     private void LeaveRoom()
-     {
-          // TO DO...
      }
 
      // =====================================================================

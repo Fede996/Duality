@@ -8,14 +8,9 @@ public class MainMenuUI : MonoBehaviour
 {
      [Header( "References" )]
      [SerializeField] private LobbyRoomManager lobbyRoomManager;
-     //[SerializeField] private LobbyNetworkManager lobbyNetworkManager;
-
      [SerializeField] private InputField hostName;
-
      [SerializeField] private InputField joinName;
      [SerializeField] private InputField joinIp;
-
-     public string playerName = null;
 
      public void OnButtonExit()
      {
@@ -40,7 +35,7 @@ public class MainMenuUI : MonoBehaviour
                return;
           }
 
-          if( joinIp.text == "localhost" ) 
+          if( joinIp.text == "localhost" || string.IsNullOrEmpty( joinIp.text ) ) 
                joinIp.text = "127.0.0.1";
 
           if( !IPAddress.TryParse( joinIp.text, out IPAddress ip ) )
@@ -52,5 +47,10 @@ public class MainMenuUI : MonoBehaviour
           lobbyRoomManager.localPlayerName = joinName.text;
           lobbyRoomManager.networkAddress = ip.ToString();
           lobbyRoomManager.StartClient();
+     }
+
+     public void OnButtonServer()
+     {
+          lobbyRoomManager.StartServer();
      }
 }

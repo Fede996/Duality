@@ -15,9 +15,9 @@ public class LobbyRoomManager : NetworkRoomManager
 
      public override bool OnRoomServerSceneLoadedForPlayer( NetworkConnection conn, GameObject roomPlayer, GameObject gamePlayer )
      {
-          GameNetworkPlayer player = gamePlayer.GetComponent<GameNetworkPlayer>();
-          player.playerName = roomPlayer.GetComponent<RoomPlayer>().playerName;
-          player.playerRole = roomPlayer.GetComponent<RoomPlayer>().playerRole;
+          GamePlayerController player = gamePlayer.GetComponent<GamePlayerController>();
+          player.playerName = roomPlayer.GetComponent<LobbyRoomPlayer>().playerName;
+          player.playerRole = roomPlayer.GetComponent<LobbyRoomPlayer>().playerRole;
 
           return true;
      }
@@ -25,18 +25,16 @@ public class LobbyRoomManager : NetworkRoomManager
      public override void OnRoomServerPlayersReady()
      {
           // calling the base method calls ServerChangeScene as soon as all players are in Ready state.
-#if UNITY_SERVER
-            base.OnRoomServerPlayersReady();
-#else
+          // base.OnRoomServerPlayersReady();
+
           showStartButton = true;
-#endif
      }
 
      public override void OnGUI()
      {
           base.OnGUI();
 
-          if( allPlayersReady && showStartButton && GUI.Button( new Rect( 300, 300, 120, 20 ), "START GAME" ) )
+          if( allPlayersReady && showStartButton && GUI.Button( new Rect( 100f + ( numPlayers * 120 ), 500, 120, 20 ), "START GAME" ) )
           {
                StartGame();
           }
@@ -46,7 +44,22 @@ public class LobbyRoomManager : NetworkRoomManager
 
      private void StartGame()
      {
-          if( ( ( RoomPlayer )roomSlots[0] ).playerRole == ( ( RoomPlayer )roomSlots[1] ).playerRole )
+          // Per DEBUG, da rimuovere!
+          if( numPlayers == 1 )
+          {
+               showStartButton = false;
+               ServerChangeScene( GameplayScene );
+               return;
+          }
+          //
+
+          if( numPlayers != 2 )
+          {
+               Debug.LogError( "Number of player must be 2!" );
+               return;
+          }
+
+          if( ( ( LobbyRoomPlayer )roomSlots[0] ).playerRole == ( ( LobbyRoomPlayer )roomSlots[1] ).playerRole )
           {
                Debug.LogError( "Players must have different roles!" );
                return;

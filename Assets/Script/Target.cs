@@ -5,14 +5,21 @@ using Mirror;
 
 public class Target : NetworkBehaviour
 {
+     [Server]
      public void OnHit()
      {
           CmdOnHit();
-          //Destroy( gameObject );
      }
 
-     [Command]
+     [Command( requiresAuthority = false )]
      private void CmdOnHit()
+     {
+          RpcOnHit();
+          Destroy( gameObject );
+     }
+
+     [ClientRpc]
+     private void RpcOnHit()
      {
           Destroy( gameObject );
      }

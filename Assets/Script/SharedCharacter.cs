@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
-public class NetworkCharacter : NetworkBehaviour
+public class SharedCharacter : NetworkBehaviour
 {
      [Header( "References" )]
      public CharacterController Controller;
-     public Transform TestaCamera;
+     public Camera TestaCamera;
      public Camera GambeCamera;
      public Transform Body;
+     public Weapon Weapon;
 
-     public TestaPlayerController TestaController;
-     public GambePlayerController GambeController;
+     private void Start()
+     {
+          DontDestroyOnLoad( this.gameObject );
+     }
 }

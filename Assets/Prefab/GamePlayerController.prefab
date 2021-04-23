@@ -10,11 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 2369009894520199226}
   - component: {fileID: 145839319892302396}
-  - component: {fileID: 1980276764004389540}
-  - component: {fileID: 5623790004977351227}
-  - component: {fileID: 2809437281447894716}
+  - component: {fileID: 8061782667936912336}
   m_Layer: 0
-  m_Name: GameNetworkPlayer
+  m_Name: GamePlayerController
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -51,7 +49,7 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &1980276764004389540
+--- !u!114 &8061782667936912336
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -64,41 +62,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0.1
+  syncInterval: 0
   playerName: 
   playerRole: 
---- !u!114 &5623790004977351227
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6591358737964280219}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5c2e91f6fba46e745a51fff6a1a739f1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  Camera: {fileID: 0}
-  Controller: {fileID: 0}
-  speed: 12
---- !u!114 &2809437281447894716
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6591358737964280219}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: df41cb3a4fa7f8546af960d32905df57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  Camera: {fileID: 0}
-  Body: {fileID: 0}
-  sensitivityX: 200
-  sensitivityY: 200
+  speed: 10
+  sensitivityX: 5
+  sensitivityY: 5
