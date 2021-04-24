@@ -61,7 +61,7 @@ public class Weapon : NetworkBehaviour
           {
                Target target = hit.collider.GetComponent<Target>();
                if( target != null )
-                    target.OnHit();
+                    target.OnHit( hit );
           }
      }
 
