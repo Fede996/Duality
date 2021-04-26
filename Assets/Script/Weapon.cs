@@ -9,6 +9,7 @@ public class Weapon : NetworkBehaviour
      [SerializeField] private Transform cameraTransform;
 
      [Header( "Settings" )]
+     [SerializeField] private float damage = 20f;
      [SerializeField] public bool autoFire;
      [SerializeField] private float shotDelay = .5f;
      [SerializeField] private float range = 100f;
@@ -62,6 +63,10 @@ public class Weapon : NetworkBehaviour
                Target target = hit.collider.GetComponent<Target>();
                if( target != null )
                     target.OnHit( hit );
+
+               Enemy enemy = hit.collider.GetComponent<Enemy>();
+               if( enemy != null )
+                    enemy.TakeDamage( damage );
           }
      }
 
