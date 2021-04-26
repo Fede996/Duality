@@ -203,8 +203,14 @@ MonoBehaviour:
   Weapon: {fileID: 8291749508052872146}
   TestaPointsText: {fileID: 0}
   GambePointsText: {fileID: 0}
+  LivesText: {fileID: 0}
+  FireText: {fileID: 0}
+  maxLives: 5
+  timeBetweenHits: 1
+  knockbackResolutionSpeed: 10
   TestaPoints: 0
   GambePoints: 0
+  Lives: 5
 --- !u!114 &4777729751643027747
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -628,8 +634,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   cameraTransform: {fileID: 8291749507319685162}
+  damage: 20
   autoFire: 0
-  shotDelay: 0.5
+  shotDelay: 0.2
   range: 100
   muzzlePrefab: {fileID: 1336949550903370, guid: 4543ab5e3d405ec40a8d4e9aa5165030, type: 3}
   muzzleTransform: {fileID: 2366704547588107899}

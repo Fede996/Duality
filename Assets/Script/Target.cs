@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
+[RequireComponent( typeof( Collider ) )]
 public class Target : NetworkBehaviour
 {
      /// <summary>
