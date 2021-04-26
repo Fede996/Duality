@@ -58,7 +58,10 @@ public class GamePlayerController : NetworkBehaviour
 
                _mouseX = Input.GetAxis( "Mouse X" ) * sensitivityX;
                _mouseY = Input.GetAxis( "Mouse Y" ) * sensitivityY;
-               
+
+               if( Input.GetButtonDown( "ToggleFire" ) ) player.ToggleFire();     
+
+               // Forse da spostare in fixed ??
                if( player.Weapon.autoFire )
                {
                     player.Weapon.isFiring = Input.GetButton( "Fire" );

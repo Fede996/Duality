@@ -17,6 +17,7 @@ public class SharedCharacter : NetworkBehaviour
      [SerializeField] private Text TestaPointsText;
      [SerializeField] private Text GambePointsText;
      [SerializeField] private Text LivesText;
+     [SerializeField] private Text FireText;
 
      [Header( "Player settings" )]
      [SerializeField] private int maxLives = 5;
@@ -77,6 +78,13 @@ public class SharedCharacter : NetworkBehaviour
 
           TestaPointsText.enabled = false;
           GambePointsText.enabled = false;
+     }
+
+     public void ToggleFire()
+     {
+          Weapon.autoFire = !Weapon.autoFire;
+          FireText.text = Weapon.autoFire ? "Fire: <color=#9BFFF8>Auto</color>" :
+                                            "Fire: <color=#9BFFF8>Single</color>";
      }
 
      // =====================================================================
