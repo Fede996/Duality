@@ -17,7 +17,7 @@ public class SharedCharacter : NetworkBehaviour
      [SerializeField] private Text TestaPointsText;
      [SerializeField] private Text GambePointsText;
      [SerializeField] private Text LivesText;
-     [SerializeField] private Text FireText;
+     [SerializeField] private GameObject WeaponPanel;
 
      [Header( "Player settings" )]
      [SerializeField] private int maxLives = 5;
@@ -60,12 +60,14 @@ public class SharedCharacter : NetworkBehaviour
                TestaCamera.enabled = true ;
                TestaCamera.GetComponent<AudioListener>().enabled = true;
                TestaPointsText.enabled = true;
+               WeaponPanel.SetActive( true );
           }
           else
           {
                GambeCamera.enabled = true;
                GambeCamera.GetComponent<AudioListener>().enabled = true;
                GambePointsText.enabled = true;
+               WeaponPanel.SetActive( false );
           }
      }
 
@@ -83,8 +85,8 @@ public class SharedCharacter : NetworkBehaviour
      public void ToggleFire()
      {
           Weapon.autoFire = !Weapon.autoFire;
-          FireText.text = Weapon.autoFire ? "Fire: <color=#9BFFF8>Auto</color>" :
-                                            "Fire: <color=#9BFFF8>Single</color>";
+          WeaponPanel.GetComponentInChildren<Text>().text = Weapon.autoFire ? "Fire: <color=#9BFFF8>Auto</color>" :
+                                                                              "Fire: <color=#9BFFF8>Single</color>";
      }
 
      // =====================================================================
@@ -120,5 +122,7 @@ public class SharedCharacter : NetworkBehaviour
                invincibilityFrame = timeBetweenHits;
                knockback = ( transform.position - hit.transform.position ).normalized * enemy.KnockbackIntensity;
           }
+          else
+               knockback = Vector3.zero;
      }
 }

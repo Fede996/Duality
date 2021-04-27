@@ -22,13 +22,17 @@ public class Enemy : SolidTarget
      // =====================================================================
 
      [Server]
-     public void TakeDamage( float damage )  
+     public void TakeDamage( float damage )
      {
           health -= damage;
+
+          if( health <= 0 )
+               Destroy( this.gameObject );
      }
 
      // =====================================================================
 
+     [Client]
      private void OnHealthChanged( float newValue, float oldVAlue )
      {
           if( health <= 0 ) 

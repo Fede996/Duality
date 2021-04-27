@@ -11,13 +11,7 @@ public class SolidTarget : Target
      [Server]
      public override void OnHit( RaycastHit hit )
      {
-          CmdOnHit( hit.point, hit.normal );
-     }
-
-     [Command( requiresAuthority = false )]
-     private void CmdOnHit( Vector3 point, Vector3 normal )
-     {
-          RpcOnHit( point, normal );
+          RpcOnHit( hit.point, hit.normal );
      }
 
      [ClientRpc]

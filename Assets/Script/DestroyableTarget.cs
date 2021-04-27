@@ -8,12 +8,8 @@ public class DestroyableTarget : Target
      [Server]
      public override void OnHit()
      {
-          CmdOnHit();
-     }
+          //CmdOnHit();
 
-     [Command( requiresAuthority = false )]
-     protected override void CmdOnHit()
-     {
           RpcOnHit();
           Destroy( gameObject );
      }
