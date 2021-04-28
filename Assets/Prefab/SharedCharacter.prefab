@@ -144,7 +144,7 @@ GameObject:
   - component: {fileID: 963117837514954701}
   m_Layer: 0
   m_Name: SharedCharacter
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -205,7 +205,7 @@ MonoBehaviour:
   TestaPointsText: {fileID: 0}
   GambePointsText: {fileID: 0}
   LivesText: {fileID: 0}
-  FireText: {fileID: 0}
+  WeaponPanel: {fileID: 0}
   maxLives: 5
   timeBetweenHits: 1
   knockbackResolutionSpeed: 10

@@ -89,6 +89,23 @@ public class SharedCharacter : NetworkBehaviour
                                                                               "Fire: <color=#9BFFF8>Single</color>";
      }
 
+     [Server]
+     public void TakeDamage( int damage )
+     {
+          TakeDamage( damage, Vector3.zero );
+     }
+
+     [Server]
+     public void TakeDamage( int damage, Vector3 knockback )
+     {
+          if( invincibilityFrame <= 0 )
+          {
+               Lives -= damage;
+               invincibilityFrame = timeBetweenHits;
+               this.knockback = knockback;
+          }
+     }
+
      // =====================================================================
 
      private void Start()
@@ -122,7 +139,5 @@ public class SharedCharacter : NetworkBehaviour
                invincibilityFrame = timeBetweenHits;
                knockback = ( transform.position - hit.transform.position ).normalized * enemy.KnockbackIntensity;
           }
-          else
-               knockback = Vector3.zero;
      }
 }

@@ -5,8 +5,7 @@ using Mirror;
 
 public class Enemy : SolidTarget
 {
-     [Header( "Settings" )]
-     [SerializeField] private float movementSpeed = 1;
+     [Header( "Enemy Settings" )]
      [SerializeField] private float maxHealth = 100;
      [SerializeField] public int Damage = 1;
      [SerializeField] public float KnockbackIntensity = .5f;
@@ -14,7 +13,7 @@ public class Enemy : SolidTarget
      [SyncVar( hook = nameof( OnHealthChanged ) )]
      public float health;
 
-     private void Start()
+     protected virtual void Start()
      {
           health = maxHealth;
      }
@@ -35,7 +34,7 @@ public class Enemy : SolidTarget
      [Client]
      private void OnHealthChanged( float newValue, float oldVAlue )
      {
-          if( health <= 0 ) 
+          if( health <= 0 )
                Destroy( this.gameObject );
      }
 }
