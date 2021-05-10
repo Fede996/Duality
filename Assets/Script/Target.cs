@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 
+[RequireComponent( typeof( Collider ) )]
 public class Target : NetworkBehaviour
 {
      /// <summary>
@@ -21,13 +22,6 @@ public class Target : NetworkBehaviour
      {
           OnHit();
      }
-
-     /// <summary>
-     /// Da chiamare da OnHit se si vogliono fare operazioni sul Server in seguito alla collisione.
-     /// Fare override di questa funzione per implementarla.
-     /// </summary>
-     [Command( requiresAuthority = false )]
-     protected virtual void CmdOnHit() { }
 
      /// <summary>
      /// Da chiamare da CmdOnHit per trasmettere i cambiamenti ai Client.

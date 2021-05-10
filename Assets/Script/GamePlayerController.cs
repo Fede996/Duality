@@ -45,6 +45,13 @@ public class GamePlayerController : NetworkBehaviour
                player.Init( role );
           }
 
+          if( isClient )
+          {
+               GameObject serverCamera = GameObject.Find( "ServerCamera" );
+               if( serverCamera != null ) 
+                    serverCamera.SetActive( false );
+          }
+
           DontDestroyOnLoad( this.gameObject );
      }
 
@@ -58,7 +65,10 @@ public class GamePlayerController : NetworkBehaviour
 
                _mouseX = Input.GetAxis( "Mouse X" ) * sensitivityX;
                _mouseY = Input.GetAxis( "Mouse Y" ) * sensitivityY;
-               
+
+               if( Input.GetButtonDown( "ToggleFire" ) ) player.ToggleFire();     
+
+               // Forse da spostare in fixed ??
                if( player.Weapon.autoFire )
                {
                     player.Weapon.isFiring = Input.GetButton( "Fire" );
@@ -91,8 +101,8 @@ public class GamePlayerController : NetworkBehaviour
                _tilt -= _mouseY;
                _tilt = Mathf.Clamp( _tilt, -90, 90 );
 
-               player.TestaCamera.transform.localRotation = Quaternion.Euler( _tilt, 90f, 0f );
-               CmdRotate( _mouseX );
+               //player.TestaCamera.transform.localRotation = Quaternion.Euler( _tilt, 90f, 0f );
+               CmdRotate( _mouseX, _tilt );
           }
           else
           {
@@ -107,8 +117,9 @@ public class GamePlayerController : NetworkBehaviour
      // =====================================================================
 
      [Command]
-     private void CmdRotate( float deltaX )
+     private void CmdRotate( float deltaX, float tilt )
      {
+          player.TestaCamera.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
           player.Body.Rotate( Vector3.up * deltaX );
      }
 
