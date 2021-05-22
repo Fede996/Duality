@@ -1992,7 +1992,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &229913139
 Transform:
   m_ObjectHideFlags: 0
@@ -6111,6 +6111,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 603294880}
   m_CullTransparentMesh: 1
+--- !u!1 &658358911 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8291749506869361797, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+  m_PrefabInstance: {fileID: 689535371}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &673738610
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6659,6 +6664,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8291749508052872146, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 658358911}
     - target: {fileID: 9063660676311734372, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
       propertyPath: sceneId
       value: 1104610429

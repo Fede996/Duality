@@ -4,11 +4,19 @@ using UnityEngine;
 using Mirror;
 
 [RequireComponent( typeof( Collider ) )]
+
+
+
+
 public class GambePointsTarget : DestroyableTarget
 {
      [Header( "Settings" )]
      [SerializeField] private int points = 1;
 
+     [Header("Objects")]
+     private Weapon weapon ;
+     
+     
      [Server]
      private void OnTriggerEnter( Collider other )
      {
@@ -16,6 +24,10 @@ public class GambePointsTarget : DestroyableTarget
 
           if( player != null )
           {
+
+               weapon = FindObjectOfType<Weapon>();
+               
+               weapon.numberOfBullets += 20;
                player.GambePoints += points;
                base.OnHit();
           }

@@ -9,11 +9,17 @@ public class TestaPointsTarget : DestroyableTarget
      [Header( "Settings" )]
      [SerializeField] private int points = 1;
 
+     private SharedCharacter player;
+     
      [Server]
      public override void OnHit()
      {
-          FindObjectOfType<SharedCharacter>().TestaPoints += points;
-
+          player = FindObjectOfType<SharedCharacter>();
+          
+          player.TestaPoints += points;
+          player.stamina = 2000;
+          
+          
           base.OnHit();
      }
 }

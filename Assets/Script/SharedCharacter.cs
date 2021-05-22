@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [RequireComponent( typeof( Rigidbody ) )]
@@ -47,7 +48,11 @@ public class SharedCharacter : NetworkBehaviour
      [SerializeField] private Text GambePointsText;
      [SerializeField] private Text LivesText;
      [SerializeField] private GameObject WeaponPanel;
+     [SerializeField] public int bullets = 20;
+     [SerializeField] public float stamina = 2000;
+     [SerializeField] public float staminaCost = 100;
 
+     
      [Header( "Players data" )]
      [SyncVar( hook = nameof( OnTestaPointsChanged ) )]
      public int TestaPoints = 0;
@@ -62,6 +67,7 @@ public class SharedCharacter : NetworkBehaviour
      private RaycastHit _slopeHit;
 
      private float _invincibilityFrame = 0;
+     private Vector3 nullvector;
 
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {
@@ -82,6 +88,9 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Init( Role playerRole )
      {
+
+          nullvector = new Vector3(0, 0, 0);
+          
           if( playerRole == Role.Testa )
           {
                TestaCamera.enabled = true;
@@ -111,7 +120,19 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Move( Vector3 movement )
      {
-          CmdMove( movement );
+          if ( stamina > 0 && movement.sqrMagnitude != 0)
+          {
+
+               stamina -= Time.deltaTime * staminaCost;
+
+          }
+          
+          if(stamina > 0)
+               CmdMove( movement );
+          else
+               CmdMove(nullvector);
+
+          
      }
 
      public void Rotate( float deltaX, float tilt )
@@ -139,7 +160,6 @@ public class SharedCharacter : NetworkBehaviour
           {
                Lives -= damage;
                _invincibilityFrame = timeBetweenHits;
-               //this.knockback = knockback;
           }
      }
 
