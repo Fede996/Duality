@@ -20,11 +20,16 @@ public class SharedCharacter : NetworkBehaviour
      [SerializeField] private Text GambePointsText;
      [SerializeField] private Text LivesText;
      [SerializeField] private GameObject WeaponPanel;
-
+     [SerializeField] public int bullets = 20;
+     
+     
      [Header( "Player settings" )]
      [SerializeField] private int maxLives = 5;
      [SerializeField] private float timeBetweenHits = 1;
 
+     
+     
+     
      [Header( "Players data" )]
      [SyncVar( hook = nameof( OnTestaPointsChanged ) )]
      public int TestaPoints = 0;
