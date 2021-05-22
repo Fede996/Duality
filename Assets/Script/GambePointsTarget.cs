@@ -14,7 +14,7 @@ public class GambePointsTarget : DestroyableTarget
      [SerializeField] private int points = 1;
 
      [Header("Objects")]
-     public Weapon weapon ;
+     private Weapon weapon ;
      
      
      [Server]
@@ -25,6 +25,8 @@ public class GambePointsTarget : DestroyableTarget
           if( player != null )
           {
 
+               weapon = FindObjectOfType<Weapon>();
+               
                weapon.numberOfBullets += 20;
                player.GambePoints += points;
                base.OnHit();
