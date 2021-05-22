@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3416,7 +3416,7 @@ MonoBehaviour:
   minPlayers: 1
   roomPlayerPrefab: {fileID: -188044214974863765, guid: 5cdf1612af346a14bbf5b53ceaac75bf, type: 3}
   RoomScene: Assets/Scenes/Lobby.unity
-  GameplayScene: Assets/Scenes/Game.unity
+  GameplayScene: Assets/Scenes/GameMatteo.unity
   _allPlayersReady: 0
   roomSlots: []
   clientIndex: 0
