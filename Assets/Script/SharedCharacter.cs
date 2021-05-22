@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 [RequireComponent( typeof( NetworkTransform ) )]
@@ -21,6 +22,8 @@ public class SharedCharacter : NetworkBehaviour
      [SerializeField] private Text LivesText;
      [SerializeField] private GameObject WeaponPanel;
      [SerializeField] public int bullets = 20;
+     [SerializeField] public float stamina = 2000;
+     [SerializeField] public float staminaCost = 100;
      
      
      [Header( "Player settings" )]
@@ -41,6 +44,8 @@ public class SharedCharacter : NetworkBehaviour
      private Rigidbody rigidBody;
      private float invincibilityFrame = 0;
 
+     private Vector3 nullvector;
+
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {
           TestaPointsText.text = $"Testa Points: <color=#9BFFF8>{newValue}</color>";
@@ -60,6 +65,9 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Init( Role playerRole )
      {
+
+          nullvector = new Vector3(0, 0, 0);
+          
           if( playerRole == Role.Testa )
           {
                TestaCamera.enabled = true ;
@@ -89,7 +97,19 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Move( Vector3 movement )
      {
-          CmdMove( movement );
+          if ( stamina > 0 && movement.sqrMagnitude != 0)
+          {
+
+               stamina -= Time.deltaTime * staminaCost;
+
+          }
+          
+          if(stamina > 0)
+               CmdMove( movement );
+          else
+               CmdMove(nullvector);
+
+          
      }
 
      public void Rotate( float deltaX, float tilt )
