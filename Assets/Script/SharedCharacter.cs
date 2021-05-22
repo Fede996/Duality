@@ -4,10 +4,12 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.UI;
 
+[RequireComponent( typeof( NetworkTransform ) )]
+[RequireComponent( typeof( Rigidbody ) )]
+[RequireComponent( typeof( Collider ) )]
 public class SharedCharacter : NetworkBehaviour
 {
      [Header( "Player references" )]
-     [SerializeField] public CharacterController Controller;
      [SerializeField] public Camera TestaCamera;
      [SerializeField] private Camera GambeCamera;
      [SerializeField] public Transform Body;
@@ -22,7 +24,6 @@ public class SharedCharacter : NetworkBehaviour
      [Header( "Player settings" )]
      [SerializeField] private int maxLives = 5;
      [SerializeField] private float timeBetweenHits = 1;
-     [SerializeField] private float knockbackResolutionSpeed = 1f;
 
      [Header( "Players data" )]
      [SyncVar( hook = nameof( OnTestaPointsChanged ) )]
@@ -32,9 +33,8 @@ public class SharedCharacter : NetworkBehaviour
      [SyncVar( hook = nameof( OnLivesChanged ) )]
      public int Lives = 5;
 
+     private Rigidbody rigidBody;
      private float invincibilityFrame = 0;
-     private Vector3 knockback = Vector3.zero;
-
 
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {
@@ -82,6 +82,16 @@ public class SharedCharacter : NetworkBehaviour
           GambePointsText.enabled = false;
      }
 
+     public void Move( Vector3 movement )
+     {
+          CmdMove( movement );
+     }
+
+     public void Rotate( float deltaX, float tilt )
+     {
+          CmdRotate( deltaX, tilt );
+     }
+
      public void ToggleFire()
      {
           Weapon.autoFire = !Weapon.autoFire;
@@ -108,25 +118,38 @@ public class SharedCharacter : NetworkBehaviour
 
      // =====================================================================
 
-     private void Start()
+     [Command( requiresAuthority = false )]
+     private void CmdMove( Vector3 movement )
      {
-          Lives = maxLives;
-          OnLivesChanged( maxLives, maxLives );
-          DontDestroyOnLoad( this.gameObject );
+          //rigidBody.MovePosition( rigidBody.position + movement );
+          this.movement = movement;
      }
 
-     [Server]
-     private void Update()
+     [Command( requiresAuthority = false )]
+     private void CmdRotate( float deltaX, float tilt )
      {
-          if( invincibilityFrame > 0 )
-               invincibilityFrame -= Time.deltaTime;
+          TestaCamera.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
+          Body.Rotate( Vector3.up * deltaX );
      }
+
+     // =====================================================================
+
+     private Vector3 movement = Vector3.zero;
 
      [Server]
      private void FixedUpdate()
      {
-          Controller.Move( knockback );
-          knockback = Vector3.Slerp( knockback, Vector3.zero, knockbackResolutionSpeed * Time.fixedDeltaTime );
+          rigidBody.MovePosition( rigidBody.position + movement );
+     }
+
+     private void Start()
+     {
+          rigidBody = GetComponent<Rigidbody>();
+          Lives = maxLives;
+          OnLivesChanged( maxLives, maxLives );
+
+
+          DontDestroyOnLoad( this.gameObject );
      }
 
      [Server]

@@ -102,7 +102,7 @@ public class GamePlayerController : NetworkBehaviour
                _tilt = Mathf.Clamp( _tilt, -90, 90 );
 
                //player.TestaCamera.transform.localRotation = Quaternion.Euler( _tilt, 90f, 0f );
-               CmdRotate( _mouseX, _tilt );
+               player.Rotate( _mouseX, _tilt );
           }
           else
           {
@@ -110,23 +110,8 @@ public class GamePlayerController : NetworkBehaviour
 
                Vector3 movement = new Vector3( _horizontal, 0, _vertical ).normalized * speed * Time.fixedDeltaTime;
 
-               CmdMove( movement );
+               player.Move( movement );
           }
-     }
-
-     // =====================================================================
-
-     [Command]
-     private void CmdRotate( float deltaX, float tilt )
-     {
-          player.TestaCamera.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
-          player.Body.Rotate( Vector3.up * deltaX );
-     }
-
-     [Command]
-     private void CmdMove( Vector3 movement )
-     {
-          player.Controller.Move( movement );
      }
 }
 

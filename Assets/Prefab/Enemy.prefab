@@ -132,5 +132,5 @@ MonoBehaviour:
   impactEffect: {fileID: 100002, guid: 5614ee4ff08dcea438185f980ecae043, type: 3}
   maxHealth: 100
   Damage: 1
-  KnockbackIntensity: 0.5
+  KnockbackIntensity: 30
   health: 0

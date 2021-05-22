@@ -18,6 +18,16 @@ public class Enemy : SolidTarget
           health = maxHealth;
      }
 
+     [Server]
+     private void OnCollisionEnter( Collision collision )
+     {
+          if( collision.collider.gameObject.CompareTag( "Player" ) )
+          {
+               Vector3 knockback = ( collision.rigidbody.position - transform.position ).normalized * KnockbackIntensity;
+               collision.gameObject.GetComponent<SharedCharacter>().TakeDamage( Damage, knockback );
+          }
+     }
+
      // =====================================================================
 
      [Server]
