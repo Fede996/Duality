@@ -11,21 +11,25 @@ public class Weapon : NetworkBehaviour
 
      [Header( "Settings" )]
      [SerializeField] private float damage = 20f;
-     [SerializeField] public bool autoFire;
+     [SerializeField] public bool autoFire = true;
      [SerializeField] private float shotDelay = .5f;
      [SerializeField] private float range = 100f;
-
+     public int numberOfBullets = 20;
+     
+     
      [Header( "Muzzle Flash" )]
      [SerializeField] private GameObject muzzlePrefab;
      [SerializeField] private Transform muzzleTransform;
      [SerializeField] private AudioSource muzzleSoundSource;
      [SerializeField] private AudioClip muzzleSound;
      [SerializeField] private Vector2 audioPitch = new Vector2(.9f, 1.1f);
-
+          
      public bool isFiring = false;
 
      private float timeLastFired;
 
+     
+     
      // =====================================================================
 
      private void Start()
@@ -38,6 +42,9 @@ public class Weapon : NetworkBehaviour
      {
           if( autoFire && isFiring && ( ( timeLastFired + shotDelay ) <= Time.time ) )
           {
+
+               
+               
                FireWeapon();
           }
      }
@@ -49,7 +56,14 @@ public class Weapon : NetworkBehaviour
           // Da chiamare in FixedUpdate()
           timeLastFired = Time.time;
 
-          CmdFireWeapon();
+          if (numberOfBullets != 0)
+          {
+               numberOfBullets--;
+               CmdFireWeapon();
+
+          }
+
+          
      }
 
      // =====================================================================
