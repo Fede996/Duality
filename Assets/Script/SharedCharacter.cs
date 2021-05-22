@@ -4,26 +4,49 @@ using UnityEngine;
 using Mirror;
 using UnityEngine.UI;
 
-[RequireComponent( typeof( NetworkTransform ) )]
 [RequireComponent( typeof( Rigidbody ) )]
 [RequireComponent( typeof( Collider ) )]
 public class SharedCharacter : NetworkBehaviour
 {
-     [Header( "Player references" )]
-     [SerializeField] public Camera TestaCamera;
-     [SerializeField] private Camera GambeCamera;
-     [SerializeField] public Transform Body;
-     [SerializeField] public Weapon Weapon;
+     [Header( "Movement" )]
+     public float movementSpeed = 6f;
+     public float groundMultiplier = 10f;
+     public float airMultiplier = 0.4f;
+     public float jumpForce = 15f;
+     public float groundDrag = 6f;
+     public float airDrag = 2f;
+     public PhysicMaterial physicMaterial;
+
+     [Header( "Sprint" )]
+     public float walkSpeed = 4f;
+     public float sprintSpeed = 6f;
+     public float acceleration = 10f;
+
+     [Header( "Ground detection" )]
+     public Transform groundCheck;
+     public float groundDistance = 0.4f;
+     public LayerMask groundLayer;
+     private bool _isGrounded;
+
+     [Header( "Slope" )]
+     public float maxSlope = 45f;
+     public float frictionMultiplier = 0.02f;
+
+     [Header( "Player settings" )]
+     public int maxLives = 5;
+     public float timeBetweenHits = 1;
+
+     [Header( "References" )]
+     public Camera TestaCamera;
+     public Camera GambeCamera;
+     public Transform Body;
+     public Weapon Weapon;
 
      [Header( "UI" )]
      [SerializeField] private Text TestaPointsText;
      [SerializeField] private Text GambePointsText;
      [SerializeField] private Text LivesText;
      [SerializeField] private GameObject WeaponPanel;
-
-     [Header( "Player settings" )]
-     [SerializeField] private int maxLives = 5;
-     [SerializeField] private float timeBetweenHits = 1;
 
      [Header( "Players data" )]
      [SyncVar( hook = nameof( OnTestaPointsChanged ) )]
@@ -33,8 +56,12 @@ public class SharedCharacter : NetworkBehaviour
      [SyncVar( hook = nameof( OnLivesChanged ) )]
      public int Lives = 5;
 
-     private Rigidbody rigidBody;
-     private float invincibilityFrame = 0;
+     private Rigidbody _rigidbody;
+     private Vector3 _moveDirection;
+     private float _playerHeight;
+     private RaycastHit _slopeHit;
+
+     private float _invincibilityFrame = 0;
 
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {
@@ -45,7 +72,7 @@ public class SharedCharacter : NetworkBehaviour
      {
           GambePointsText.text = $"Gambe Points: <color=#9BFFF8>{newValue}</color>";
      }
-     
+
      private void OnLivesChanged( int oldValue, int newValue )
      {
           LivesText.text = $"Lives: <color=#9BFFF8>{newValue}</color>";
@@ -57,7 +84,7 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( playerRole == Role.Testa )
           {
-               TestaCamera.enabled = true ;
+               TestaCamera.enabled = true;
                TestaCamera.GetComponent<AudioListener>().enabled = true;
                TestaPointsText.enabled = true;
                WeaponPanel.SetActive( true );
@@ -108,10 +135,10 @@ public class SharedCharacter : NetworkBehaviour
      [Server]
      public void TakeDamage( int damage, Vector3 knockback )
      {
-          if( invincibilityFrame <= 0 )
+          if( _invincibilityFrame <= 0 )
           {
                Lives -= damage;
-               invincibilityFrame = timeBetweenHits;
+               _invincibilityFrame = timeBetweenHits;
                //this.knockback = knockback;
           }
      }
@@ -121,8 +148,7 @@ public class SharedCharacter : NetworkBehaviour
      [Command( requiresAuthority = false )]
      private void CmdMove( Vector3 movement )
      {
-          //rigidBody.MovePosition( rigidBody.position + movement );
-          this.movement = movement;
+          _moveDirection = movement;
      }
 
      [Command( requiresAuthority = false )]
@@ -134,22 +160,36 @@ public class SharedCharacter : NetworkBehaviour
 
      // =====================================================================
 
-     private Vector3 movement = Vector3.zero;
+     private void Start()
+     {
+          _rigidbody = GetComponent<Rigidbody>();
+          _rigidbody.freezeRotation = true;
+          _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+
+          Collider collider = GetComponent<Collider>();
+          _playerHeight = collider.bounds.size.y;
+          collider.material = physicMaterial;
+
+          Lives = maxLives;
+          OnLivesChanged( maxLives, maxLives );
+
+          DontDestroyOnLoad( this.gameObject );
+     }
+
+     private void Update()
+     {
+          _isGrounded = Physics.CheckSphere( groundCheck.position, groundDistance, groundLayer );
+
+          SetDrag();
+          //SetSpeed( false );
+          SetFriction();
+     }
 
      private void FixedUpdate()
      {
           if( !isServer ) return;
 
-          rigidBody.MovePosition( rigidBody.position + movement );
-     }
-
-     private void Start()
-     {
-          rigidBody = GetComponent<Rigidbody>();
-          Lives = maxLives;
-          OnLivesChanged( maxLives, maxLives );
-
-          DontDestroyOnLoad( this.gameObject );
+          MovePlayer( _moveDirection );
      }
 
      private void OnControllerColliderHit( ControllerColliderHit hit )
@@ -157,11 +197,78 @@ public class SharedCharacter : NetworkBehaviour
           if( !isServer ) return;
 
           Enemy enemy = hit.gameObject.GetComponent<Enemy>();
-          if( enemy != null && invincibilityFrame <= 0 )
+          if( enemy != null && _invincibilityFrame <= 0 )
           {
                Lives -= enemy.Damage;
-               invincibilityFrame = timeBetweenHits;
-               //knockback = ( transform.position - hit.transform.position ).normalized * enemy.KnockbackIntensity;
+               _invincibilityFrame = timeBetweenHits;
+          }
+     }
+
+     // =====================================================================
+
+     private void MovePlayer( Vector3 direction )
+     {
+          if( _isGrounded && !IsOnSlope() )
+          {
+               // on a plane surface
+               _rigidbody.AddForce( direction * movementSpeed * groundMultiplier );
+          }
+          else if( _isGrounded && IsOnSlope() )
+          {
+               // on a slope
+               _rigidbody.AddForce( Vector3.ProjectOnPlane( _moveDirection, _slopeHit.normal ) * movementSpeed * groundMultiplier );
+          }
+          else
+          {
+               // airborne
+               _rigidbody.AddForce( direction * movementSpeed * airMultiplier );
+          }
+     }
+
+     private void Jump()
+     {
+          if( _isGrounded )
+          {
+               _rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0, _rigidbody.velocity.z );
+               _rigidbody.AddForce( Vector3.up * jumpForce, ForceMode.Impulse );
+          }
+     }
+
+     private bool IsOnSlope()
+     {
+          if( Physics.Raycast( transform.position, Vector3.down, out _slopeHit, _playerHeight / 2 + 0.5f ) )
+          {
+               if( _slopeHit.normal != Vector3.up )
+               {
+                    return true;
+               }
+          }
+
+          return false;
+     }
+
+     private void SetDrag()
+     {
+          _rigidbody.drag = _isGrounded ? groundDrag : airDrag;
+     }
+
+     private void SetSpeed( bool sprinting )
+     {
+          movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
+     }
+
+     private void SetFriction()
+     {
+          float angle;
+          if( IsOnSlope() && ( angle = Vector3.Angle( Vector3.up, _slopeHit.normal ) ) < maxSlope )
+          {
+               physicMaterial.staticFriction = angle * frictionMultiplier;
+               physicMaterial.dynamicFriction = angle * frictionMultiplier;
+          }
+          else
+          {
+               physicMaterial.staticFriction = 0;
+               physicMaterial.dynamicFriction = 0;
           }
      }
 }

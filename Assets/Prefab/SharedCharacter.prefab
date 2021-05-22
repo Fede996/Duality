@@ -32,6 +32,36 @@ Transform:
   m_Father: {fileID: 8291749507319685162}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &7232467640116366496
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2200133220945261184}
+  m_Layer: 0
+  m_Name: Ground check
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2200133220945261184
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7232467640116366496}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 8291749506869361799}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8291749506561895373
 GameObject:
   m_ObjectHideFlags: 0
@@ -143,7 +173,6 @@ GameObject:
   - component: {fileID: 2977293532427440583}
   - component: {fileID: 9156339451366411078}
   - component: {fileID: 6313907295476722545}
-  - component: {fileID: 8291749506869361798}
   m_Layer: 0
   m_Name: SharedCharacter
   m_TagString: Player
@@ -164,6 +193,7 @@ Transform:
   m_Children:
   - {fileID: 8291749507669871762}
   - {fileID: 8291749507040416692}
+  - {fileID: 2200133220945261184}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -263,6 +293,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0
+  movementSpeed: 6
+  groundMultiplier: 10
+  airMultiplier: 4
+  jumpForce: 10
+  groundDrag: 6
+  airDrag: 2
+  physicMaterial: {fileID: 13400000, guid: 93e7890e3a7d8c04d80d3d04f63c804e, type: 2}
+  walkSpeed: 4
+  sprintSpeed: 6
+  acceleration: 10
+  groundCheck: {fileID: 2200133220945261184}
+  groundDistance: 0.4
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  maxSlope: 45
+  frictionMultiplier: 0.04
+  maxLives: 5
+  timeBetweenHits: 1
   TestaCamera: {fileID: 8291749507319685164}
   GambeCamera: {fileID: 8291749507040416694}
   Body: {fileID: 8291749507669871762}
@@ -271,8 +320,6 @@ MonoBehaviour:
   GambePointsText: {fileID: 0}
   LivesText: {fileID: 0}
   WeaponPanel: {fileID: 0}
-  maxLives: 5
-  timeBetweenHits: 1
   TestaPoints: 0
   GambePoints: 0
   Lives: 5
@@ -299,30 +346,12 @@ CapsuleCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8291749506869361797}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: 93e7890e3a7d8c04d80d3d04f63c804e, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 2
   m_Direction: 1
-  m_Center: {x: 0, y: 1, z: 0}
---- !u!143 &8291749506869361798
-CharacterController:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8291749506869361797}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 0
-  serializedVersion: 2
-  m_Height: 2
-  m_Radius: 0.5
-  m_SlopeLimit: 45
-  m_StepOffset: 0.3
-  m_SkinWidth: 0.01
-  m_MinMoveDistance: 0.001
   m_Center: {x: 0, y: 1, z: 0}
 --- !u!1 &8291749507040416691
 GameObject:
