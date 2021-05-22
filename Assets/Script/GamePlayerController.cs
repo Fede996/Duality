@@ -109,7 +109,7 @@ public class GamePlayerController : NetworkBehaviour
                // Applico input GAMBE qui...
 
                Vector3 movement = new Vector3( _horizontal, 0, _vertical ).normalized * speed * Time.fixedDeltaTime;
-
+               
                player.Move( movement );
           }
      }
