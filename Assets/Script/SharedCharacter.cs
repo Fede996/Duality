@@ -112,7 +112,7 @@ public class SharedCharacter : NetworkBehaviour
           {
                Lives -= damage;
                invincibilityFrame = timeBetweenHits;
-               this.knockback = knockback;
+               //this.knockback = knockback;
           }
      }
 
@@ -136,9 +136,10 @@ public class SharedCharacter : NetworkBehaviour
 
      private Vector3 movement = Vector3.zero;
 
-     [Server]
      private void FixedUpdate()
      {
+          if( !isServer ) return;
+
           rigidBody.MovePosition( rigidBody.position + movement );
      }
 
@@ -148,19 +149,19 @@ public class SharedCharacter : NetworkBehaviour
           Lives = maxLives;
           OnLivesChanged( maxLives, maxLives );
 
-
           DontDestroyOnLoad( this.gameObject );
      }
 
-     [Server]
      private void OnControllerColliderHit( ControllerColliderHit hit )
      {
+          if( !isServer ) return;
+
           Enemy enemy = hit.gameObject.GetComponent<Enemy>();
           if( enemy != null && invincibilityFrame <= 0 )
           {
                Lives -= enemy.Damage;
                invincibilityFrame = timeBetweenHits;
-               knockback = ( transform.position - hit.transform.position ).normalized * enemy.KnockbackIntensity;
+               //knockback = ( transform.position - hit.transform.position ).normalized * enemy.KnockbackIntensity;
           }
      }
 }

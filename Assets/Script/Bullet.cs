@@ -15,9 +15,10 @@ public class Bullet : NetworkBehaviour
 
      // =====================================================================
 
-     [Server]
      private void Update()
      {
+          if( !isServer ) return;
+
           if( timeToLive > 0 )
           {
                timeToLive -= Time.deltaTime;
@@ -29,9 +30,10 @@ public class Bullet : NetworkBehaviour
           }
      }
 
-     [Server]
      private void OnTriggerEnter( Collider other )
      {
+          if( !isServer ) return;
+
           if( !other.CompareTag( "Enemy" ) )
           {
                if( other.CompareTag( "Player" ) )

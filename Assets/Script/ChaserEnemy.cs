@@ -26,9 +26,10 @@ public class ChaserEnemy : Enemy
           base.Start();
      }
 
-     [Server]
      protected virtual void Update()
      {
+          if( !isServer ) return;
+
           if( movementSpeed != 0 )
           {
                agent.SetDestination( player.position ); 

@@ -21,9 +21,10 @@ public class ShooterEnemy : ChaserEnemy
           base.Start();
      }
 
-     [Server]
      protected override void Update()
      {
+          if( !isServer ) return;
+
           if( timeToNextShot > 0 )
           {
                timeToNextShot -= Time.deltaTime;
