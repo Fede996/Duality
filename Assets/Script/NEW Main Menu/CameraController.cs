@@ -6,29 +6,28 @@ using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
-     [Header( "User data" )]
-     public string playerName;
-     public string serverIp;
-
      [Header( "Settings" )]
      public Vector2 maxAngles;
      public float sensitivity = 1f;
      public float maxInteractionDistance = 1f;
+     public Transform cameraTargetPosition;
 
      [Header( "References" )]
-     public Transform cameraTarget;
-     public Desktop desktop;
-     public Text onlineText;
-     public GameObject insertName;
-     public GameObject insertIp;
-     public LobbyRoomManager lobbyRoomManager;
-     //public GameObject cursor;
+     public GameObject menuManager;
 
+     [Header( "UI" )]
+     public InputField username;
+     public Toggle rememberMe;
+
+     [Header( "Animations" )]
      public AnimationClip[] clips;
 
-     private Status currentStatus = Status.None;
+     private Status currentStatus = Status.DoNothing;
      private Vector2 initialAngles;
      private Animation anim;
+
+     // ==================================================================================
+     // Unity events
 
      private void Start()
      {
@@ -40,13 +39,21 @@ public class CameraController : MonoBehaviour
           {
                clip.legacy = true;
           }
-          currentStatus = Status.Animating;
+          currentStatus = Status.DoNothing;
           anim.Play( "Cam_start" );
+
+          // populate UI with data from the loader
+          DataLoader dl = menuManager.GetComponent<DataLoader>();
+          if( dl.rememberMe )
+          {
+               username.text = dl.lastUsername;
+               rememberMe.isOn = dl.rememberMe;
+          }
      }
 
      private void Update()
      {
-          if( currentStatus == Status.Animating ) return;
+          if( currentStatus == Status.DoNothing ) return;
 
           float dx = Input.GetAxis( "Mouse X" );
           float dy = Input.GetAxis( "Mouse Y" );
@@ -65,7 +72,7 @@ public class CameraController : MonoBehaviour
                if( Input.GetKeyDown( KeyCode.S ) )
                {
                     // Start server...
-                    lobbyRoomManager.StartServer();
+                    //lobbyRoomManager.StartServer();
 
                     Cursor.lockState = CursorLockMode.Confined;
                     Cursor.visible = true;
@@ -79,7 +86,7 @@ public class CameraController : MonoBehaviour
                     Cursor.visible = true;
                     currentStatus = Status.DoNothing;
 
-                    StartCoroutine( Host() );
+                    //StartCoroutine( Host() );
                }
 
                if( Input.GetKeyDown( KeyCode.J ) )
@@ -89,7 +96,7 @@ public class CameraController : MonoBehaviour
                     Cursor.visible = true;
                     currentStatus = Status.DoNothing;
 
-                    StartCoroutine( Join() );
+                    //StartCoroutine( Join() );
                }
 
                if( Input.GetButtonDown( "Cancel" ) )
@@ -100,6 +107,7 @@ public class CameraController : MonoBehaviour
      }
 
      // ==================================================================================
+     // UI and animation events
 
      public void OnAnimationEnded()
      {
@@ -109,22 +117,38 @@ public class CameraController : MonoBehaviour
           initialAngles.x = transform.rotation.eulerAngles.x;
      }
 
-     public void OnInsertName()
+     public void OnButtonLogin()
      {
-          playerName = insertName.GetComponentInChildren<InputField>().text;
-          insertName.SetActive( false );
+          if( menuManager.GetComponent<AccessManager>().Login( username.text ) )
+          {
+               DataLoader dl = menuManager.GetComponent<DataLoader>();
+               dl.rememberMe = rememberMe.isOn;
+               dl.lastUsername = username.text;
+               dl.SaveGlobalData();
+          }
+          else
+          {
+               username.text = "<i><color=red>User not found!</color></i>";
+          }
      }
 
-     public void OnInsertIp()
+     public void OnButtonCreate()
      {
-          serverIp = insertIp.GetComponentInChildren<InputField>().text;
-          insertIp.SetActive( false );
+          if( menuManager.GetComponent<AccessManager>().Create( username.text ) )
+          {
+               DataLoader dl = menuManager.GetComponent<DataLoader>();
+               dl.rememberMe = rememberMe.isOn;
+               dl.lastUsername = username.text;
+               dl.SaveGlobalData();
+          }
+          else
+          {
+               username.text = "<i><color=red>User already exists!</color></i>";
+          }
      }
 
-     public void OnLogin()
-     {
-          anim.Play( "Cam_login" );
-     }
+     // ==================================================================================
+     // Other functions
 
      private void MoveCamera( float dx, float dy )
      {
@@ -145,68 +169,68 @@ public class CameraController : MonoBehaviour
 
      private IEnumerator TurnToScreen()
      {
-          currentStatus = Status.InScreen;
+          currentStatus = Status.DoNothing;
 
-          while( Quaternion.Angle( cameraTarget.rotation, transform.rotation ) > 0.1 || Vector3.Distance( transform.position, cameraTarget.position ) > 0.001 )
+          while( Quaternion.Angle( cameraTargetPosition.rotation, transform.rotation ) > 0.1 || Vector3.Distance( transform.position, cameraTargetPosition.position ) > 0.001 )
           {
-               transform.position = Vector3.Lerp( transform.position, cameraTarget.position, sensitivity * Time.deltaTime );
-               transform.rotation = Quaternion.Lerp( transform.rotation, cameraTarget.rotation, sensitivity * Time.deltaTime );
+               transform.position = Vector3.Lerp( transform.position, cameraTargetPosition.position, sensitivity * Time.deltaTime );
+               transform.rotation = Quaternion.Lerp( transform.rotation, cameraTargetPosition.rotation, sensitivity * Time.deltaTime );
                yield return null;
           }
 
-          desktop.Login();
+          anim.Play( "Cam_login" );
           Cursor.lockState = CursorLockMode.Confined;
           Cursor.visible = true;
      }
 
      private void LeaveScreen()
      {
-          desktop.Lock();
           currentStatus = Status.OffScreen;
      }
 
-     private IEnumerator Host()
-     {
-          insertName.SetActive( true );
-          playerName = null;
+     //private IEnumerator Host()
+     //{
+     //     insertName.SetActive( true );
+     //     playerName = null;
 
-          while( playerName == null )
-          {
-               yield return null;
-          }
+     //     while( playerName == null )
+     //     {
+     //          yield return null;
+     //     }
 
-          lobbyRoomManager.localPlayerName = playerName;
-          lobbyRoomManager.StartHost();
-     }
+     //     lobbyRoomManager.localPlayerName = playerName;
+     //     lobbyRoomManager.StartHost();
+     //}
 
-     private IEnumerator Join()
-     {
-          insertName.SetActive( true );
-          playerName = null;
+     //private IEnumerator Join()
+     //{
+     //     insertName.SetActive( true );
+     //     playerName = null;
 
-          while( playerName == null )
-          {
-               yield return null;
-          }
+     //     while( playerName == null )
+     //     {
+     //          yield return null;
+     //     }
 
-          insertIp.SetActive( true );
-          serverIp = null;
+     //     insertIp.SetActive( true );
+     //     serverIp = null;
 
-          while( serverIp == null )
-          {
-               yield return null;
-          }
+     //     while( serverIp == null )
+     //     {
+     //          yield return null;
+     //     }
 
-          lobbyRoomManager.localPlayerName = playerName;
-          lobbyRoomManager.networkAddress = serverIp;
-          lobbyRoomManager.StartClient();
-     }
+     //     lobbyRoomManager.localPlayerName = playerName;
+     //     lobbyRoomManager.networkAddress = serverIp;
+     //     lobbyRoomManager.StartClient();
+     //}
+
+     // ==================================================================================
+     // Enums
 
      enum Status
      {
-          None,
           DoNothing,
-          Animating,
           InScreen,
           OffScreen,
      }
