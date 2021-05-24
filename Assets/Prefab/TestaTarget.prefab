@@ -129,3 +129,4 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   points: 1
+  rechargeSphere: {fileID: 9071619075924234358, guid: c263c6140e0d70a45a5a877124e00441, type: 3}
