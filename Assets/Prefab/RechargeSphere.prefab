@@ -4929,7 +4929,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 04595117e9526be4eb892f020fa0bd02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 20
 --- !u!198 &9071619075924234350
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -5558,7 +5558,7 @@ ParticleSystem:
     serializedVersion: 6
     enabled: 1
     type: 4
-    angle: 10
+    angle: 78.27543
     length: 5
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 0
