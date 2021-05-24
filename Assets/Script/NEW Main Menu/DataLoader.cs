@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -40,12 +41,17 @@ public class DataLoader : MonoBehaviour
           LoadGlobalData();
      }
 
+     private void OnApplicationQuit()
+     {
+          SaveUserData();
+          SaveGlobalData();
+     }
+
      // ==================================================================================
      // User data
 
      public List<string> LoadAllUsers()
      {
-          // load all username from file...
           users.Clear();
           users.AddRange( PlayerPrefs.GetString( "UserList" ).Split( ';' ) );
 
@@ -56,10 +62,7 @@ public class DataLoader : MonoBehaviour
      {
           if( LoadAllUsers().Contains( username ) )
           {
-               userData.username = username;
-               userData.serverIp = "localhost";
-
-               // load user data from file...
+               userData = JsonUtility.FromJson<UserData>( PlayerPrefs.GetString( username ) );
 
                return true;
           }
@@ -75,8 +78,18 @@ public class DataLoader : MonoBehaviour
           }
 
           PlayerPrefs.SetString( "UserList", $"{PlayerPrefs.GetString( "UserList" )};{username}".Trim( ';' ) );
+          PlayerPrefs.SetString( username, JsonUtility.ToJson( new UserData( username ) ) );
           PlayerPrefs.Save();
 
           return true;
+     }
+
+     public void SaveUserData()
+     {
+          if( userData != null && !string.IsNullOrEmpty( userData.username ) )
+          {
+               PlayerPrefs.SetString( userData.username, JsonUtility.ToJson( userData ) );
+               PlayerPrefs.Save();
+          }
      }
 }

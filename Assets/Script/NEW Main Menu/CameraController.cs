@@ -18,6 +18,10 @@ public class CameraController : MonoBehaviour
      [Header( "UI" )]
      public InputField username;
      public Toggle rememberMe;
+     public Text playerName;
+     public Text playerLevel;
+     public Scrollbar levelBar;
+     public Text playerCash;
 
      [Header( "Animations" )]
      public AnimationClip[] clips;
@@ -117,14 +121,16 @@ public class CameraController : MonoBehaviour
           initialAngles.x = transform.rotation.eulerAngles.x;
      }
 
+     public void OnLockEnded()
+     {
+          currentStatus = Status.OffScreen;
+     }
+
      public void OnButtonLogin()
      {
           if( menuManager.GetComponent<AccessManager>().Login( username.text ) )
           {
-               DataLoader dl = menuManager.GetComponent<DataLoader>();
-               dl.rememberMe = rememberMe.isOn;
-               dl.lastUsername = username.text;
-               dl.SaveGlobalData();
+               InitMainPage();
           }
           else
           {
@@ -136,15 +142,29 @@ public class CameraController : MonoBehaviour
      {
           if( menuManager.GetComponent<AccessManager>().Create( username.text ) )
           {
-               DataLoader dl = menuManager.GetComponent<DataLoader>();
-               dl.rememberMe = rememberMe.isOn;
-               dl.lastUsername = username.text;
-               dl.SaveGlobalData();
+               InitMainPage();    
           }
           else
           {
                username.text = "<i><color=red>User already exists!</color></i>";
           }
+     }
+
+     private void InitMainPage()
+     {
+          DataLoader dl = menuManager.GetComponent<DataLoader>();
+          dl.rememberMe = rememberMe.isOn;
+          dl.lastUsername = username.text;
+          dl.SaveGlobalData();
+
+          anim.Play( "Cam_main" );
+          currentStatus = Status.InScreen;
+
+          UserData ud = menuManager.GetComponent<UserData>();
+          playerName.text = ud.username;
+          playerLevel.text = ud.level.ToString();
+          levelBar.size = ud.exp / ud.expToNextLevel;
+          playerCash.text = ud.cash.ToString();
      }
 
      // ==================================================================================
@@ -185,7 +205,8 @@ public class CameraController : MonoBehaviour
 
      private void LeaveScreen()
      {
-          currentStatus = Status.OffScreen;
+          currentStatus = Status.DoNothing;
+          anim.Play( "Cam_lock" );
      }
 
      //private IEnumerator Host()
