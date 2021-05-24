@@ -10,6 +10,9 @@ public class TestaPointsTarget : DestroyableTarget
      [SerializeField] private int points = 1;
 
      private SharedCharacter player;
+     public GameObject rechargeSphere;
+     
+     
      
      [Server]
      public override void OnHit()
@@ -18,6 +21,12 @@ public class TestaPointsTarget : DestroyableTarget
           
           player.TestaPoints += points;
           player.stamina = 2000;
+
+          
+          
+          Instantiate(rechargeSphere, transform.position, Quaternion.identity);
+          
+          
           
           
           base.OnHit();

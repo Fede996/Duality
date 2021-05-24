@@ -89,7 +89,6 @@ public class SharedCharacter : NetworkBehaviour
      public void Init( Role playerRole )
      {
 
-          nullvector = new Vector3(0, 0, 0);
           
           if( playerRole == Role.Testa )
           {
@@ -130,7 +129,7 @@ public class SharedCharacter : NetworkBehaviour
           if(stamina > 0)
                CmdMove( movement );
           else
-               CmdMove(nullvector);
+               CmdMove(Vector3.zero);
 
           
      }
