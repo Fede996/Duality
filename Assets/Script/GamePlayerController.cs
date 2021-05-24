@@ -12,7 +12,6 @@ public class GamePlayerController : NetworkBehaviour
      protected Role role = Role.None;
 
      [Header( "Movement" )]
-     [SerializeField] private float speed = 10f;
      [SerializeField] private float sensitivityX = 100f;
      [SerializeField] private float sensitivityY = 100f;
 
@@ -108,8 +107,8 @@ public class GamePlayerController : NetworkBehaviour
           {
                // Applico input GAMBE qui...
 
-               Vector3 movement = new Vector3( _horizontal, 0, _vertical ).normalized * speed * Time.fixedDeltaTime;
-               
+               Vector3 movement = new Vector3( _horizontal, 0, _vertical ).normalized;
+
                player.Move( movement );
           }
      }
