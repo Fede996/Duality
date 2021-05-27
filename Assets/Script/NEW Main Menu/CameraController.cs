@@ -22,6 +22,7 @@ public class CameraController : MonoBehaviour
      public Text playerLevel;
      public Scrollbar levelBar;
      public Text playerCash;
+     public InputField serverIp;
 
      [Header( "Animations" )]
      public AnimationClip[] clips;
@@ -142,7 +143,7 @@ public class CameraController : MonoBehaviour
      {
           if( menuManager.GetComponent<AccessManager>().Create( username.text ) )
           {
-               InitMainPage();    
+               InitMainPage();
           }
           else
           {
@@ -160,11 +161,56 @@ public class CameraController : MonoBehaviour
           anim.Play( "Cam_main" );
           currentStatus = Status.InScreen;
 
-          UserData ud = menuManager.GetComponent<UserData>();
+          UserData ud = dl.userData;
           playerName.text = ud.username;
           playerLevel.text = ud.level.ToString();
           levelBar.size = ud.exp / ud.expToNextLevel;
           playerCash.text = ud.cash.ToString();
+          if( !string.IsNullOrEmpty( ud.serverIp ) )
+               serverIp.text = ud.serverIp;
+     }
+
+     public void OnButtonConnect()
+     {
+          if( !menuManager.GetComponent<AccessManager>().Connect( serverIp.text ) )
+          {
+               serverIp.text = "<i><color=red>Server unreachable!</color></i>";
+          }
+          else
+          {
+               currentStatus = Status.DoNothing;
+               anim.Play( "Cam_connect" );
+          }
+     }
+
+     public void OnButtonServer()
+     {
+          currentStatus = Status.DoNothing;
+
+          menuManager.GetComponent<AccessManager>().OpenServer();
+          anim.Play( "Cam_open_server" );
+     }
+
+     public void OnButtonHost()
+     {
+          menuManager.GetComponent<AccessManager>().Host();
+          currentStatus = Status.DoNothing;
+          anim.Play( "Cam_connect" );
+     }
+
+     public void OnButtonCloseServer()
+     {
+          menuManager.GetComponent<AccessManager>().CloseServer();
+          anim.Play( "Cam_close_server" );
+
+          currentStatus = Status.InScreen;
+     }
+
+     public void OnButtonDisconnect()
+     {
+          anim.Play( "Cam_disconnect" );
+
+          currentStatus = Status.InScreen;
      }
 
      // ==================================================================================
@@ -208,43 +254,6 @@ public class CameraController : MonoBehaviour
           currentStatus = Status.DoNothing;
           anim.Play( "Cam_lock" );
      }
-
-     //private IEnumerator Host()
-     //{
-     //     insertName.SetActive( true );
-     //     playerName = null;
-
-     //     while( playerName == null )
-     //     {
-     //          yield return null;
-     //     }
-
-     //     lobbyRoomManager.localPlayerName = playerName;
-     //     lobbyRoomManager.StartHost();
-     //}
-
-     //private IEnumerator Join()
-     //{
-     //     insertName.SetActive( true );
-     //     playerName = null;
-
-     //     while( playerName == null )
-     //     {
-     //          yield return null;
-     //     }
-
-     //     insertIp.SetActive( true );
-     //     serverIp = null;
-
-     //     while( serverIp == null )
-     //     {
-     //          yield return null;
-     //     }
-
-     //     lobbyRoomManager.localPlayerName = playerName;
-     //     lobbyRoomManager.networkAddress = serverIp;
-     //     lobbyRoomManager.StartClient();
-     //}
 
      // ==================================================================================
      // Enums
