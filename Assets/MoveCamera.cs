@@ -54,8 +54,8 @@ public class MoveCamera : MonoBehaviour
             
         }
         
-        if( isVisible(chaser.transform.position)  )
-            chaser.setHasSeenPlayer(true);
+        //if( isVisible(chaser.transform.position)  )
+            //chaser.setHasSeenPlayer(true);
 
     }
 

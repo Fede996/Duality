@@ -16,7 +16,6 @@ public class ChaserEnemy : Enemy
 
      private float movementSpeedSave;
      
-     private bool hasSeenPlayer = false;
      // =====================================================================
 
      protected override void Start()
@@ -26,7 +25,6 @@ public class ChaserEnemy : Enemy
           agent = GetComponent<NavMeshAgent>();
           agent.speed = movementSpeed;
           
-          movementSpeedSave = movementSpeed;
           
           base.Start();
      }
@@ -37,7 +35,6 @@ public class ChaserEnemy : Enemy
 
           
           
-          movementSpeed = hasSeenPlayer ? movementSpeedSave : 0;
           
           if( movementSpeed != 0  )
           {
@@ -45,12 +42,7 @@ public class ChaserEnemy : Enemy
           }
      }
 
-     public void setHasSeenPlayer(bool hasSeenPlayer)
-     {
-
-          this.hasSeenPlayer = hasSeenPlayer;
-
-     }
+    
      
      
 }
