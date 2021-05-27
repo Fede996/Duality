@@ -36,7 +36,7 @@ public class MoveCamera : MonoBehaviour
         //Debug.Log( checkIsInCamera );
         
         //if (!(checkIsInCamera.x > 0 && checkIsInCamera.x < 1 && checkIsInCamera.y > 0 && checkIsInCamera.y < 1) )
-        if (!(checkIsInCamera.x > 0 && checkIsInCamera.x < 1) )
+        if (!(checkIsInCamera.x >= 0 && checkIsInCamera.x <= 1) )
         {
             //offset = Mathf.Abs( thisCamera.transform.position.x - player.transform.position.x);
             offsetX = thisCamera.transform.position.x - player.transform.position.x;
@@ -46,7 +46,7 @@ public class MoveCamera : MonoBehaviour
 
         }
 
-        if (!(checkIsInCamera.y > 0 && checkIsInCamera.y < 1))
+        if (!(checkIsInCamera.y >= 0 && checkIsInCamera.y <= 1))
         {
             offsetZ = thisCamera.transform.position.z - player.transform.position.z;
             
