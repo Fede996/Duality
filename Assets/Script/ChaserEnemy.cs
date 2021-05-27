@@ -14,6 +14,9 @@ public class ChaserEnemy : Enemy
      private NavMeshAgent agent;
      protected Transform player;
 
+     private float movementSpeedSave;
+     
+     private bool hasSeenPlayer = false;
      // =====================================================================
 
      protected override void Start()
@@ -22,7 +25,9 @@ public class ChaserEnemy : Enemy
 
           agent = GetComponent<NavMeshAgent>();
           agent.speed = movementSpeed;
-
+          
+          movementSpeedSave = movementSpeed;
+          
           base.Start();
      }
 
@@ -30,9 +35,22 @@ public class ChaserEnemy : Enemy
      {
           if( !isServer ) return;
 
-          if( movementSpeed != 0 )
+          
+          
+          movementSpeed = hasSeenPlayer ? movementSpeedSave : 0;
+          
+          if( movementSpeed != 0  )
           {
                agent.SetDestination( player.position ); 
           }
      }
+
+     public void setHasSeenPlayer(bool hasSeenPlayer)
+     {
+
+          this.hasSeenPlayer = hasSeenPlayer;
+
+     }
+     
+     
 }
