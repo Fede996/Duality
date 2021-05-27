@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net;
 using UnityEngine;
 
 public class AccessManager : MonoBehaviour
@@ -8,7 +9,13 @@ public class AccessManager : MonoBehaviour
      public LobbyRoomManager lobbyRoomManager;
 
      private DataLoader dataLoader;
-     private UserData userData;
+     private UserData userData
+     {
+          get 
+          { 
+               return dataLoader?.userData; 
+          }
+     }
 
      // ==================================================================================
      // Unity events
@@ -16,7 +23,6 @@ public class AccessManager : MonoBehaviour
      private void Start()
      {
           dataLoader = GetComponent<DataLoader>();
-          userData = GetComponent<UserData>();
      }
 
      // ==================================================================================
@@ -47,5 +53,41 @@ public class AccessManager : MonoBehaviour
                dataLoader.LoadUserData( username );
                return true;
           }
+     }
+
+     public bool Connect( string ip )
+     {
+          if( ip.ToLower() == "localhost" ) 
+               ip = "127.0.0.1";
+
+          if( !IPAddress.TryParse( ip, out IPAddress serverIp ) )
+          {
+               return false;
+          }
+
+          lobbyRoomManager.localPlayerData = userData;
+          lobbyRoomManager.localPlayerName = userData.username;
+          lobbyRoomManager.networkAddress = ip;
+          lobbyRoomManager.StartClient();
+
+          return true;
+     } 
+
+     public void OpenServer()
+     {
+          lobbyRoomManager.StartServer();
+     }
+
+     public void CloseServer()
+     {
+          lobbyRoomManager.StopServer();
+          Destroy( lobbyRoomManager.gameObject );
+     }
+
+     public void Host()
+     {
+          lobbyRoomManager.localPlayerData = userData;
+          lobbyRoomManager.localPlayerName = userData.username;
+          lobbyRoomManager.StartHost();
      }
 }
