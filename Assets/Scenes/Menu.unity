@@ -5154,7 +5154,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3167596238055309468, guid: 8bb866c3ed5d2cc4390d68cb03ffb134, type: 3}
       propertyPath: GameplayScene
-      value: Assets/Scenes/GameMatteo.unity
+      value: Assets/Scenes/SImos 1st Dungeon MatteoCamera.unity
       objectReference: {fileID: 0}
     - target: {fileID: 3167596238055309469, guid: 8bb866c3ed5d2cc4390d68cb03ffb134, type: 3}
       propertyPath: m_Name
