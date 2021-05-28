@@ -5038,6 +5038,7 @@ MonoBehaviour:
   player: {fileID: 1703765835}
   chaser: {fileID: 167854738}
   thisCamera: {fileID: 510974337}
+  stepTransition: 5
 --- !u!81 &510974336
 AudioListener:
   m_ObjectHideFlags: 0
@@ -5097,7 +5098,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 510974334}
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: -130, y: 70, z: -0.4}
+  m_LocalPosition: {x: -130, y: 60, z: -0.4}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -6596,6 +6597,14 @@ PrefabInstance:
     - target: {fileID: 8291749506869361799, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291749507669871763, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8291749507669871763, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+      propertyPath: m_IsTrigger
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9063660676311734372, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
       propertyPath: sceneId
