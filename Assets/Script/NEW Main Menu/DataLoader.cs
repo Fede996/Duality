@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class DataLoader : MonoBehaviour
 {
-     private UserData userData;
+     public UserData userData;
 
      private List<string> users = new List<string>();
 
@@ -36,14 +36,12 @@ public class DataLoader : MonoBehaviour
 
      private void Start()
      {
-          userData = GetComponent<UserData>();
-
           LoadGlobalData();
      }
 
      private void OnApplicationQuit()
      {
-          SaveUserData();
+          SaveUserData( userData );
           SaveGlobalData();
      }
 
@@ -84,11 +82,11 @@ public class DataLoader : MonoBehaviour
           return true;
      }
 
-     public void SaveUserData()
+     public void SaveUserData( UserData data )
      {
-          if( userData != null && !string.IsNullOrEmpty( userData.username ) )
+          if( data != null && !string.IsNullOrEmpty( data.username ) )
           {
-               PlayerPrefs.SetString( userData.username, JsonUtility.ToJson( userData ) );
+               PlayerPrefs.SetString( data.username, JsonUtility.ToJson( data ) );
                PlayerPrefs.Save();
           }
      }

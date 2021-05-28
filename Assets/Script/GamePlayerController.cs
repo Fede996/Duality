@@ -27,7 +27,7 @@ public class GamePlayerController : NetworkBehaviour
      protected void Start()
      {
           player = FindObjectOfType<SharedCharacter>();
-          if( playerRole == "Testa" )
+          if( playerRole == "HEAD" || playerRole == "Testa" )
           {
                role = Role.Testa;
           }
