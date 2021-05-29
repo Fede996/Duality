@@ -5,72 +5,59 @@ using UnityEngine;
 
 public class DataLoader : MonoBehaviour
 {
-     public UserData userData;
-
-     private List<string> users = new List<string>();
+     public bool clearPlayerPrefs = true;
 
      // ==================================================================================
      // Global data
 
-     public bool firstLaunch;
-     public bool rememberMe;
-     public string lastUsername;
+     public static GlobalData globalData;
 
-     private void LoadGlobalData()
+     public void LoadGlobalData()
      {
-          firstLaunch = PlayerPrefs.GetInt( "FirstLaunch" ) == 1;
-          rememberMe = PlayerPrefs.GetInt( "RememberMe" ) == 1;
-          lastUsername = PlayerPrefs.GetString( "LastUser" );
+          string json = PlayerPrefs.GetString( "GlobalData" );
+          if( string.IsNullOrEmpty( json ) )
+          {
+               globalData = new GlobalData();
+               globalData.firstLaunch = false;
+               globalData.Save();
+               globalData.firstLaunch = true;
+          }
+          else
+          {
+               globalData = JsonUtility.FromJson<GlobalData>( json );
+          }
      }
 
      public void SaveGlobalData()
      {
-          PlayerPrefs.SetInt( "FirstLaunch", firstLaunch ? 1 : 0 );
-          PlayerPrefs.SetInt( "RememberMe", rememberMe ? 1 : 0 );
-          PlayerPrefs.SetString( "LastUser", lastUsername );
-          PlayerPrefs.Save();
-     }
-
-     // ==================================================================================
-     // Unity events
-
-     private void Start()
-     {
-          LoadGlobalData();
-     }
-
-     private void OnApplicationQuit()
-     {
-          SaveUserData( userData );
-          SaveGlobalData();
+          globalData.Save();
      }
 
      // ==================================================================================
      // User data
 
-     public List<string> LoadAllUsers()
-     {
-          users.Clear();
-          users.AddRange( PlayerPrefs.GetString( "UserList" ).Split( ';' ) );
+     private CameraController player;
 
-          return users;
+     public List<string> GetUserList()
+     {
+          string[] users = PlayerPrefs.GetString( "UserList" ).Split( ';' );
+          return new List<string>( users );
      }
 
-     public bool LoadUserData( string username )
+     public UserData LoadUserData( string username )
      {
-          if( LoadAllUsers().Contains( username ) )
+          UserData userData = null;
+          if( GetUserList().Contains( username ) )
           {
                userData = JsonUtility.FromJson<UserData>( PlayerPrefs.GetString( username ) );
-
-               return true;
           }
 
-          return false;
+          return userData;
      }
 
      public bool CreateUserData( string username )
      {
-          if( users.Contains( username ) )
+          if( GetUserList().Contains( username ) )
           {
                return false;
           }
@@ -82,12 +69,70 @@ public class DataLoader : MonoBehaviour
           return true;
      }
 
-     public void SaveUserData( UserData data )
+     // ==================================================================================
+     // Unity events
+
+     private void Start()
      {
-          if( data != null && !string.IsNullOrEmpty( data.username ) )
+          if( clearPlayerPrefs )
           {
-               PlayerPrefs.SetString( data.username, JsonUtility.ToJson( data ) );
-               PlayerPrefs.Save();
+               PlayerPrefs.DeleteAll();
           }
+
+          LoadGlobalData();
+          player = FindObjectOfType<CameraController>();
+     }
+
+     private void OnApplicationQuit()
+     {
+          if( player != null && player.userData != null && !string.IsNullOrEmpty( player.userData.username ) )
+          {
+               player.userData.Save();
+          }
+          SaveGlobalData();
+     }
+}
+
+[Serializable]
+public class UserData
+{
+     [Header( "User data" )]
+     public string  username;
+
+     public int     level               = 0;
+     public float   exp                 = 0;
+     public float   expToNextLevel      = 100;
+     public float   cash                = 0;
+     public string  serverIp            = "localhost";
+
+     public string  role                = "HEAD";
+     public bool    ready               = false;
+     public bool    leader              = false;
+     public float   color               = 0;
+
+     public UserData( string username )
+     {
+          this.username = username;
+     }
+
+     public void Save()
+     {
+          PlayerPrefs.SetString( username, JsonUtility.ToJson( this ) );
+          PlayerPrefs.Save();
+     }
+}
+
+[Serializable]
+public class GlobalData
+{
+     [Header( "Global data" )]
+     public bool    firstLaunch    = true;
+     public bool    rememberMe     = false;
+     public string  lastUsername   = "";
+
+     public void Save()
+     {
+          PlayerPrefs.SetString( "GlobalData", JsonUtility.ToJson( this ) );
+          PlayerPrefs.Save();
      }
 }

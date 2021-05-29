@@ -6,28 +6,81 @@ using UnityEngine.SceneManagement;
 
 public class LobbyRoomManager : NetworkRoomManager
 {
-     [Header( "Local player data" )]
-     public string localPlayerName = null;
-     public UserData localPlayerData;
+     private UiManager UI;
 
      // =====================================================================
+     // Unity events
 
-     public override bool OnRoomServerSceneLoadedForPlayer( NetworkConnection conn, GameObject roomPlayer, GameObject gamePlayer )
+     public override void Start()
      {
-          LobbyRoomPlayer lrp = roomPlayer.GetComponent<LobbyRoomPlayer>();
-          DisableUI();
+          UI = FindObjectOfType<UiManager>();
 
-          GamePlayerController player = gamePlayer.GetComponent<GamePlayerController>();
-          player.playerName = lrp.playerData.username;
-          player.playerRole = lrp.playerData.role;
+          base.Start();
+     }
 
-          return true;
+     // =====================================================================
+     // Network events
+
+     public override void OnClientDisconnect( NetworkConnection conn )
+     {
+          UI.OnClientDisconnect();
+
+          base.OnClientDisconnect( conn );
+     }
+
+     public override void OnClientConnect( NetworkConnection conn )
+     {
+          UI.OnClientConnect();
+
+          base.OnClientConnect( conn );
+     }
+
+     public override void OnStartServer()
+     {
+          UI.OnServerStart();
+
+          base.OnStartServer();
+     }
+
+     public override void OnStopServer()
+     {
+          UI.OnServerClose();
+
+          base.OnStopServer();
      }
 
      public override void OnRoomServerPlayersReady()
      {
           // calling the base method calls ServerChangeScene as soon as all players are in Ready state.
           // base.OnRoomServerPlayersReady();
+     }
+
+     public override bool OnRoomServerSceneLoadedForPlayer( NetworkConnection conn, GameObject roomPlayer, GameObject gamePlayer )
+     {
+          LobbyRoomPlayer lobbyPlayer = roomPlayer.GetComponent<LobbyRoomPlayer>();
+          GamePlayerController player = gamePlayer.GetComponent<GamePlayerController>();
+          
+          player.playerData = lobbyPlayer.serverPlayerData;
+          player.playerName = lobbyPlayer.serverPlayerData.username;
+          player.playerRole = lobbyPlayer.serverPlayerData.role;
+
+          return true;
+     }
+
+     public override void OnClientSceneChanged( NetworkConnection conn )
+     {
+          base.OnClientSceneChanged( conn );
+
+          FindObjectOfType<CameraController>().gameObject.SetActive( false );
+          foreach( LobbyRoomPlayer lobbyPlayer in FindObjectsOfType<LobbyRoomPlayer>() )
+               lobbyPlayer.gameObject.SetActive( false );
+     }
+
+     public override void OnServerSceneChanged( string sceneName )
+     {
+          base.OnServerSceneChanged( sceneName );
+
+          FindObjectOfType<CameraController>().gameObject.SetActive( false );
      }
 
      // =====================================================================
@@ -51,13 +104,5 @@ public class LobbyRoomManager : NetworkRoomManager
           ServerChangeScene( sceneName );
 
           return true;
-     }
-
-     private void DisableUI()
-     {
-          foreach( NetworkRoomPlayer lrp in roomSlots )
-          {
-               ( ( LobbyRoomPlayer )lrp ).DisableUI();
-          }
      }
 }
