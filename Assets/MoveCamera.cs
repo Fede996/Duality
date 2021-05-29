@@ -15,6 +15,13 @@ public class MoveCamera : MonoBehaviour
     private float offsetX;
 
     private float offsetZ;
+
+    private bool isTransitioning = false;
+
+    public float stepTransition = 1f;
+    
+    private Vector3 arrivalPosition;
+    private Vector3 startPosition;
     // Start is called before the first frame update
     void Start()
     {
@@ -42,20 +49,41 @@ public class MoveCamera : MonoBehaviour
             offsetX = thisCamera.transform.position.x - player.transform.position.x;
             //Debug.Log("Outside!");
             //59-21
-            thisCamera.transform.position = new Vector3(player.transform.position.x - offsetX ,initialY ,thisCamera.transform.position.z );
+            //thisCamera.transform.position = new Vector3(player.transform.position.x - offsetX ,initialY ,thisCamera.transform.position.z );
+            startPosition = thisCamera.transform.position;
+            arrivalPosition = new Vector3(player.transform.position.x - offsetX ,initialY ,thisCamera.transform.position.z );
+            isTransitioning = true;
 
         }
 
         if (!(checkIsInCamera.y >= 0 && checkIsInCamera.y <= 1))
         {
             offsetZ = thisCamera.transform.position.z - player.transform.position.z;
-            
-            thisCamera.transform.position = new Vector3(thisCamera.transform.position.x ,initialY ,player.transform.position.z - offsetZ );
-            
+            startPosition = thisCamera.transform.position;
+
+            //thisCamera.transform.position = new Vector3(thisCamera.transform.position.x ,initialY ,player.transform.position.z - offsetZ );
+            arrivalPosition = new Vector3(thisCamera.transform.position.x ,initialY ,player.transform.position.z - offsetZ );
+            isTransitioning = true;
+            //Use lerp
+
+
         }
         
         //if( isVisible(chaser.transform.position)  )
             //chaser.setHasSeenPlayer(true);
+
+
+            if (isTransitioning)
+            {
+
+                thisCamera.transform.position = Vector3.Lerp(thisCamera.transform.position, arrivalPosition, Time.deltaTime * stepTransition);
+
+                if ((thisCamera.transform.position - arrivalPosition).sqrMagnitude < 0.1f)
+                    isTransitioning = false;
+
+
+            }
+            
 
     }
 
