@@ -6,23 +6,14 @@ using UnityEngine.UI;
 
 public class CameraController : MonoBehaviour
 {
-     [Header( "Settings" )]
+     [Header( "User data" )]
+     public UserData userData;
+
+     [Header( "Camera movement" )]
      public Vector2 maxAngles;
      public float sensitivity = 1f;
      public float maxInteractionDistance = 1f;
      public Transform cameraTargetPosition;
-
-     [Header( "References" )]
-     public GameObject menuManager;
-
-     [Header( "UI" )]
-     public InputField username;
-     public Toggle rememberMe;
-     public Text playerName;
-     public Text playerLevel;
-     public Scrollbar levelBar;
-     public Text playerCash;
-     public InputField serverIp;
 
      [Header( "Animations" )]
      public AnimationClip[] clips;
@@ -30,12 +21,19 @@ public class CameraController : MonoBehaviour
      private Status currentStatus = Status.DoNothing;
      private Vector2 initialAngles;
      private Animation anim;
+     private DataLoader loader;
+     private AccessManager access;
+     private UiManager UI;
 
      // ==================================================================================
      // Unity events
 
      private void Start()
      {
+          loader = FindObjectOfType<DataLoader>();
+          access = FindObjectOfType<AccessManager>();
+          UI = FindObjectOfType<UiManager>();
+
           Cursor.lockState = CursorLockMode.Locked;
           Cursor.visible = false;
 
@@ -46,14 +44,6 @@ public class CameraController : MonoBehaviour
           }
           currentStatus = Status.DoNothing;
           anim.Play( "Cam_start" );
-
-          // populate UI with data from the loader
-          DataLoader dl = menuManager.GetComponent<DataLoader>();
-          if( dl.rememberMe )
-          {
-               username.text = dl.lastUsername;
-               rememberMe.isOn = dl.rememberMe;
-          }
      }
 
      private void Update()
@@ -74,39 +64,9 @@ public class CameraController : MonoBehaviour
           }
           else if( currentStatus == Status.InScreen )
           {
-               if( Input.GetKeyDown( KeyCode.S ) )
-               {
-                    // Start server...
-                    //lobbyRoomManager.StartServer();
-
-                    Cursor.lockState = CursorLockMode.Confined;
-                    Cursor.visible = true;
-                    currentStatus = Status.DoNothing;
-               }
-
-               if( Input.GetKeyDown( KeyCode.H ) )
-               {
-                    // Start host...
-                    Cursor.lockState = CursorLockMode.Confined;
-                    Cursor.visible = true;
-                    currentStatus = Status.DoNothing;
-
-                    //StartCoroutine( Host() );
-               }
-
-               if( Input.GetKeyDown( KeyCode.J ) )
-               {
-                    // Join online lobby...
-                    Cursor.lockState = CursorLockMode.Confined;
-                    Cursor.visible = true;
-                    currentStatus = Status.DoNothing;
-
-                    //StartCoroutine( Join() );
-               }
-
                if( Input.GetButtonDown( "Cancel" ) )
                {
-                    LeaveScreen();
+                    //LeaveScreen();
                }
           }
      }
@@ -114,103 +74,36 @@ public class CameraController : MonoBehaviour
      // ==================================================================================
      // UI and animation events
 
-     public void OnAnimationEnded()
+     // Animations
+     // ----------
+
+     public void OnStartAnimationEnded()
      {
           currentStatus = Status.OffScreen;
 
           initialAngles.y = transform.rotation.eulerAngles.y;
           initialAngles.x = transform.rotation.eulerAngles.x;
+
+          if( DataLoader.globalData.firstLaunch )
+          {
+               Debug.Log( "Hey! Seems like you are new to this office...\n" +
+                          "Please have a seet at your new desk.\n" +
+                          "You can unlock your desktop by pressing the 'Interact' button:\n" +
+                          "[E] on keyboard;\n" +
+                          "[X] on PS4 controller;\n" );
+          }
      }
 
-     public void OnLockEnded()
+     public void OnUnlockAnimationEnded()
+     {
+          Cursor.lockState = CursorLockMode.Confined;
+          Cursor.visible = true;
+          currentStatus = Status.InScreen;
+     }
+
+     public void OnLockAnimationEnded()
      {
           currentStatus = Status.OffScreen;
-     }
-
-     public void OnButtonLogin()
-     {
-          if( menuManager.GetComponent<AccessManager>().Login( username.text ) )
-          {
-               InitMainPage();
-          }
-          else
-          {
-               username.text = "<i><color=red>User not found!</color></i>";
-          }
-     }
-
-     public void OnButtonCreate()
-     {
-          if( menuManager.GetComponent<AccessManager>().Create( username.text ) )
-          {
-               InitMainPage();
-          }
-          else
-          {
-               username.text = "<i><color=red>User already exists!</color></i>";
-          }
-     }
-
-     private void InitMainPage()
-     {
-          DataLoader dl = menuManager.GetComponent<DataLoader>();
-          dl.rememberMe = rememberMe.isOn;
-          dl.lastUsername = username.text;
-          dl.SaveGlobalData();
-
-          anim.Play( "Cam_main" );
-          currentStatus = Status.InScreen;
-
-          UserData ud = dl.userData;
-          playerName.text = ud.username;
-          playerLevel.text = ud.level.ToString();
-          levelBar.size = ud.exp / ud.expToNextLevel;
-          playerCash.text = ud.cash.ToString();
-          if( !string.IsNullOrEmpty( ud.serverIp ) )
-               serverIp.text = ud.serverIp;
-     }
-
-     public void OnButtonConnect()
-     {
-          if( !menuManager.GetComponent<AccessManager>().Connect( serverIp.text ) )
-          {
-               serverIp.text = "<i><color=red>Server unreachable!</color></i>";
-          }
-          else
-          {
-               currentStatus = Status.DoNothing;
-               anim.Play( "Cam_connect" );
-          }
-     }
-
-     public void OnButtonServer()
-     {
-          currentStatus = Status.DoNothing;
-
-          menuManager.GetComponent<AccessManager>().OpenServer();
-          anim.Play( "Cam_open_server" );
-     }
-
-     public void OnButtonHost()
-     {
-          menuManager.GetComponent<AccessManager>().Host();
-          currentStatus = Status.DoNothing;
-          anim.Play( "Cam_connect" );
-     }
-
-     public void OnButtonCloseServer()
-     {
-          menuManager.GetComponent<AccessManager>().CloseServer();
-          anim.Play( "Cam_close_server" );
-
-          currentStatus = Status.InScreen;
-     }
-
-     public void OnButtonDisconnect()
-     {
-          anim.Play( "Cam_disconnect" );
-
-          currentStatus = Status.InScreen;
      }
 
      // ==================================================================================
@@ -244,9 +137,8 @@ public class CameraController : MonoBehaviour
                yield return null;
           }
 
-          anim.Play( "Cam_login" );
-          Cursor.lockState = CursorLockMode.Confined;
-          Cursor.visible = true;
+          UI.OnScreenFocused();
+          currentStatus = Status.InScreen;
      }
 
      private void LeaveScreen()

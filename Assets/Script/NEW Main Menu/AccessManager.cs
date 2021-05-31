@@ -9,11 +9,12 @@ public class AccessManager : MonoBehaviour
      public LobbyRoomManager lobbyRoomManager;
 
      private DataLoader dataLoader;
+     private CameraController player;
      private UserData userData
      {
           get 
           { 
-               return dataLoader?.userData; 
+               return player?.userData; 
           }
      }
 
@@ -22,17 +23,21 @@ public class AccessManager : MonoBehaviour
 
      private void Start()
      {
-          dataLoader = GetComponent<DataLoader>();
+          dataLoader = FindObjectOfType<DataLoader>();
+          player = FindObjectOfType<CameraController>();
      }
 
      // ==================================================================================
      // UI events
 
+     // Login page
+     // ----------
+
      public bool Login( string username )
      {
-          if( dataLoader.LoadAllUsers().Contains( username ) )
+          if( dataLoader.GetUserList().Contains( username ) )
           {
-               dataLoader.LoadUserData( username );
+               player.userData = dataLoader.LoadUserData( username );
                return true;
           }
           else
@@ -43,17 +48,19 @@ public class AccessManager : MonoBehaviour
 
      public bool Create( string username )
      {
-          if( dataLoader.LoadAllUsers().Contains( username ) )
+          if( dataLoader.GetUserList().Contains( username ) )
           {
                return false;
           }
           else
           {
                dataLoader.CreateUserData( username );
-               dataLoader.LoadUserData( username );
                return true;
           }
      }
+
+     // Connect page
+     // ------------
 
      public bool Connect( string ip )
      {
@@ -65,8 +72,7 @@ public class AccessManager : MonoBehaviour
                return false;
           }
 
-          lobbyRoomManager.localPlayerData = userData;
-          lobbyRoomManager.localPlayerName = userData.username;
+          Debug.Log( "Connecting to MATCHING server..." );
           lobbyRoomManager.networkAddress = ip;
           lobbyRoomManager.StartClient();
 
@@ -75,19 +81,34 @@ public class AccessManager : MonoBehaviour
 
      public void OpenServer()
      {
+          Debug.Log( "Starting MATCHING server..." );
           lobbyRoomManager.StartServer();
-     }
-
-     public void CloseServer()
-     {
-          lobbyRoomManager.StopServer();
-          Destroy( lobbyRoomManager.gameObject );
      }
 
      public void Host()
      {
-          lobbyRoomManager.localPlayerData = userData;
-          lobbyRoomManager.localPlayerName = userData.username;
+          Debug.Log( "Starting local MATCHING server..." );
           lobbyRoomManager.StartHost();
+     }
+
+     // Server page
+     // -----------
+
+     public void StopServer()
+     {
+          lobbyRoomManager.StopServer();
+     }
+
+     // Lobby page
+     // ----------
+
+     public void StopClient()
+     {
+          lobbyRoomManager.StopClient();
+     }
+
+     public void StopHost()
+     {
+          lobbyRoomManager.StopHost();
      }
 }

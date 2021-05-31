@@ -22,8 +22,6 @@ public class MainMenuUI : MonoBehaviour
           if( string.IsNullOrEmpty( hostName.text ) )
                return;
 
-          lobbyRoomManager.localPlayerName = hostName.text;
-
           lobbyRoomManager.StartHost();
      }
 
@@ -44,7 +42,6 @@ public class MainMenuUI : MonoBehaviour
                return;
           }
 
-          lobbyRoomManager.localPlayerName = joinName.text;
           lobbyRoomManager.networkAddress = ip.ToString();
           lobbyRoomManager.StartClient();
      }

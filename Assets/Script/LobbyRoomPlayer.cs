@@ -8,198 +8,126 @@ using System.IO;
 
 public class LobbyRoomPlayer : NetworkRoomPlayer
 {
-     [Header( "UI" )]
-     public GameObject UI;
-     public Button startButton;
-     public Dropdown levelList;
+     private UiManager UI;
+     private CameraController player;
+     public UserData playerData 
+     {
+          get
+          {
+               return player.userData;
+          }
+          set
+          {
+               player.userData = value;
+          }
+     }
 
-     public GameObject UiPlayer1;
-     public Text roleP1;
-     public Text readyP1;
-     public Text leaderP1;
-     public Image imageP1;
-     public Slider colorSlider;
+     // =====================================================================
+     // Unity / Mirror events
 
-     public GameObject UiPlayer2;
-     public Text nameP2;
-     public Text roleP2;
-     public Text readyP2;
-     public Text leaderP2;
-     public Image imageP2;
+     public override void OnStartClient()
+     {
+          UI = FindObjectOfType<UiManager>();
+
+          base.OnStartClient();
+     }
+
+     public override void OnStopClient()
+     {
+          if( isLocalPlayer )
+          {
+               playerData.leader = false;
+               playerData.Save();
+          }
+          else
+          {
+               UI.ResetPlayer2();
+
+               player = FindObjectOfType<CameraController>();
+               playerData.leader = index == 0;
+               playerData.ready = false;
+               UI.SetupLobby( playerData.leader, false );
+          }
+
+          base.OnStopClient();
+     }
+
+     public override void OnClientEnterRoom()
+     {
+          if( isLocalPlayer )
+          {
+               player = FindObjectOfType<CameraController>();
+
+               bool isLeader = index == 0;
+               playerData.leader = isLeader;
+               playerData.ready = false;
+
+               UI.roomPlayer = this;
+               UI.SetupLobby( isLeader );
+          }
+
+          base.OnClientEnterRoom();
+     }
 
      // =====================================================================
      // User data synchronization
 
      [SyncVar( hook = nameof( OnPlayerDataChanged ) )]
      private string playerDataJson;
-     public UserData playerData;
 
      private void OnPlayerDataChanged( string oldValue, string newValue )
      {
-          playerData = JsonUtility.FromJson<UserData>( newValue );
-
-          // refresh ui...
-          if( isLocalPlayer )
+          if( !isLocalPlayer )
           {
-               roleP1.text = playerData.role;
-               readyP1.text = playerData.ready ? "<color=green>READY</color>" : "<color=red>NOT READY</color>";
-               leaderP1.enabled = playerData.leader;
-          }
-          else
-          {
-               nameP2.text = playerData.username;
-               roleP2.text = playerData.role;
-               readyP2.text = playerData.ready ? "<color=green>READY</color>" : "<color=red>NOT READY</color>";
-               leaderP2.enabled = playerData.leader;
-               imageP2.color = Color.HSVToRGB( playerData.color, 1, 1 );
+               UserData newPlayerData = JsonUtility.FromJson<UserData>( newValue );
+               if( UI == null ) UI = FindObjectOfType<UiManager>();
+               UI.UpdatePlayer2( newPlayerData );
           }
      }
 
-     [Command( requiresAuthority = false )]
+     [Command]
      private void CmdSetPlayerData( string jsonData )
      {
-          playerData = JsonUtility.FromJson<UserData>( jsonData );
           playerDataJson = jsonData;
      }
 
-     private void UpdatePlayerData()
+     public void UpdatePlayerData()
      {
           CmdSetPlayerData( JsonUtility.ToJson( playerData ) );
-          playerData.Save();
      }
 
      // =====================================================================
      // UI events
 
-     public void OnColorSliderChanged()
+     public UserData serverPlayerData;
+
+     public void SetPlayerReady( bool ready )
      {
-          imageP1.color = Color.HSVToRGB( playerData.color, 1, 1 );
-          playerData.color = colorSlider.value;
-          UpdatePlayerData();
-     }
-
-     public void OnButtonRole()
-     {
-          playerData.role = playerData.role == "HEAD" ? "LEGS" : "HEAD";
-
-          UpdatePlayerData();
-     }
-
-     public void OnButtonReady()
-     {
-          playerData.ready = !playerData.ready;
-          CmdChangeReadyState( playerData.ready );
-
-          UpdatePlayerData();
-     }
-     
-     public void OnButtonBack()
-     {
-          if( isClientOnly )
-               ( ( LobbyRoomManager )NetworkManager.singleton ).StopClient();
-          else if ( isServerOnly )
-               ( ( LobbyRoomManager )NetworkManager.singleton ).StopServer();
-          else
-               ( ( LobbyRoomManager )NetworkManager.singleton ).StopHost();
-
-          FindObjectOfType<CameraController>().OnButtonDisconnect();
-     }
-
-     public void OnButtonStart()
-     {
-          if( !playerData.leader )
-          {
-               Debug.LogError( "Only the leader can start the game!" );
-               return;
-          }
-
-          CmdStartGame( levelList.captionText.text );
+          CmdChangeReadyState( ready );
+          SetServerPlayerData( JsonUtility.ToJson( playerData ) );
      }
 
      [Command]
-     private void CmdStartGame( string sceneName )
+     private void SetServerPlayerData( string json )
+     {
+          serverPlayerData = JsonUtility.FromJson<UserData>( json );
+     }
+
+     [Command]
+     public void CmdStartGame( string sceneName )
      {
           ( ( LobbyRoomManager )NetworkManager.singleton ).StartGame( sceneName );
-     } 
+     }
 
      [Server]
      public void DisableUI()
      {
-          if( isServerOnly )
-               UI.SetActive( false );
-
           RpcDisableUI();
      }
 
      [ClientRpc]
      private void RpcDisableUI()
      {
-          UI.SetActive( false );
-     }
-
-     // =====================================================================
-     // Unity / Mirror events
-
-     public override void OnStartLocalPlayer()
-     {
-          UiPlayer1.SetActive( true );
-          UiPlayer2.SetActive( false );
-
-          levelList.options.Clear();
-          for( int i = 1; i < SceneManager.sceneCountInBuildSettings; i++ )
-          {
-               levelList.options.Add( new Dropdown.OptionData( Path.GetFileNameWithoutExtension( SceneUtility.GetScenePathByBuildIndex( i ) ) ) );
-          }
-
-          playerData = ( ( LobbyRoomManager )NetworkManager.singleton ).localPlayerData;
-          colorSlider.value = playerData.color;
-
-          playerData.serverIp = ( ( LobbyRoomManager )NetworkManager.singleton ).networkAddress;
-          playerData.leader = index == 0;
-          playerData.ready = false;
-          UpdatePlayerData();
-
-          if( playerData.leader )
-          {
-               startButton.enabled = true;
-               levelList.enabled = true;
-          }
-          else
-          {
-               startButton.enabled = false;
-               levelList.enabled = false;
-          }
-
-          base.OnStartLocalPlayer();
-     }
-
-     public override void OnStartClient()
-     {
-          if( !isLocalPlayer )
-          {
-               UiPlayer1.SetActive( false );
-               UiPlayer2.SetActive( true );
-          }
-
-          base.OnStartClient();
-     }
-
-     public override void IndexChanged( int oldIndex, int newIndex )
-     {
-          playerData.leader = index == 0;
-          UpdatePlayerData();
-
-          if( playerData.leader )
-          {
-               startButton.enabled = true;
-               levelList.enabled = true;
-          }
-          else
-          {
-               startButton.enabled = false;
-               levelList.enabled = false;
-          }
-
-          base.IndexChanged( oldIndex, newIndex );
+          player.gameObject.SetActive( false );
      }
 }

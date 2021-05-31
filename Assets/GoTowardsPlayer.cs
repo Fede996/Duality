@@ -10,12 +10,15 @@ public class GoTowardsPlayer : MonoBehaviour
     
     private GameObject target;
 
+
+    private TransparencyAnimation cameraPlaneAnimationComponent;
+    
     // Start is called before the first frame update
     void Awake()
     {
 
         target = GameObject.Find("Body");
-
+        //cameraPlaneAnimationComponent = GameObject.Find("PlaneCamera").GetComponent<TransparencyAnimation>();
 
     }
 
@@ -34,8 +37,17 @@ public class GoTowardsPlayer : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.name == "Body")
+        if (other.name == "Body")
+        {
+
+            //cameraPlaneAnimationComponent.startAnimation();
+
+            
             GameObject.Destroy(gameObject);
+            
+            
+            
+        }
 
     }
 }

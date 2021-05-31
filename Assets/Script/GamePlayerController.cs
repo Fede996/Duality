@@ -5,6 +5,8 @@ using Mirror;
 
 public class GamePlayerController : NetworkBehaviour
 {
+     public UserData playerData;
+
      [SyncVar]
      public string playerName = null;
      [SyncVar]
@@ -22,7 +24,6 @@ public class GamePlayerController : NetworkBehaviour
      private float _mouseX = 0f;
      private float _mouseY = 0f;
      private float _tilt = 0;
-
 
      protected void Start()
      {
