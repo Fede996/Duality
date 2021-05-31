@@ -6,24 +6,19 @@ using Mirror;
 
 public class TriggeringCollider : NetworkBehaviour
 {
-     public GameObject[] enemies;
-
-     private void Start()
-     {
-          foreach (GameObject enemy in enemies)
-          {
-               enemy.SetActive(false); 
-          }
-     }
-
-     
+     public GameObject[] placeholders;
+     public GameObject[] prefabs;
+    
+     [Server]
      private void OnTriggerEnter(Collider collision)
      {
           if (collision.CompareTag("Player"))
           {
-               foreach(GameObject enemy in enemies)
+               for (int i=0; i<placeholders.Length; i++)
                {
-                    enemy.SetActive(true);
+                    GameObject enemy = Instantiate(prefabs[i], placeholders[i].transform.position, Quaternion.identity, transform.parent);
+                    enemy.transform.position = placeholders[i].transform.position;
+                    NetworkServer.Spawn(enemy); 
                }
           }
 
@@ -31,3 +26,4 @@ public class TriggeringCollider : NetworkBehaviour
      }
 
 }
+ 

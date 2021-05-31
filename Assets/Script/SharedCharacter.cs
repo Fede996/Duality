@@ -122,11 +122,12 @@ public class SharedCharacter : NetworkBehaviour
           if ( stamina > 0 && movement.sqrMagnitude != 0)
           {
 
-               stamina -= Time.deltaTime * staminaCost;
+               //stamina -= Time.deltaTime * staminaCost;
+               stamina -= staminaCost; 
 
           }
-          
-          if(stamina > 0)
+
+          if (stamina > 0)
                CmdMove( movement );
           else
                CmdMove(Vector3.zero);
