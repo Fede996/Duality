@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -12,6 +13,7 @@ public class UiManager : MonoBehaviour
 
      [Header( "UI Components" )]
      [Space]
+     public GameObject desktop;
      public InputField username;
      public Toggle rememberMe;
      public Button loginButton;
@@ -35,6 +37,12 @@ public class UiManager : MonoBehaviour
      public Text readyP2;
      public Text leaderP2;
      public Image imageP2;
+     [Space]
+     public GameObject escMenu;
+     public GameObject pausePage;
+     public Text quality;
+     public Slider qualitySlider;
+     public Button applyButton;
 
      [Header( "Animation" )]
      public AnimationClip[] clips;
@@ -85,6 +93,9 @@ public class UiManager : MonoBehaviour
      private float elapsed = 0f;
      private bool dirty = false;
 
+     private bool prevCursorVisible = false;
+     private CursorLockMode preCursorLock = CursorLockMode.Locked;
+
      private void Update()
      {
           elapsed += Time.deltaTime;
@@ -96,6 +107,25 @@ public class UiManager : MonoBehaviour
                {
                     roomPlayer.UpdatePlayerData();
                     dirty = false;
+               }
+          }
+
+          if( Input.GetButtonDown( "Cancel" ) )
+          {
+               if( escMenu.activeInHierarchy )
+               {
+                    escMenu.SetActive( false );
+                    Cursor.visible = prevCursorVisible;
+                    Cursor.lockState = preCursorLock;
+               }
+               else
+               {
+                    prevCursorVisible = Cursor.visible;
+                    preCursorLock = Cursor.lockState;
+                    escMenu.SetActive( true );
+                    pausePage.SetActive( true );
+                    Cursor.visible = true;
+                    Cursor.lockState = CursorLockMode.Confined;
                }
           }
      }
@@ -239,6 +269,7 @@ public class UiManager : MonoBehaviour
 
      public void SetupLobby( bool leader, bool setDirty = true )
      {
+          colorSlider.value = playerData.color;
           roleP1.text = playerData.role;
           readyP1.text = "<color=red>NOT READY</color>";
 
@@ -319,6 +350,52 @@ public class UiManager : MonoBehaviour
           anim.Play( "UI_disconnect" );
      }
 
+     // ESC menu page
+     // -------------
+
+     public void OnButtonResume()
+     {
+          escMenu.SetActive( false );
+          Cursor.visible = prevCursorVisible;
+          Cursor.lockState = preCursorLock;
+     }
+
+     public void OnButtonExit()
+     {
+          Application.Quit();
+     }
+
+     public void OnButtonOptions()
+     {
+          qualitySlider.value = QualitySettings.GetQualityLevel();
+     }
+
+     // Options menu page
+     // -----------------
+
+     public void OnQualitySliderChanged()
+     {
+          int index = ( int )qualitySlider.value;
+          quality.text = QualitySettings.names[index];
+
+          if( index != QualitySettings.GetQualityLevel() )
+          {
+               applyButton.enabled = true;
+          }
+          else
+          {
+               applyButton.enabled = false;
+          }
+     }
+
+     public void OnButtonApply()
+     {
+          applyButton.GetComponentInChildren<Text>().text = "WAIT...";
+          QualitySettings.SetQualityLevel( ( int )qualitySlider.value );
+          applyButton.GetComponentInChildren<Text>().text = "APPLY";
+          applyButton.enabled = false;
+     }
+
      // ==================================================================================
      // Animations
 
@@ -354,5 +431,13 @@ public class UiManager : MonoBehaviour
      public void OnLockAnimationEnded()
      {
           player.OnLockAnimationEnded();
+     }
+
+     // ==================================================================================
+     // Commands
+
+     public void DisableMainMenuUI()
+     {
+          desktop.SetActive( false );
      }
 }

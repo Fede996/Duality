@@ -6,21 +6,21 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/NEW Main Menu.unity
+    path: Assets/Scenes/Main Menu.unity
     guid: 4739144ba658b6d429399e66746f04b8
-  - enabled: 0
-    path: Assets/Scenes/Menu.unity
-    guid: 4cb527e1729c899438beaff67c9adacc
   - enabled: 1
-    path: Assets/Scenes/Lobby.unity
-    guid: 48478f4d522f96945b8396f376299d3a
-  - enabled: 0
     path: Assets/Scenes/Game.unity
     guid: 9fc0d4010bbf28b4594072e72b8655ab
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes/GameMatteo.unity
     guid: baf449e43556ed5438135d53b28853bd
   - enabled: 1
     path: Assets/Scenes/SImos 1st Dungeon MatteoCamera.unity
     guid: f02e4c0aab99aed4e8ba70a3386047af
+  - enabled: 1
+    path: Assets/Scenes/Procedural dungeon.unity
+    guid: 5e8554da06b81774d9c93fc0e8669972
+  - enabled: 1
+    path: Assets/Scenes/Performance Test.unity
+    guid: cc62b941e86d704479487e50c75e0e78
   m_configObjects: {}

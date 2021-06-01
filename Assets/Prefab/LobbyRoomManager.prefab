@@ -75,8 +75,8 @@ MonoBehaviour:
   serverTickRate: 30
   serverBatching: 1
   serverBatchInterval: 0
-  offlineScene: Assets/Scenes/Menu.unity
-  onlineScene: Assets/Scenes/Lobby.unity
+  offlineScene: Assets/Scenes/Main Menu.unity
+  onlineScene: Assets/Scenes/Main Menu.unity
   transport: {fileID: 3167596238055309459}
   networkAddress: localhost
   maxConnections: 5
@@ -91,10 +91,8 @@ MonoBehaviour:
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 8036302773801158395, guid: 5cdf1612af346a14bbf5b53ceaac75bf, type: 3}
-  RoomScene: Assets/Scenes/Lobby.unity
+  RoomScene: Assets/Scenes/Main Menu.unity
   GameplayScene: Assets/Scenes/Game.unity
   _allPlayersReady: 0
   roomSlots: []
   clientIndex: 0
-  localPlayerName: 
-  localPlayerData: {fileID: 0}

@@ -71,6 +71,18 @@ public class CameraController : MonoBehaviour
           }
      }
 
+     private void OnDisable()
+     {
+          GetComponent<Camera>().enabled = false;
+          GetComponent<AudioListener>().enabled = false;
+     }
+
+     private void OnEnable()
+     {
+          GetComponent<Camera>().enabled = true;
+          GetComponent<AudioListener>().enabled = true;
+     }
+
      // ==================================================================================
      // UI and animation events
 

@@ -119,20 +119,20 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Move( Vector3 movement )
      {
-          if ( stamina > 0 && movement.sqrMagnitude != 0)
-          {
+          //if ( stamina > 0 && movement.sqrMagnitude != 0)
+          //{
 
-               //stamina -= Time.deltaTime * staminaCost;
-               stamina -= staminaCost; 
+          //     //stamina -= Time.deltaTime * staminaCost;
+          //     stamina -= staminaCost; 
 
-          }
+          //}
 
-          if (stamina > 0)
-               CmdMove( movement );
-          else
-               CmdMove(Vector3.zero);
+          //if (stamina > 0)
+          //     CmdMove( movement );
+          //else
+          //     CmdMove(Vector3.zero);
 
-          
+          CmdMove( movement );
      }
 
      public void Rotate( float deltaX, float tilt )

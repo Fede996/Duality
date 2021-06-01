@@ -71,16 +71,24 @@ public class LobbyRoomManager : NetworkRoomManager
      {
           base.OnClientSceneChanged( conn );
 
-          FindObjectOfType<CameraController>().gameObject.SetActive( false );
-          foreach( LobbyRoomPlayer lobbyPlayer in FindObjectsOfType<LobbyRoomPlayer>() )
-               lobbyPlayer.gameObject.SetActive( false );
+          if( SceneManager.GetActiveScene().name != "Main Menu" )
+          {
+               CameraController camera = FindObjectOfType<CameraController>();
+               camera.enabled = false;
+               UI.DisableMainMenuUI();
+
+               foreach( LobbyRoomPlayer lobbyPlayer in FindObjectsOfType<LobbyRoomPlayer>() )
+                    lobbyPlayer.enabled = false;
+          }
      }
 
      public override void OnServerSceneChanged( string sceneName )
      {
           base.OnServerSceneChanged( sceneName );
 
-          FindObjectOfType<CameraController>().gameObject.SetActive( false );
+          CameraController camera = FindObjectOfType<CameraController>();
+          camera.enabled = false;
+          UI.DisableMainMenuUI();
      }
 
      // =====================================================================

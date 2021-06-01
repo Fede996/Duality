@@ -18,7 +18,6 @@ public class DataLoader : MonoBehaviour
           if( string.IsNullOrEmpty( json ) )
           {
                globalData = new GlobalData();
-               globalData.firstLaunch = false;
                globalData.Save();
                globalData.firstLaunch = true;
           }
@@ -126,13 +125,18 @@ public class UserData
 public class GlobalData
 {
      [Header( "Global data" )]
-     public bool    firstLaunch    = true;
+     public bool    firstLaunch    = false;
      public bool    rememberMe     = false;
      public string  lastUsername   = "";
 
      public void Save()
      {
+          bool temp = firstLaunch;
+
+          firstLaunch = false;
           PlayerPrefs.SetString( "GlobalData", JsonUtility.ToJson( this ) );
           PlayerPrefs.Save();
+
+          firstLaunch = temp;
      }
 }
