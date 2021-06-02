@@ -9,10 +9,9 @@ using UnityEngine.UI;
 public class UiManager : MonoBehaviour
 {
      [Header( "Settings" )]
-     public float serverSyncTime = 1f;
+     public float playerDataSyncTime = 1f;
 
-     [Header( "UI Components" )]
-     [Space]
+     [Header( "Login page" )]
      public GameObject desktop;
      public InputField username;
      public Toggle rememberMe;
@@ -22,7 +21,8 @@ public class UiManager : MonoBehaviour
      public Scrollbar levelBar;
      public Text playerCash;
      public InputField serverIp;
-     [Space]
+
+     [Header( "Lobby page" )]
      public Button startButton;
      public Dropdown levelList;
      public GameObject UiPlayer1;
@@ -37,12 +37,21 @@ public class UiManager : MonoBehaviour
      public Text readyP2;
      public Text leaderP2;
      public Image imageP2;
-     [Space]
+
+     [Header( "Esc menu" )]
      public GameObject escMenu;
      public GameObject pausePage;
      public Text quality;
      public Slider qualitySlider;
      public Button applyButton;
+
+     [Header( "Game" )]
+     public GameObject gameUiRoot;
+     public Text lives;
+     public Text points;
+     public GameObject sight;
+     public GameObject weaponInfo;
+     public Text fireMode;
 
      [Header( "Animation" )]
      public AnimationClip[] clips;
@@ -55,11 +64,11 @@ public class UiManager : MonoBehaviour
      {
           get
           {
-               return player.userData;
+               return player.playerData;
           }
           set
           {
-               player.userData = value;
+               player.playerData = value;
           }
      }
 
@@ -83,11 +92,6 @@ public class UiManager : MonoBehaviour
                username.text = DataLoader.globalData.lastUsername;
                rememberMe.isOn = DataLoader.globalData.rememberMe;
           }
-
-          if( Application.isBatchMode )
-          {
-               OnButtonServer();
-          }
      }
 
      private float elapsed = 0f;
@@ -99,9 +103,9 @@ public class UiManager : MonoBehaviour
      private void Update()
      {
           elapsed += Time.deltaTime;
-          if( elapsed >= serverSyncTime )
+          if( elapsed >= playerDataSyncTime )
           {
-               elapsed = elapsed % serverSyncTime;
+               elapsed %= playerDataSyncTime;
 
                if( dirty )
                {
@@ -182,12 +186,12 @@ public class UiManager : MonoBehaviour
 
           anim.Play( "UI_login" );
 
-          playerName.text = player.userData.username;
-          playerLevel.text = player.userData.level.ToString();
-          levelBar.size = player.userData.exp / player.userData.expToNextLevel;
-          playerCash.text = player.userData.cash.ToString();
-          if( !string.IsNullOrEmpty( player.userData.serverIp ) )
-               serverIp.text = player.userData.serverIp;
+          playerName.text = player.playerData.username;
+          playerLevel.text = player.playerData.level.ToString();
+          levelBar.size = player.playerData.exp / player.playerData.expToNextLevel;
+          playerCash.text = player.playerData.cash.ToString();
+          if( !string.IsNullOrEmpty( player.playerData.serverIp ) )
+               serverIp.text = player.playerData.serverIp;
      }
 
      // Connect page
@@ -209,8 +213,8 @@ public class UiManager : MonoBehaviour
 
           if( !isHost )
           {
-               player.userData.serverIp = serverIp.text;
-               player.userData.Save();
+               player.playerData.serverIp = serverIp.text;
+               player.playerData.Save();
           }
 
           anim.Play( "UI_connect" );
@@ -396,6 +400,24 @@ public class UiManager : MonoBehaviour
           applyButton.enabled = false;
      }
 
+     // Game UI page
+     // ------------
+
+     public void SetLives( int value )
+     {
+          lives.text = value.ToString();
+     }
+
+     public void SetPoints( int value )
+     {
+          points.text = value.ToString();
+     }
+
+     public void SetFireMode( string mode )
+     {
+          fireMode.text = mode;
+     }
+
      // ==================================================================================
      // Animations
 
@@ -439,5 +461,20 @@ public class UiManager : MonoBehaviour
      public void DisableMainMenuUI()
      {
           desktop.SetActive( false );
+     }
+
+     public void SetupGameUI( Role playerRole )
+     {
+          gameUiRoot.SetActive( true );
+          if( playerRole == Role.Head )
+          {
+               sight.SetActive( true );
+               weaponInfo.SetActive( true );
+          }
+          else
+          {
+               sight.SetActive( false );
+               weaponInfo.SetActive( false );
+          }
      }
 }

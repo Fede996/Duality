@@ -14,7 +14,7 @@ public class AccessManager : MonoBehaviour
      {
           get 
           { 
-               return player?.userData; 
+               return player?.playerData; 
           }
      }
 
@@ -37,7 +37,7 @@ public class AccessManager : MonoBehaviour
      {
           if( dataLoader.GetUserList().Contains( username ) )
           {
-               player.userData = dataLoader.LoadUserData( username );
+               player.playerData = dataLoader.LoadUserData( username );
                return true;
           }
           else

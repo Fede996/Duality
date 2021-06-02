@@ -13,10 +13,8 @@ public class DebugPlayerController : GamePlayerController
 
           if( Input.GetButtonDown( "DebugSwitch" ) )
           {
-               player.ResetPlayer();
-
-               if( role == Role.Testa ) playerRole = "Gambe";
-               else playerRole = "Testa";
+               if( role == Role.Head ) playerData.role = "LEGS";
+               else playerData.role = "HEAD";
 
                base.Start();
           }

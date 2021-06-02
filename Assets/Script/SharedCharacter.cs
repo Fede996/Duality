@@ -18,10 +18,10 @@ public class SharedCharacter : NetworkBehaviour
      public float airDrag = 2f;
      public PhysicMaterial physicMaterial;
 
-     [Header( "Sprint" )]
-     public float walkSpeed = 4f;
-     public float sprintSpeed = 6f;
-     public float acceleration = 10f;
+     //[Header( "Sprint" )]
+     //public float walkSpeed = 4f;
+     //public float sprintSpeed = 6f;
+     //public float acceleration = 10f;
 
      [Header( "Ground detection" )]
      public Transform groundCheck;
@@ -36,115 +36,101 @@ public class SharedCharacter : NetworkBehaviour
      [Header( "Player settings" )]
      public int maxLives = 5;
      public float timeBetweenHits = 1;
+     public int bullets = 20;
+     public float stamina = 2000;
+     public float staminaCost = 100;
 
      [Header( "References" )]
-     public Camera TestaCamera;
-     public Camera GambeCamera;
+     public Transform headCameraSocket;
+     public Transform legsCameraSocket;
      public Transform Body;
      public Weapon Weapon;
 
-     [Header( "UI" )]
-     [SerializeField] private Text TestaPointsText;
-     [SerializeField] private Text GambePointsText;
-     [SerializeField] private Text LivesText;
-     [SerializeField] private GameObject WeaponPanel;
-     [SerializeField] public int bullets = 20;
-     [SerializeField] public float stamina = 2000;
-     [SerializeField] public float staminaCost = 100;
-
-     
-     [Header( "Players data" )]
-     [SyncVar( hook = nameof( OnTestaPointsChanged ) )]
-     public int TestaPoints = 0;
-     [SyncVar( hook = nameof( OnGambePointsChanged ) )]
-     public int GambePoints = 0;
-     [SyncVar( hook = nameof( OnLivesChanged ) )]
-     public int Lives = 5;
-
      private Rigidbody _rigidbody;
-     private Vector3 _moveDirection;
      private float _playerHeight;
      private RaycastHit _slopeHit;
 
      private float _invincibilityFrame = 0;
      private Vector3 nullvector;
 
-     private void OnTestaPointsChanged( int oldValue, int newValue )
-     {
-          TestaPointsText.text = $"Testa Points: <color=#9BFFF8>{newValue}</color>";
-     }
-
-     private void OnGambePointsChanged( int oldValue, int newValue )
-     {
-          GambePointsText.text = $"Gambe Points: <color=#9BFFF8>{newValue}</color>";
-     }
-
-     private void OnLivesChanged( int oldValue, int newValue )
-     {
-          LivesText.text = $"Lives: <color=#9BFFF8>{newValue}</color>";
-     }
-
      // =====================================================================
+     // Commands from controllers
+
+     public Role localRole;
 
      public void Init( Role playerRole )
      {
+          localRole = playerRole;
+          OnLivesChanged( Lives, Lives );
 
-          
-          if( playerRole == Role.Testa )
+          if( playerRole == Role.Head )
           {
-               TestaCamera.enabled = true;
-               TestaCamera.GetComponent<AudioListener>().enabled = true;
-               TestaPointsText.enabled = true;
-               WeaponPanel.SetActive( true );
+               Camera.main.transform.parent = headCameraSocket;
+               Camera.main.transform.Reset();
           }
           else
           {
-               GambeCamera.enabled = true;
-               GambeCamera.GetComponent<AudioListener>().enabled = true;
-               GambePointsText.enabled = true;
-               WeaponPanel.SetActive( false );
+               Camera.main.transform.parent = legsCameraSocket;
+               Camera.main.transform.Reset();
           }
-     }
-
-     public void ResetPlayer()
-     {
-          TestaCamera.enabled = false;
-          TestaCamera.GetComponent<AudioListener>().enabled = false;
-          GambeCamera.enabled = false;
-          GambeCamera.GetComponent<AudioListener>().enabled = false;
-
-          TestaPointsText.enabled = false;
-          GambePointsText.enabled = false;
-     }
-
-     public void Move( Vector3 movement )
-     {
-          //if ( stamina > 0 && movement.sqrMagnitude != 0)
-          //{
-
-          //     //stamina -= Time.deltaTime * staminaCost;
-          //     stamina -= staminaCost; 
-
-          //}
-
-          //if (stamina > 0)
-          //     CmdMove( movement );
-          //else
-          //     CmdMove(Vector3.zero);
-
-          CmdMove( movement );
-     }
-
-     public void Rotate( float deltaX, float tilt )
-     {
-          CmdRotate( deltaX, tilt );
      }
 
      public void ToggleFire()
      {
           Weapon.autoFire = !Weapon.autoFire;
-          WeaponPanel.GetComponentInChildren<Text>().text = Weapon.autoFire ? "Fire: <color=#9BFFF8>Auto</color>" :
-                                                                              "Fire: <color=#9BFFF8>Single</color>";
+          UI.SetFireMode( Weapon.autoFire ? "AUTO" : "SINGLE" );
+     }
+
+     // =====================================================================
+     // Unity events
+
+     private void Start()
+     {
+          UI = FindObjectOfType<UiManager>();
+
+          _rigidbody = GetComponent<Rigidbody>();
+          _rigidbody.freezeRotation = true;
+          _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+
+          Collider collider = GetComponent<Collider>();
+          _playerHeight = collider.bounds.size.y;
+          collider.material = physicMaterial;
+
+          Lives = maxLives;
+
+          DontDestroyOnLoad( gameObject );
+     }
+
+     private void Update()
+     {
+          if( isServer )
+          {
+               _isGrounded = Physics.CheckSphere( groundCheck.position, groundDistance, groundLayer );
+
+               SetDrag();
+               SetFriction(); 
+          }
+     }
+
+     private void FixedUpdate()
+     {
+          if( isServer )
+          {
+               MovePlayer( moveDirection );
+               RotateBody( zRotation, tiltAngle ); 
+          }
+     }
+
+     private void OnControllerColliderHit( ControllerColliderHit hit )
+     {
+          if( !isServer ) return;
+
+          Enemy enemy = hit.gameObject.GetComponent<Enemy>();
+          if( enemy != null && _invincibilityFrame <= 0 )
+          {
+               Lives -= enemy.Damage;
+               _invincibilityFrame = timeBetweenHits;
+          }
      }
 
      [Server]
@@ -164,67 +150,45 @@ public class SharedCharacter : NetworkBehaviour
      }
 
      // =====================================================================
+     // Sync movement
+
+     public void Move( Vector3 movement )
+     {
+          if( stamina > 0 && movement.sqrMagnitude != 0 )
+          {
+               stamina -= staminaCost;
+          }
+
+          if( stamina > 0 )
+               CmdSetMoveDirection( movement );
+          else
+               CmdSetMoveDirection( Vector3.zero );
+     }
+
+     public void Rotate( float deltaX, float tilt )
+     {
+          CmdRotate( deltaX, tilt );
+     }
+
+     public Vector3 moveDirection;
+     public float zRotation;
+     public float tiltAngle;
 
      [Command( requiresAuthority = false )]
-     private void CmdMove( Vector3 movement )
+     private void CmdSetMoveDirection( Vector3 movement )
      {
-          _moveDirection = movement;
+          moveDirection = movement;
      }
 
      [Command( requiresAuthority = false )]
      private void CmdRotate( float deltaX, float tilt )
      {
-          TestaCamera.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
-          Body.Rotate( Vector3.up * deltaX );
+          zRotation = deltaX;
+          tiltAngle = tilt;
      }
 
      // =====================================================================
-
-     private void Start()
-     {
-          _rigidbody = GetComponent<Rigidbody>();
-          _rigidbody.freezeRotation = true;
-          _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
-
-          Collider collider = GetComponent<Collider>();
-          _playerHeight = collider.bounds.size.y;
-          collider.material = physicMaterial;
-
-          Lives = maxLives;
-          OnLivesChanged( maxLives, maxLives );
-
-          DontDestroyOnLoad( this.gameObject );
-     }
-
-     private void Update()
-     {
-          _isGrounded = Physics.CheckSphere( groundCheck.position, groundDistance, groundLayer );
-
-          SetDrag();
-          //SetSpeed( false );
-          SetFriction();
-     }
-
-     private void FixedUpdate()
-     {
-          if( !isServer ) return;
-
-          MovePlayer( _moveDirection );
-     }
-
-     private void OnControllerColliderHit( ControllerColliderHit hit )
-     {
-          if( !isServer ) return;
-
-          Enemy enemy = hit.gameObject.GetComponent<Enemy>();
-          if( enemy != null && _invincibilityFrame <= 0 )
-          {
-               Lives -= enemy.Damage;
-               _invincibilityFrame = timeBetweenHits;
-          }
-     }
-
-     // =====================================================================
+     // Rigidbody movement
 
      private void MovePlayer( Vector3 direction )
      {
@@ -236,7 +200,7 @@ public class SharedCharacter : NetworkBehaviour
           else if( _isGrounded && IsOnSlope() )
           {
                // on a slope
-               _rigidbody.AddForce( Vector3.ProjectOnPlane( _moveDirection, _slopeHit.normal ) * movementSpeed * groundMultiplier );
+               _rigidbody.AddForce( Vector3.ProjectOnPlane( moveDirection, _slopeHit.normal ) * movementSpeed * groundMultiplier );
           }
           else
           {
@@ -245,14 +209,14 @@ public class SharedCharacter : NetworkBehaviour
           }
      }
 
-     private void Jump()
-     {
-          if( _isGrounded )
-          {
-               _rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0, _rigidbody.velocity.z );
-               _rigidbody.AddForce( Vector3.up * jumpForce, ForceMode.Impulse );
-          }
-     }
+     //private void Jump()
+     //{
+     //     if( _isGrounded )
+     //     {
+     //          _rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0, _rigidbody.velocity.z );
+     //          _rigidbody.AddForce( Vector3.up * jumpForce, ForceMode.Impulse );
+     //     }
+     //}
 
      private bool IsOnSlope()
      {
@@ -272,10 +236,13 @@ public class SharedCharacter : NetworkBehaviour
           _rigidbody.drag = _isGrounded ? groundDrag : airDrag;
      }
 
-     private void SetSpeed( bool sprinting )
-     {
-          movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
-     }
+     //private void SetSpeed( bool sprinting )
+     //{
+     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
+     //}     //private void SetSpeed( bool sprinting )
+     //{
+     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
+     //}
 
      private void SetFriction()
      {
@@ -290,5 +257,45 @@ public class SharedCharacter : NetworkBehaviour
                physicMaterial.staticFriction = 0;
                physicMaterial.dynamicFriction = 0;
           }
+     }
+
+     private void RotateBody( float zRotation, float tiltAngle )
+     {
+          headCameraSocket.transform.localRotation = Quaternion.Euler( tiltAngle, 90f, 0f );
+          Body.Rotate( Vector3.up * zRotation );
+     }
+
+     // =====================================================================
+     // UI events
+
+     private UiManager UI;
+
+     [Header( "Players data" )]
+     [SyncVar( hook = nameof( OnTestaPointsChanged ) )]
+     public int TestaPoints = 0;
+     [SyncVar( hook = nameof( OnGambePointsChanged ) )]
+     public int GambePoints = 0;
+     [SyncVar( hook = nameof( OnLivesChanged ) )]
+     public int Lives = 5;
+
+     private void OnTestaPointsChanged( int oldValue, int newValue )
+     {
+          if( localRole == Role.Head )
+          {
+               UI.SetPoints( newValue ); 
+          }
+     }
+
+     private void OnGambePointsChanged( int oldValue, int newValue )
+     {
+          if( localRole == Role.Legs )
+          {
+               UI.SetPoints( newValue ); 
+          }
+     }
+
+     private void OnLivesChanged( int oldValue, int newValue )
+     {
+          UI.SetLives( newValue );
      }
 }

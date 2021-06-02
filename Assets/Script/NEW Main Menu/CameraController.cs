@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
+using Mirror;
 
 public class CameraController : MonoBehaviour
 {
      [Header( "User data" )]
-     public UserData userData;
+     public UserData playerData;
 
      [Header( "Camera movement" )]
      public Vector2 maxAngles;
@@ -18,11 +19,9 @@ public class CameraController : MonoBehaviour
      [Header( "Animations" )]
      public AnimationClip[] clips;
 
-     private Status currentStatus = Status.DoNothing;
+     public Status currentStatus = Status.DoNothing;
      private Vector2 initialAngles;
      private Animation anim;
-     private DataLoader loader;
-     private AccessManager access;
      private UiManager UI;
 
      // ==================================================================================
@@ -30,8 +29,6 @@ public class CameraController : MonoBehaviour
 
      private void Start()
      {
-          loader = FindObjectOfType<DataLoader>();
-          access = FindObjectOfType<AccessManager>();
           UI = FindObjectOfType<UiManager>();
 
           Cursor.lockState = CursorLockMode.Locked;
@@ -48,7 +45,7 @@ public class CameraController : MonoBehaviour
 
      private void Update()
      {
-          if( currentStatus == Status.DoNothing ) return;
+          if( currentStatus == Status.DoNothing || currentStatus == Status.InScreen ) return;
 
           float dx = Input.GetAxis( "Mouse X" );
           float dy = Input.GetAxis( "Mouse Y" );
@@ -60,13 +57,6 @@ public class CameraController : MonoBehaviour
                if( Input.GetButtonDown( "Interact" ) )
                {
                     StartCoroutine( TurnToScreen() );
-               }
-          }
-          else if( currentStatus == Status.InScreen )
-          {
-               if( Input.GetButtonDown( "Cancel" ) )
-               {
-                    //LeaveScreen();
                }
           }
      }
@@ -162,7 +152,7 @@ public class CameraController : MonoBehaviour
      // ==================================================================================
      // Enums
 
-     enum Status
+     public enum Status
      {
           DoNothing,
           InScreen,

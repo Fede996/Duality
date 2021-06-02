@@ -1,0 +1,19 @@
++----------------------------------+
+|   F A T C    C H A N G E L O G   |
++----------------------------------+
+
+<=== 01/06/2021 | Fede ======================>
+
+a.  fixato flag firstLaunch che chiedeva di creare un nuovo utente a ogni apertura del gioco;
+
+b.  fixato un bug per cui il colore del giocatore non veniva salvato tra una sessione di gioco e l'altra;
+
+c.  aggiunto menu di pausa - apribile premendo [ESC] - da cui è possibile accedere ai settaggi e chiudere il gioco;
+    aggiunto settaggio della qualità video (prima il gioco girava sempre in "ULTRA") - il settaggio di default è ora "MEDIUM";
+
+
+<=== 02/06/2021 | Fede ======================>
+
+a.  migliorate prestazioni di rete (latenza, frequenza di aggiornamento)
+
+b.  aggiunti indicatori di performance: ping, deviazione standard del ping e FPS;

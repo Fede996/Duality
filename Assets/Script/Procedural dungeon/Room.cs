@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Room : MonoBehaviour
 {
-     public Camera roomCamera;
+     public Transform roomCameraSocket;
 
      private Color original;
      private SharedCharacter player;
@@ -14,7 +14,6 @@ public class Room : MonoBehaviour
 
      void Awake()
      {
-          roomCamera = GetComponentInChildren<Camera>();
           player = FindObjectOfType<SharedCharacter>();
      }
 
@@ -27,10 +26,7 @@ public class Room : MonoBehaviour
           original = GetComponentInChildren<Renderer>().material.color;
           GetComponentInChildren<Renderer>().material.color = Color.yellow;
 
-          bool enabled = player.GambeCamera.enabled;
-          player.GambeCamera.enabled = false;
-          player.GambeCamera = roomCamera;
-          player.GambeCamera.enabled = enabled;
+          player.legsCameraSocket.transform.parent = roomCameraSocket;
      }
 
      public void Unload()

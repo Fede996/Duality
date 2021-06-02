@@ -84,9 +84,9 @@ public class DataLoader : MonoBehaviour
 
      private void OnApplicationQuit()
      {
-          if( player != null && player.userData != null && !string.IsNullOrEmpty( player.userData.username ) )
+          if( player != null && player.playerData != null && !string.IsNullOrEmpty( player.playerData.username ) )
           {
-               player.userData.Save();
+               player.playerData.Save();
           }
           SaveGlobalData();
      }

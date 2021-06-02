@@ -62,9 +62,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
-  syncInterval: 0
-  playerName: 
-  playerRole: 
-  speed: 10
+  syncInterval: 0.1
+  playerData:
+    username: 
+    level: 0
+    exp: 0
+    expToNextLevel: 0
+    cash: 0
+    serverIp: 
+    role: 
+    ready: 0
+    leader: 0
+    color: 0
+  role: 0
   sensitivityX: 5
-  sensitivityY: 5
+  sensitivityY: 1
+  playerDataJson: 

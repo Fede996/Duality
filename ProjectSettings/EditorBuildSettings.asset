@@ -15,6 +15,9 @@ EditorBuildSettings:
     path: Assets/Scenes/GameMatteo.unity
     guid: baf449e43556ed5438135d53b28853bd
   - enabled: 1
+    path: Assets/Scenes/SImos 1st Dungeon 1.unity
+    guid: 58481bd92fde4df448dbb4c36ffc051b
+  - enabled: 1
     path: Assets/Scenes/SImos 1st Dungeon MatteoCamera.unity
     guid: f02e4c0aab99aed4e8ba70a3386047af
   - enabled: 1

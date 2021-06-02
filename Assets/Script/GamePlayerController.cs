@@ -5,36 +5,50 @@ using Mirror;
 
 public class GamePlayerController : NetworkBehaviour
 {
+     [Header( "User data" )]
      public UserData playerData;
-
-     [SyncVar]
-     public string playerName = null;
-     [SyncVar]
-     public string playerRole = null;
-     protected Role role = Role.None;
+     public Role role = Role.None;
 
      [Header( "Movement" )]
-     [SerializeField] private float sensitivityX = 100f;
-     [SerializeField] private float sensitivityY = 100f;
+     public float sensitivityX = 100f;
+     public float sensitivityY = 100f;
 
      protected SharedCharacter player;
+     private UiManager UI;
+     private float tilt = 0;
 
-     private float _horizontal = 0f;
-     private float _vertical = 0f;
-     private float _mouseX = 0f;
-     private float _mouseY = 0f;
-     private float _tilt = 0;
+     // =====================================================================
+     // Sync data
+
+     [SyncVar( hook = nameof( OnPlayerDataChanged ) )]
+     public string playerDataJson;
+
+     private void OnPlayerDataChanged( string oldValue, string newValue )
+     {
+          playerData = JsonUtility.FromJson<UserData>( newValue );
+     }
+
+     [Command]
+     private void CmdSetPlayerData( string jsonData )
+     {
+          playerData = JsonUtility.FromJson<UserData>( jsonData );
+          playerDataJson = jsonData;
+     }
+
+     // =====================================================================
+     // Unity events
 
      protected void Start()
      {
           player = FindObjectOfType<SharedCharacter>();
-          if( playerRole == "HEAD" || playerRole == "Testa" )
+          UI = FindObjectOfType<UiManager>();
+          if( playerData.role == "HEAD" )
           {
-               role = Role.Testa;
+               role = Role.Head;
           }
           else
           {
-               role = Role.Gambe;
+               role = Role.Legs;
           }
 
           if( isLocalPlayer )
@@ -42,33 +56,28 @@ public class GamePlayerController : NetworkBehaviour
                Cursor.lockState = CursorLockMode.Locked;
                Cursor.visible = false;
 
+               UI.SetupGameUI( role );
                player.Init( role );
           }
-
-          if( isClient )
-          {
-               GameObject serverCamera = GameObject.Find( "ServerCamera" );
-               if( serverCamera != null ) 
-                    serverCamera.SetActive( false );
-          }
-
-          DontDestroyOnLoad( this.gameObject );
      }
 
      protected virtual void Update()
      {
           if( !isLocalPlayer ) return;
 
-          if( role == Role.Testa )
+          if( role == Role.Head )
           {
-               // Raccolgo input TESTA qui...
+               float mouseX = Input.GetAxis( "Mouse X" ) * sensitivityX;
+               float mouseY = Input.GetAxis( "Mouse Y" ) * sensitivityY;
 
-               _mouseX = Input.GetAxis( "Mouse X" ) * sensitivityX;
-               _mouseY = Input.GetAxis( "Mouse Y" ) * sensitivityY;
+               tilt -= mouseY;
+               tilt = Mathf.Clamp( tilt, -90, 90 );
 
-               if( Input.GetButtonDown( "ToggleFire" ) ) player.ToggleFire();     
+               player.Rotate( mouseX, tilt );
 
-               // Forse da spostare in fixed ??
+               if( Input.GetButtonDown( "ToggleFire" ) ) 
+                    player.ToggleFire();     
+
                if( player.Weapon.autoFire )
                {
                     player.Weapon.isFiring = Input.GetButton( "Fire" );
@@ -81,34 +90,10 @@ public class GamePlayerController : NetworkBehaviour
           }
           else
           {
-               // Raccolgo input GAMBE qui...
+               float horizontal = Input.GetAxis( "Horizontal" );
+               float vertical = Input.GetAxis( "Vertical" );
 
-               _horizontal = Input.GetAxis( "Horizontal" );
-               _vertical = Input.GetAxis( "Vertical" );
-          }
-     }
-
-     private void FixedUpdate()
-     {
-          if( !isLocalPlayer ) return;
-
-          if( role == Role.Testa )
-          {
-               // Applico input TESTA qui...
-
-               //_mouseX *= Time.fixedDeltaTime;
-               //_mouseY *= Time.fixedDeltaTime;
-               _tilt -= _mouseY;
-               _tilt = Mathf.Clamp( _tilt, -90, 90 );
-
-               //player.TestaCamera.transform.localRotation = Quaternion.Euler( _tilt, 90f, 0f );
-               player.Rotate( _mouseX, _tilt );
-          }
-          else
-          {
-               // Applico input GAMBE qui...
-
-               Vector3 movement = new Vector3( _horizontal, 0, _vertical ).normalized;
+               Vector3 movement = new Vector3( horizontal, 0, vertical ).normalized;
 
                player.Move( movement );
           }
@@ -118,6 +103,6 @@ public class GamePlayerController : NetworkBehaviour
 public enum Role
 {
      None,
-     Testa,
-     Gambe,
+     Head,
+     Legs,
 }

@@ -59,10 +59,7 @@ public class LobbyRoomManager : NetworkRoomManager
      {
           LobbyRoomPlayer lobbyPlayer = roomPlayer.GetComponent<LobbyRoomPlayer>();
           GamePlayerController player = gamePlayer.GetComponent<GamePlayerController>();
-          
-          player.playerData = lobbyPlayer.serverPlayerData;
-          player.playerName = lobbyPlayer.serverPlayerData.username;
-          player.playerRole = lobbyPlayer.serverPlayerData.role;
+          player.playerDataJson = lobbyPlayer.playerDataJson;
 
           return true;
      }
@@ -73,8 +70,6 @@ public class LobbyRoomManager : NetworkRoomManager
 
           if( SceneManager.GetActiveScene().name != "Main Menu" )
           {
-               CameraController camera = FindObjectOfType<CameraController>();
-               camera.enabled = false;
                UI.DisableMainMenuUI();
 
                foreach( LobbyRoomPlayer lobbyPlayer in FindObjectsOfType<LobbyRoomPlayer>() )
@@ -86,8 +81,6 @@ public class LobbyRoomManager : NetworkRoomManager
      {
           base.OnServerSceneChanged( sceneName );
 
-          CameraController camera = FindObjectOfType<CameraController>();
-          camera.enabled = false;
           UI.DisableMainMenuUI();
      }
 

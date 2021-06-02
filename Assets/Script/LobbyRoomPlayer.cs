@@ -14,11 +14,11 @@ public class LobbyRoomPlayer : NetworkRoomPlayer
      {
           get
           {
-               return player.userData;
+               return player.playerData;
           }
           set
           {
-               player.userData = value;
+               player.playerData = value;
           }
      }
 
@@ -73,7 +73,7 @@ public class LobbyRoomPlayer : NetworkRoomPlayer
      // User data synchronization
 
      [SyncVar( hook = nameof( OnPlayerDataChanged ) )]
-     private string playerDataJson;
+     public string playerDataJson;
 
      private void OnPlayerDataChanged( string oldValue, string newValue )
      {
@@ -99,18 +99,9 @@ public class LobbyRoomPlayer : NetworkRoomPlayer
      // =====================================================================
      // UI events
 
-     public UserData serverPlayerData;
-
      public void SetPlayerReady( bool ready )
      {
           CmdChangeReadyState( ready );
-          SetServerPlayerData( JsonUtility.ToJson( playerData ) );
-     }
-
-     [Command]
-     private void SetServerPlayerData( string json )
-     {
-          serverPlayerData = JsonUtility.FromJson<UserData>( json );
      }
 
      [Command]
