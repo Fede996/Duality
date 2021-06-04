@@ -17,6 +17,7 @@ public class SharedCharacter : NetworkBehaviour
      public float groundDrag = 6f;
      public float airDrag = 2f;
      public PhysicMaterial physicMaterial;
+     public float rotationUpdateInterval = 0.1f;
 
      //[Header( "Sprint" )]
      //public float walkSpeed = 4f;
@@ -57,6 +58,9 @@ public class SharedCharacter : NetworkBehaviour
      // Commands from controllers
 
      public Role localRole;
+     public Vector3 moveDirection;
+     private float turn;
+     private float tilt;
 
      public void Init( Role playerRole )
      {
@@ -67,6 +71,7 @@ public class SharedCharacter : NetworkBehaviour
           {
                Camera.main.transform.parent = headCameraSocket;
                Camera.main.transform.Reset();
+               StartCoroutine( UpdateRotation() );
           }
           else
           {
@@ -147,6 +152,12 @@ public class SharedCharacter : NetworkBehaviour
           {
                _invincibilityFrame -= Time.deltaTime;
           }
+
+          if( isClient && localRole == Role.Legs )
+          {
+               headCameraSocket.transform.localRotation = Quaternion.Euler( Mathf.LerpAngle( headCameraSocket.transform.localRotation.x, tilt, Time.deltaTime * 10 ), 90f, 0f );
+               Body.rotation = Quaternion.Euler( Body.rotation.eulerAngles.x, Mathf.LerpAngle( Body.rotation.eulerAngles.y, turn, Time.deltaTime * 10 ), Body.rotation.eulerAngles.z );
+          }
      }
 
      private void FixedUpdate()
@@ -154,7 +165,6 @@ public class SharedCharacter : NetworkBehaviour
           if( isServer )
           {
                MovePlayer( moveDirection );
-               RotateBody( zRotation, tiltAngle );
           }
      }
 
@@ -204,27 +214,16 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Rotate( float deltaX, float tilt )
      {
-          if( isClientOnly )
+          if( isClient )
                RotateBody( deltaX, tilt );
-
-          CmdRotate( deltaX, tilt );
      }
 
-     public Vector3 moveDirection;
-     public float zRotation;
-     public float tiltAngle;
+     
 
      [Command( requiresAuthority = false )]
      private void CmdSetMoveDirection( Vector3 movement )
      {
           moveDirection = movement;
-     }
-
-     [Command( requiresAuthority = false )]
-     private void CmdRotate( float deltaX, float tilt )
-     {
-          zRotation = deltaX;
-          tiltAngle = tilt;
      }
 
      // =====================================================================
@@ -276,14 +275,6 @@ public class SharedCharacter : NetworkBehaviour
           _rigidbody.drag = _isGrounded ? groundDrag : airDrag;
      }
 
-     //private void SetSpeed( bool sprinting )
-     //{
-     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
-     //}     //private void SetSpeed( bool sprinting )
-     //{
-     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
-     //}
-
      private void SetFriction()
      {
           float angle;
@@ -299,10 +290,55 @@ public class SharedCharacter : NetworkBehaviour
           }
      }
 
-     private void RotateBody( float zRotation, float tiltAngle )
+     //private void SetSpeed( bool sprinting )
+     //{
+     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
+     //}     //private void SetSpeed( bool sprinting )
+     //{
+     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
+     //}
+
+     private void RotateBody( float turnAmount, float tilt )
      {
-          headCameraSocket.transform.localRotation = Quaternion.Euler( tiltAngle, 90f, 0f );
-          Body.Rotate( Vector3.up * zRotation );
+          headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
+          Body.Rotate( Vector3.up * turnAmount );
+     }
+
+     private IEnumerator UpdateRotation()
+     {
+          float prevTurn = Body.rotation.eulerAngles.y;
+          float prevTilt = headCameraSocket.transform.localRotation.x;
+
+          for( ; ; )
+          {
+               float currTurn = Body.rotation.eulerAngles.y;
+               float currTilt = headCameraSocket.transform.localRotation.x;
+
+               if( currTilt != prevTilt || currTurn != prevTurn )
+               {
+                    CmdUpdateRotation( currTurn, currTilt );
+                    prevTilt = currTilt;
+                    prevTurn = currTurn;
+               }
+
+               yield return new WaitForSecondsRealtime( rotationUpdateInterval );
+          }
+     }
+
+     [Command( requiresAuthority = false )]
+     private void CmdUpdateRotation( float turn, float tilt )
+     {
+          RpcUpdateRotation( turn, tilt );
+     }
+
+     [ClientRpc]
+     private void RpcUpdateRotation( float turn, float tilt )
+     {
+          if( localRole == Role.Legs )
+          {
+               this.turn = turn;
+               this.tilt = tilt;
+          } 
      }
 
      // =====================================================================

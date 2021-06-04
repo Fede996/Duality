@@ -25,3 +25,8 @@ a.  aggiunta 'uscita' a livello che consente di tornare alla lobby per un'altra 
 
 
 <=== 04/06/2021 | Fede ======================>
+
+a. fixato sincronismo del movimento della testa tra i due client;
+
+
+<=== 05/06/2021 | Fede ======================>
