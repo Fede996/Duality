@@ -17,3 +17,11 @@ c.  aggiunto menu di pausa - apribile premendo [ESC] - da cui è possibile accede
 a.  migliorate prestazioni di rete (latenza, frequenza di aggiornamento)
 
 b.  aggiunti indicatori di performance: ping, deviazione standard del ping e FPS;
+
+
+<=== 03/06/2021 | Fede ======================>
+
+a.  aggiunta 'uscita' a livello che consente di tornare alla lobby per un'altra partita;
+
+
+<=== 04/06/2021 | Fede ======================>

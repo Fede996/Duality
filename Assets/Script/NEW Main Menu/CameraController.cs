@@ -149,6 +149,14 @@ public class CameraController : MonoBehaviour
           anim.Play( "Cam_lock" );
      }
 
+     public void SetupLobby()
+     {
+          Transform final = GameObject.Find( "Camera target position" ).transform;
+          transform.position = final.position;
+          transform.rotation = final.rotation;
+          UI.UpdatePlayerData();
+     }
+
      // ==================================================================================
      // Enums
 

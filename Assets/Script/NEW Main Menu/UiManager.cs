@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -19,6 +20,7 @@ public class UiManager : MonoBehaviour
      public Text playerName;
      public Text playerLevel;
      public Scrollbar levelBar;
+     public Text exp;
      public Text playerCash;
      public InputField serverIp;
 
@@ -186,12 +188,13 @@ public class UiManager : MonoBehaviour
 
           anim.Play( "UI_login" );
 
-          playerName.text = player.playerData.username;
-          playerLevel.text = player.playerData.level.ToString();
-          levelBar.size = player.playerData.exp / player.playerData.expToNextLevel;
-          playerCash.text = player.playerData.cash.ToString();
-          if( !string.IsNullOrEmpty( player.playerData.serverIp ) )
-               serverIp.text = player.playerData.serverIp;
+          playerName.text = playerData.username;
+          playerLevel.text = playerData.level.ToString();
+          levelBar.size = playerData.exp / playerData.expToNextLevel;
+          exp.text = $"{playerData.exp.ToString( "F0" )} / {playerData.expToNextLevel.ToString( "F0" )}";
+          playerCash.text = playerData.cash.ToString();
+          if( !string.IsNullOrEmpty( playerData.serverIp ) )
+               serverIp.text = playerData.serverIp;
      }
 
      // Connect page
@@ -346,6 +349,8 @@ public class UiManager : MonoBehaviour
 
      public void OnButtonBack()
      {
+          Destroy( FindObjectOfType<EventSystem>().gameObject );
+
           if( isHost )
                access.StopHost();
           else
@@ -458,6 +463,12 @@ public class UiManager : MonoBehaviour
      // ==================================================================================
      // Commands
 
+     public void EnableMainMenuUI()
+     {
+          desktop.SetActive( true );
+          gameUiRoot.SetActive( false );
+     }
+
      public void DisableMainMenuUI()
      {
           desktop.SetActive( false );
@@ -476,5 +487,13 @@ public class UiManager : MonoBehaviour
                sight.SetActive( false );
                weaponInfo.SetActive( false );
           }
+     }
+
+     public void UpdatePlayerData()
+     {
+          playerCash.text = playerData.cash.ToString();
+          playerLevel.text = playerData.level.ToString();
+          levelBar.size = playerData.exp / playerData.expToNextLevel;
+          exp.text = $"{playerData.exp.ToString( "F0" )} / {playerData.expToNextLevel.ToString( "F0" )}";
      }
 }

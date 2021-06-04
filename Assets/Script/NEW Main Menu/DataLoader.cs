@@ -98,9 +98,9 @@ public class UserData
      [Header( "User data" )]
      public string  username;
 
-     public int     level               = 0;
+     public int     level               = 1;
      public float   exp                 = 0;
-     public float   expToNextLevel      = 100;
+     public float   expToNextLevel      = 30;
      public float   cash                = 0;
      public string  serverIp            = "localhost";
 
@@ -118,6 +118,19 @@ public class UserData
      {
           PlayerPrefs.SetString( username, JsonUtility.ToJson( this ) );
           PlayerPrefs.Save();
+     }
+
+     public void AddExp( float value )
+     {
+          exp += value;
+
+          while( exp >= expToNextLevel )
+          {
+               exp -= expToNextLevel;
+               level++;
+               expToNextLevel = ( level - 1 ) * 50;
+          }
+          Save();
      }
 }
 

@@ -2526,7 +2526,7 @@ PrefabInstance:
     - target: {fileID: 2977293532427440583, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
       propertyPath: GambeCamera
       value: 
-      objectReference: {fileID: 1678434867}
+      objectReference: {fileID: 0}
     - target: {fileID: 2977293532427440583, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
       propertyPath: WeaponPanel
       value: 
@@ -5015,11 +5015,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1678434867 stripped
-Camera:
-  m_CorrespondingSourceObject: {fileID: 8291749507040416694, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
-  m_PrefabInstance: {fileID: 689535371}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1684948409
 PrefabInstance:
   m_ObjectHideFlags: 0

@@ -12,6 +12,8 @@ public class DungeonGenerator : MonoBehaviour
      public int numberOfRooms;
 
      [Header( "Structure" )]
+     public GameObject startRoom;
+     public GameObject endRoom;
      public GameObject roomPrefab;
      public Vector2 roomSize;
      // Ordine di inserimento mura:
@@ -33,16 +35,15 @@ public class DungeonGenerator : MonoBehaviour
      private void Start()
      {
           Generate( numberOfRooms );
-          //root.GetComponentInChildren<Room>().Load();
      }
 
      private void Update()
      {
-          if( Input.GetKeyDown( KeyCode.G ) )
-          {
-               Clear();
-               Generate( numberOfRooms );
-          }
+          //if( Input.GetKeyDown( KeyCode.G ) )
+          //{
+          //     Clear();
+          //     Generate( numberOfRooms );
+          //}
      }
 
      // =======================================================
@@ -160,32 +161,35 @@ public class DungeonGenerator : MonoBehaviour
                x = ( int )index.x;
                y = ( int )index.y;
 
-               // genero pavimento
+               // genero stanza
                Vector3 position = new Vector3( ( x - startX ) * roomSize.x, 0, ( y - startY ) * roomSize.y );
-               GameObject room = Instantiate( roomPrefab, root );
-               room.transform.localPosition = position;
 
+               GameObject room = null;
                switch( map[x][y] )
                {
                     case 1:
                     {
-                         room.GetComponentInChildren<Renderer>().material.color = Color.white;
+                         // stanza normale
+                         room = Instantiate( roomPrefab, root );
                          room.name = "Room";
                          break;
                     }
                     case 2:
                     {
-                         room.GetComponentInChildren<Renderer>().material.color = Color.cyan;
+                         // prima stanza
+                         room = Instantiate( startRoom, root );
                          room.name = "Start room";
                          break;
                     }
                     case 3:
                     {
-                         room.GetComponentInChildren<Renderer>().material.color = Color.red;
+                         // ultima stanza
+                         room = Instantiate( endRoom, root );
                          room.name = "End room";
                          break;
                     }
                }
+               room.transform.localPosition = position;
 
                // calcolo porte
                GameObject wall = null;
@@ -236,8 +240,8 @@ public class DungeonGenerator : MonoBehaviour
           }
 
           // spawno il giocatore
-          //Instantiate( player, root );
-          //root.GetComponentInChildren<Camera>().enabled = true;
+          Transform spawn = GameObject.Find( "Player spawn" ).transform; 
+          Instantiate( player, spawn.position, spawn.rotation );
      }
 
      private void Clear()

@@ -8,6 +8,8 @@ public class GamePlayerController : NetworkBehaviour
      [Header( "User data" )]
      public UserData playerData;
      public Role role = Role.None;
+     public float gainedExp;
+     public float gainedCash;
 
      [Header( "Movement" )]
      public float sensitivityX = 100f;
@@ -61,9 +63,11 @@ public class GamePlayerController : NetworkBehaviour
           }
      }
 
+     private bool disableInput = false;
+
      protected virtual void Update()
      {
-          if( !isLocalPlayer ) return;
+          if( !isLocalPlayer || disableInput ) return;
 
           if( role == Role.Head )
           {
@@ -97,6 +101,33 @@ public class GamePlayerController : NetworkBehaviour
 
                player.Move( movement );
           }
+     }
+
+     // =====================================================================
+     // Game events
+
+     [Server]
+     public void OnEndLevel()
+     {
+          RpcOnEndLevel();
+     }
+
+     [ClientRpc]
+     private void RpcOnEndLevel()
+     {
+          if( isLocalPlayer )
+          {
+               disableInput = true;
+               GetRewards();
+          }
+     }
+
+     private void GetRewards()
+     {
+          playerData.AddExp( gainedExp );
+          playerData.cash += gainedCash;
+          FindObjectOfType<CameraController>().playerData = playerData;
+          playerData.Save();
      }
 }
 

@@ -16,7 +16,6 @@ public class Weapon : NetworkBehaviour
      [SerializeField] private float range = 100f;
      public int numberOfBullets = 20;
      
-     
      [Header( "Muzzle Flash" )]
      [SerializeField] private GameObject muzzlePrefab;
      [SerializeField] private Transform muzzleTransform;
@@ -28,8 +27,6 @@ public class Weapon : NetworkBehaviour
 
      private float timeLastFired;
 
-     
-     
      // =====================================================================
 
      private void Start()

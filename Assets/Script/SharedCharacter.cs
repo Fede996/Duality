@@ -81,6 +81,28 @@ public class SharedCharacter : NetworkBehaviour
           UI.SetFireMode( Weapon.autoFire ? "AUTO" : "SINGLE" );
      }
 
+     [Server]
+     public void OnEndLevel()
+     {
+          Camera.main.transform.parent = null;
+          RpcOnEndLevel();
+
+          StartCoroutine( DestroyPlayer() );
+     }
+
+     [Server]
+     private IEnumerator DestroyPlayer()
+     {
+          yield return new WaitForSeconds( 1 );
+          NetworkServer.Destroy( gameObject );
+     }
+
+     [ClientRpc]
+     private void RpcOnEndLevel()
+     {
+          Camera.main.transform.parent = null;
+     }
+
      // =====================================================================
      // Unity events
 
@@ -91,6 +113,16 @@ public class SharedCharacter : NetworkBehaviour
           _rigidbody = GetComponent<Rigidbody>();
           _rigidbody.freezeRotation = true;
           _rigidbody.interpolation = RigidbodyInterpolation.Interpolate;
+          if( isServer )
+          {
+               _rigidbody.isKinematic = false;
+               GetComponent<Collider>().enabled = true;
+          }
+          else
+          {
+               _rigidbody.isKinematic = true;
+               GetComponent<Collider>().enabled = false;
+          }
 
           Collider collider = GetComponent<Collider>();
           _playerHeight = collider.bounds.size.y;
@@ -108,7 +140,12 @@ public class SharedCharacter : NetworkBehaviour
                _isGrounded = Physics.CheckSphere( groundCheck.position, groundDistance, groundLayer );
 
                SetDrag();
-               SetFriction(); 
+               SetFriction();
+          }
+
+          if( _invincibilityFrame > 0 )
+          {
+               _invincibilityFrame -= Time.deltaTime;
           }
      }
 
@@ -117,7 +154,7 @@ public class SharedCharacter : NetworkBehaviour
           if( isServer )
           {
                MovePlayer( moveDirection );
-               RotateBody( zRotation, tiltAngle ); 
+               RotateBody( zRotation, tiltAngle );
           }
      }
 
@@ -167,6 +204,9 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Rotate( float deltaX, float tilt )
      {
+          if( isClientOnly )
+               RotateBody( deltaX, tilt );
+
           CmdRotate( deltaX, tilt );
      }
 
@@ -282,7 +322,7 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( localRole == Role.Head )
           {
-               UI.SetPoints( newValue ); 
+               UI.SetPoints( newValue );
           }
      }
 
@@ -290,7 +330,7 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( localRole == Role.Legs )
           {
-               UI.SetPoints( newValue ); 
+               UI.SetPoints( newValue );
           }
      }
 

@@ -6,7 +6,11 @@ using UnityEngine.SceneManagement;
 
 public class LobbyRoomManager : NetworkRoomManager
 {
+     [Header( "Custom settings" )]
+     public GameObject playerPawn;
+
      private UiManager UI;
+     private CameraController player;
 
      // =====================================================================
      // Unity events
@@ -14,6 +18,7 @@ public class LobbyRoomManager : NetworkRoomManager
      public override void Start()
      {
           UI = FindObjectOfType<UiManager>();
+          player = FindObjectOfType<CameraController>();
 
           base.Start();
      }
@@ -61,6 +66,8 @@ public class LobbyRoomManager : NetworkRoomManager
           GamePlayerController player = gamePlayer.GetComponent<GamePlayerController>();
           player.playerDataJson = lobbyPlayer.playerDataJson;
 
+          base.OnRoomServerSceneLoadedForPlayer( conn, roomPlayer, gamePlayer );
+
           return true;
      }
 
@@ -68,12 +75,17 @@ public class LobbyRoomManager : NetworkRoomManager
      {
           base.OnClientSceneChanged( conn );
 
-          if( SceneManager.GetActiveScene().name != "Main Menu" )
+          string sceneName = SceneManager.GetActiveScene().path;
+          if( sceneName != offlineScene && sceneName != RoomScene )
           {
                UI.DisableMainMenuUI();
-
-               foreach( LobbyRoomPlayer lobbyPlayer in FindObjectsOfType<LobbyRoomPlayer>() )
-                    lobbyPlayer.enabled = false;
+          }
+          else
+          {
+               UI.EnableMainMenuUI();
+               Cursor.visible = true;
+               Cursor.lockState = CursorLockMode.Confined;
+               player.SetupLobby();
           }
      }
 
@@ -81,11 +93,26 @@ public class LobbyRoomManager : NetworkRoomManager
      {
           base.OnServerSceneChanged( sceneName );
 
-          UI.DisableMainMenuUI();
+          if( sceneName != offlineScene && sceneName != RoomScene )
+          {
+               Transform spawn = GameObject.Find( "Player spawn" ).transform;
+               GameObject pawn = Instantiate( playerPawn, spawn.position, spawn.rotation );
+               NetworkServer.Spawn( pawn );
+
+               UI.DisableMainMenuUI();
+          }
+          else
+          {
+               UI.EnableMainMenuUI();
+               Cursor.visible = true;
+               Cursor.lockState = CursorLockMode.Confined;
+               player.SetupLobby();
+          }
      }
 
      // =====================================================================
 
+     [Server]
      public bool StartGame( string sceneName )
      {
           //if( numPlayers != 2 )
@@ -106,4 +133,10 @@ public class LobbyRoomManager : NetworkRoomManager
 
           return true;
      }
+
+     [Server]
+     public void ReturnToLobby()
+     {
+          ServerChangeScene( RoomScene );
+     } 
 }
