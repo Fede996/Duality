@@ -30,10 +30,9 @@ public class Radial : MonoBehaviour
         _i += Time.deltaTime ;
 
 
-        Debug.Log(_i);
 
 
-        if (_i - Frequency < 0.01) {
+        if (Mathf.Abs(_i - Frequency) < 0.01f) {
 
             startPoint = transform.position;
             SpawnProjectile(numberOfProjectiles);
