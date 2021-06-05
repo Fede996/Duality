@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3422959572891611565}
   - component: {fileID: 1513936526917169936}
   - component: {fileID: 4178188157183879251}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: GambeTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}

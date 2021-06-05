@@ -966,6 +966,7 @@ MonoBehaviour:
   player: {fileID: 1142456617}
   chaser: {fileID: 0}
   thisCamera: {fileID: 87693498}
+  stepTransition: 1
 --- !u!1 &105817253
 GameObject:
   m_ObjectHideFlags: 0
@@ -4992,6 +4993,10 @@ PrefabInstance:
     - target: {fileID: 4777729751643027747, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
       propertyPath: sceneId
       value: 1938695555
+      objectReference: {fileID: 0}
+    - target: {fileID: 5594900333308513079, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+      propertyPath: sceneId
+      value: 3299308316
       objectReference: {fileID: 0}
     - target: {fileID: 6313907295476722545, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
       propertyPath: m_IsTrigger
