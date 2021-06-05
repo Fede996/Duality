@@ -80,9 +80,22 @@ public class GamePlayerController : NetworkBehaviour
                player.Rotate( mouseX, tilt );
 
                if( Input.GetButtonDown( "ToggleFire" ) ) 
-                    player.ToggleFire();     
+                    player.ToggleFire();
 
-               if( player.Weapon.autoFire )
+
+               if (Input.GetButton("Grenade"))
+               {
+
+                    // Mostro la traiettoria della granata
+                    if (Input.GetButton("Fire"))
+                    {
+                         //Sparo la granata
+                         //Farò lo spawn della granata nella posizione del player
+                         //Cancello la traiettoria
+                         return;
+                    }
+               }
+               else if( player.Weapon.autoFire )
                {
                     player.Weapon.isFiring = Input.GetButton( "Fire" );
                }
@@ -91,6 +104,8 @@ public class GamePlayerController : NetworkBehaviour
                     if( Input.GetButtonDown( "Fire" ) )
                          player.Weapon.FireWeapon();
                }
+
+               //Cancello la traiettoria
           }
           else
           {
