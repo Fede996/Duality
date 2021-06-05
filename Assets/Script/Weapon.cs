@@ -18,7 +18,7 @@ public class Weapon : NetworkBehaviour
      
      [Header( "Muzzle Flash" )]
      [SerializeField] private GameObject muzzlePrefab;
-     [SerializeField] private Transform muzzleTransform;
+     [SerializeField] private Transform[] muzzleTransforms;
      [SerializeField] private AudioSource muzzleSoundSource;
      [SerializeField] private AudioClip muzzleSound;
      [SerializeField] private Vector2 audioPitch = new Vector2(.9f, 1.1f);
@@ -39,9 +39,6 @@ public class Weapon : NetworkBehaviour
      {
           if( autoFire && isFiring && ( ( timeLastFired + shotDelay ) <= Time.time ) )
           {
-
-               
-               
                FireWeapon();
           }
      }
@@ -50,17 +47,13 @@ public class Weapon : NetworkBehaviour
 
      public void FireWeapon()
      {
-          // Da chiamare in FixedUpdate()
           timeLastFired = Time.time;
 
           if (numberOfBullets != 0)
           {
                numberOfBullets--;
                CmdFireWeapon();
-
           }
-
-          
      }
 
      // =====================================================================
@@ -85,7 +78,11 @@ public class Weapon : NetworkBehaviour
      [ClientRpc]
      private void RpcFireWeapon()
      {
-          Instantiate( muzzlePrefab, muzzleTransform );
+          foreach( Transform parent in muzzleTransforms )
+          {
+               Instantiate( muzzlePrefab, parent );
+          }
+
           if( muzzleSoundSource != null )
           {
                muzzleSoundSource.pitch = Random.Range( audioPitch.x, audioPitch.y );

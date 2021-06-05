@@ -30,3 +30,8 @@ a. fixato sincronismo del movimento della testa tra i due client;
 
 
 <=== 05/06/2021 | Fede ======================>
+
+a. aggiunto modello mech a player character;
+
+b. fixato problema della doppia network identity sul player (solo su nuovo personaggio-mech);
+
