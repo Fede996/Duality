@@ -13312,7 +13312,7 @@ MonoBehaviour:
   playerSpawnMethod: 0
   spawnPrefabs:
   - {fileID: 908232412765883618, guid: 26a825120d3c2d44c88f4d9f9a28d9c4, type: 3}
-  - {fileID: 8291749506869361797, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+  - {fileID: 5579281804836223981, guid: e5b390a8c4799134c8fc051cfd7fdb78, type: 3}
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 8036302773801158395, guid: 5cdf1612af346a14bbf5b53ceaac75bf, type: 3}
@@ -13321,7 +13321,7 @@ MonoBehaviour:
   _allPlayersReady: 0
   roomSlots: []
   clientIndex: 0
-  playerPawn: {fileID: 8291749506869361797, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+  playerPawn: {fileID: 5579281804836223981, guid: e5b390a8c4799134c8fc051cfd7fdb78, type: 3}
 --- !u!1 &3167596236304246255
 GameObject:
   m_ObjectHideFlags: 0

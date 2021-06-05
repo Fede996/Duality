@@ -52,16 +52,12 @@ public class SharedCharacter : NetworkBehaviour
      private RaycastHit _slopeHit;
 
      private float _invincibilityFrame = 0;
-     private Vector3 nullvector;
 
      // =====================================================================
      // Commands from controllers
 
      public Role localRole;
-     public Vector3 moveDirection;
-     private float turn;
-     private float tilt;
-
+     
      public void Init( Role playerRole )
      {
           localRole = playerRole;
@@ -155,7 +151,6 @@ public class SharedCharacter : NetworkBehaviour
 
           if( isClient && localRole == Role.Legs )
           {
-               headCameraSocket.transform.localRotation = Quaternion.Euler( Mathf.LerpAngle( headCameraSocket.transform.localRotation.x, tilt, Time.deltaTime * 10 ), 90f, 0f );
                Body.rotation = Quaternion.Euler( Body.rotation.eulerAngles.x, Mathf.LerpAngle( Body.rotation.eulerAngles.y, turn, Time.deltaTime * 10 ), Body.rotation.eulerAngles.z );
           }
      }
@@ -168,6 +163,7 @@ public class SharedCharacter : NetworkBehaviour
           }
      }
 
+     [Server]
      private void OnControllerColliderHit( ControllerColliderHit hit )
      {
           if( !isServer ) return;
@@ -199,6 +195,10 @@ public class SharedCharacter : NetworkBehaviour
      // =====================================================================
      // Sync movement
 
+     private Vector3 moveDirection;
+     private float turn;
+     //private float tilt;
+
      public void Move( Vector3 movement )
      {
           if( stamina > 0 && movement.sqrMagnitude != 0 )
@@ -212,22 +212,11 @@ public class SharedCharacter : NetworkBehaviour
                CmdSetMoveDirection( Vector3.zero );
      }
 
-     public void Rotate( float deltaX, float tilt )
-     {
-          if( isClient )
-               RotateBody( deltaX, tilt );
-     }
-
-     
-
      [Command( requiresAuthority = false )]
      private void CmdSetMoveDirection( Vector3 movement )
      {
           moveDirection = movement;
      }
-
-     // =====================================================================
-     // Rigidbody movement
 
      private void MovePlayer( Vector3 direction )
      {
@@ -248,6 +237,48 @@ public class SharedCharacter : NetworkBehaviour
           }
      }
 
+     public void Rotate( float turnAmount, float tilt )
+     {
+          headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
+          Body.Rotate( Vector3.up * turnAmount );
+     }
+
+     private IEnumerator UpdateRotation()
+     {
+          float prevTurn = Body.rotation.eulerAngles.y;
+
+          for(; ; )
+          {
+               float currTurn = Body.rotation.eulerAngles.y;
+
+               if( currTurn != prevTurn )
+               {
+                    CmdUpdateRotation( currTurn );
+                    prevTurn = currTurn;
+               }
+
+               yield return new WaitForSecondsRealtime( rotationUpdateInterval );
+          }
+     }
+
+     [Command( requiresAuthority = false )]
+     private void CmdUpdateRotation( float turn )
+     {
+          RpcUpdateRotation( turn );
+     }
+
+     [ClientRpc]
+     private void RpcUpdateRotation( float turn )
+     {
+          if( localRole == Role.Legs )
+          {
+               this.turn = turn;
+          }
+     }
+
+     // =====================================================================
+     // Movement checks
+
      //private void Jump()
      //{
      //     if( _isGrounded )
@@ -255,6 +286,14 @@ public class SharedCharacter : NetworkBehaviour
      //          _rigidbody.velocity = new Vector3( _rigidbody.velocity.x, 0, _rigidbody.velocity.z );
      //          _rigidbody.AddForce( Vector3.up * jumpForce, ForceMode.Impulse );
      //     }
+     //}
+
+     //private void SetSpeed( bool sprinting )
+     //{
+     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
+     //}     //private void SetSpeed( bool sprinting )
+     //{
+     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
      //}
 
      private bool IsOnSlope()
@@ -288,57 +327,6 @@ public class SharedCharacter : NetworkBehaviour
                physicMaterial.staticFriction = 0;
                physicMaterial.dynamicFriction = 0;
           }
-     }
-
-     //private void SetSpeed( bool sprinting )
-     //{
-     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
-     //}     //private void SetSpeed( bool sprinting )
-     //{
-     //     movementSpeed = Mathf.Lerp( movementSpeed, sprinting ? sprintSpeed : walkSpeed, acceleration * Time.deltaTime );
-     //}
-
-     private void RotateBody( float turnAmount, float tilt )
-     {
-          headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
-          Body.Rotate( Vector3.up * turnAmount );
-     }
-
-     private IEnumerator UpdateRotation()
-     {
-          float prevTurn = Body.rotation.eulerAngles.y;
-          float prevTilt = headCameraSocket.transform.localRotation.x;
-
-          for( ; ; )
-          {
-               float currTurn = Body.rotation.eulerAngles.y;
-               float currTilt = headCameraSocket.transform.localRotation.x;
-
-               if( currTilt != prevTilt || currTurn != prevTurn )
-               {
-                    CmdUpdateRotation( currTurn, currTilt );
-                    prevTilt = currTilt;
-                    prevTurn = currTurn;
-               }
-
-               yield return new WaitForSecondsRealtime( rotationUpdateInterval );
-          }
-     }
-
-     [Command( requiresAuthority = false )]
-     private void CmdUpdateRotation( float turn, float tilt )
-     {
-          RpcUpdateRotation( turn, tilt );
-     }
-
-     [ClientRpc]
-     private void RpcUpdateRotation( float turn, float tilt )
-     {
-          if( localRole == Role.Legs )
-          {
-               this.turn = turn;
-               this.tilt = tilt;
-          } 
      }
 
      // =====================================================================
