@@ -6,25 +6,26 @@ using UnityEngine.AI;
 
 [RequireComponent( typeof( NetworkTransform ) )]
 [RequireComponent( typeof( NavMeshAgent ) )]
+[RequireComponent( typeof( Rigidbody ) )]
 public class ChaserEnemy : Enemy
 {
      [Header( "Movement" )]
-     [SerializeField] private float movementSpeed = 1;
+     public float movementSpeed = 1;
 
      private NavMeshAgent agent;
      protected Transform player;
-
-     private float movementSpeedSave;
      
      // =====================================================================
 
      protected override void Start()
      {
-          player = GameObject.Find( "Player" ).transform;
+          if( isServer )
+          {
+               player = FindObjectOfType<SharedCharacter>().transform;
 
-          agent = GetComponent<NavMeshAgent>();
-          agent.speed = movementSpeed;
-          
+               agent = GetComponent<NavMeshAgent>();
+               agent.speed = movementSpeed; 
+          }
           
           base.Start();
      }
@@ -33,16 +34,9 @@ public class ChaserEnemy : Enemy
      {
           if( !isServer ) return;
 
-          
-          
-          
-          if( movementSpeed != 0  )
+          if( movementSpeed != 0 && player != null )
           {
                agent.SetDestination( player.position ); 
           }
      }
-
-    
-     
-     
 }

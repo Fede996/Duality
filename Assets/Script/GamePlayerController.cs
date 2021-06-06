@@ -80,7 +80,7 @@ public class GamePlayerController : NetworkBehaviour
                player.Rotate( mouseX, tilt );
 
                if( Input.GetButtonDown( "ToggleFire" ) ) 
-                    player.ToggleFire();
+                    player.weapon.ToggleFire();
 
 
                if (Input.GetButton("Grenade"))
@@ -95,14 +95,14 @@ public class GamePlayerController : NetworkBehaviour
                          return;
                     }
                }
-               else if( player.Weapon.autoFire )
+               else if( player.weapon.autoFire )
                {
-                    player.Weapon.isFiring = Input.GetButton( "Fire" );
+                    player.weapon.isFiring = Input.GetButton( "Fire" );
                }
                else
                {
                     if( Input.GetButtonDown( "Fire" ) )
-                         player.Weapon.FireWeapon();
+                         player.weapon.FireWeapon();
                }
 
                //Cancello la traiettoria
@@ -122,18 +122,22 @@ public class GamePlayerController : NetworkBehaviour
      // Game events
 
      [Server]
-     public void OnEndLevel()
+     public void OnEndLevel( bool gameOver )
      {
-          RpcOnEndLevel();
+          RpcOnEndLevel( gameOver );
      }
 
      [ClientRpc]
-     private void RpcOnEndLevel()
+     private void RpcOnEndLevel( bool gameOver )
      {
           if( isLocalPlayer )
           {
                disableInput = true;
-               GetRewards();
+
+               if( !gameOver )
+               {
+                    GetRewards();
+               }
           }
      }
 

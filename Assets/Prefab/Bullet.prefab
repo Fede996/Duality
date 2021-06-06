@@ -14,14 +14,13 @@ GameObject:
   - component: {fileID: 8337452395685793692}
   - component: {fileID: 2594156554786479428}
   - component: {fileID: 688073824756303706}
-  - component: {fileID: 6459074934332370595}
   - component: {fileID: 1528998573288565805}
   - component: {fileID: 2252558020150700463}
   - component: {fileID: 8642427254491191000}
   - component: {fileID: 6365657628191469956}
   m_Layer: 6
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -116,7 +115,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &688073824756303706
 MonoBehaviour:
@@ -135,27 +134,6 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &6459074934332370595
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 908232412765883618}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0
-  clientAuthority: 0
-  localPositionSensitivity: 0.01
-  localRotationSensitivity: 0.01
-  localScaleSensitivity: 0.01
-  compressRotation: 0
-  interpolateScale: 0
-  syncScale: 0
 --- !u!114 &1528998573288565805
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,8 +149,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   timeToLive: 10
-  Damage: 1
-  KnockbackIntensity: 0.5
+  damage: 1
+  knockbackIntensity: 500
+  parent: {fileID: 0}
 --- !u!198 &2252558020150700463
 ParticleSystem:
   m_ObjectHideFlags: 0

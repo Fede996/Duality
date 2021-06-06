@@ -5,15 +5,20 @@ using Mirror;
 
 [RequireComponent( typeof( Rigidbody ) )]
 [RequireComponent( typeof( Collider ) )]
-[RequireComponent( typeof( NetworkTransform ) )]
 public class Bullet : NetworkBehaviour
 {
      [Header( "Bullet Settings" )]
-     [SerializeField] private float timeToLive = 5;
-     public int Damage = 1;
-     public float KnockbackIntensity = .5f;
+     public float timeToLive = 5;
+     public int damage = 1;
+     public float knockbackIntensity = .5f;
+     public Collider parent;
 
      // =====================================================================
+
+     private void Start()
+     {
+          Physics.IgnoreCollision( GetComponent<Collider>(), parent );
+     }
 
      private void Update()
      {
@@ -25,33 +30,41 @@ public class Bullet : NetworkBehaviour
           }
           else
           {
-               DestroyBullet();
-               Destroy( this.gameObject );
+               NetworkServer.Destroy( gameObject );
           }
      }
 
+     [Server]
      private void OnTriggerEnter( Collider other )
      {
-          if( !isServer ) return;
-
-          if( !other.CompareTag( "Enemy" ) )
+          if( !other.gameObject.CompareTag( "Enemy" ) )
           {
-               if( other.CompareTag( "Player" ) )
+               if( other.gameObject.CompareTag( "Player" ) )
                {
-                    Vector3 knockback = ( other.transform.position - transform.position ).normalized * KnockbackIntensity;
-                    other.GetComponent<SharedCharacter>().TakeDamage( Damage, knockback );
+                    Vector3 knockback = new Vector3 ( other.transform.position.x - transform.position.x, 0, other.transform.position.z - transform.position.z ).normalized * knockbackIntensity;
+                    SharedCharacter player = other.gameObject.GetComponent<SharedCharacter>();
+                    if( player != null )
+                         player.TakeDamage( damage, knockback );
                }
 
-               DestroyBullet();
-               Destroy( this.gameObject );
+               NetworkServer.Destroy( gameObject );
           }
      }
 
-     // =====================================================================
-
-     [ClientRpc]
-     private void DestroyBullet()
+     [Server]
+     private void OnTriggerStay( Collider other )
      {
-          Destroy( this.gameObject );
+          if( !other.gameObject.CompareTag( "Enemy" ) )
+          {
+               if( other.gameObject.CompareTag( "Player" ) )
+               {
+                    Vector3 knockback = new Vector3 ( other.transform.position.x - transform.position.x, 0, other.transform.position.z - transform.position.z ).normalized * knockbackIntensity;
+                    SharedCharacter player = other.gameObject.GetComponent<SharedCharacter>();
+                    if( player != null )
+                         player.TakeDamage( damage, knockback );
+               }
+
+               NetworkServer.Destroy( gameObject );
+          }
      }
 }

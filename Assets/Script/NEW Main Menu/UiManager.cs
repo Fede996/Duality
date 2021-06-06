@@ -54,6 +54,7 @@ public class UiManager : MonoBehaviour
      public GameObject sight;
      public GameObject weaponInfo;
      public Text fireMode;
+     public GameObject gameOver;
 
      [Header( "Animation" )]
      public AnimationClip[] clips;
@@ -423,6 +424,11 @@ public class UiManager : MonoBehaviour
           fireMode.text = mode;
      }
 
+     public void OnButtonReturnToLobby()
+     {
+          FindObjectOfType<SharedCharacter>().CmdReturnToLobby();
+     }
+
      // ==================================================================================
      // Animations
 
@@ -466,6 +472,7 @@ public class UiManager : MonoBehaviour
      public void EnableMainMenuUI()
      {
           desktop.SetActive( true );
+          gameOver.SetActive( false );
           gameUiRoot.SetActive( false );
      }
 

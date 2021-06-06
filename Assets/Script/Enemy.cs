@@ -6,11 +6,10 @@ using Mirror;
 public class Enemy : SolidTarget
 {
      [Header( "Enemy Settings" )]
-     [SerializeField] private float maxHealth = 100;
-     [SerializeField] public int Damage = 1;
-     [SerializeField] public float KnockbackIntensity = .5f;
+     public float maxHealth = 100;
+     public int damage = 1;
+     public float knockbackIntensity = 1000f;
 
-     [SyncVar( hook = nameof( OnHealthChanged ) )]
      public float health;
 
      protected virtual void Start()
@@ -23,8 +22,22 @@ public class Enemy : SolidTarget
      {
           if( collision.collider.gameObject.CompareTag( "Player" ) )
           {
-               Vector3 knockback = ( collision.rigidbody.position - transform.position ).normalized * KnockbackIntensity;
-               collision.gameObject.GetComponent<SharedCharacter>().TakeDamage( Damage, knockback );
+               Vector3 knockback = new Vector3 ( collision.rigidbody.position.x - transform.position.x, 0, collision.rigidbody.position.z - transform.position.z ).normalized * knockbackIntensity;
+               SharedCharacter player = collision.gameObject.GetComponent<SharedCharacter>();
+               if( player != null )
+                    player.TakeDamage( damage, knockback );
+          }
+     }
+
+     [Server]
+     private void OnCollisionStay( Collision collision )
+     {
+          if( collision.collider.gameObject.CompareTag( "Player" ) )
+          {
+               Vector3 knockback = new Vector3 ( collision.rigidbody.position.x - transform.position.x, 0, collision.rigidbody.position.z - transform.position.z ).normalized * knockbackIntensity;
+               SharedCharacter player = collision.gameObject.GetComponent<SharedCharacter>();
+               if( player != null )
+                    player.TakeDamage( damage, knockback );
           }
      }
 
@@ -36,15 +49,6 @@ public class Enemy : SolidTarget
           health -= damage;
 
           if( health <= 0 )
-               Destroy( this.gameObject );
-     }
-
-     // =====================================================================
-
-     [Client]
-     private void OnHealthChanged( float newValue, float oldVAlue )
-     {
-          if( health <= 0 )
-               Destroy( this.gameObject );
+               NetworkServer.Destroy( gameObject );
      }
 }

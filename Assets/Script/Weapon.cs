@@ -26,11 +26,14 @@ public class Weapon : NetworkBehaviour
      public bool isFiring = false;
 
      private float timeLastFired;
+     private UiManager UI;
 
      // =====================================================================
 
      private void Start()
      {
+          UI = FindObjectOfType<UiManager>();
+
           if( muzzleSoundSource != null )
                muzzleSoundSource.clip = muzzleSound;
      }
@@ -54,6 +57,12 @@ public class Weapon : NetworkBehaviour
                numberOfBullets--;
                CmdFireWeapon();
           }
+     }
+
+     public void ToggleFire()
+     {
+          autoFire = !autoFire;
+          UI.SetFireMode( autoFire ? "AUTO" : "SINGLE" );
      }
 
      // =====================================================================

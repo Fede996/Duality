@@ -1,19 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Room : MonoBehaviour
+public class Room : NetworkBehaviour
 {
      public Transform roomCameraSocket;
-
-     private SharedCharacter player;
 
      // =======================================================
      // Unity events 
 
-     void Awake()
+     void Start()
      {
-          player = FindObjectOfType<SharedCharacter>();
+
      }
 
      // =======================================================

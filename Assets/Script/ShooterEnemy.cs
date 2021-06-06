@@ -6,9 +6,9 @@ using Mirror;
 public class ShooterEnemy : ChaserEnemy
 {
      [Header( "Shooting" )]
-     [SerializeField] private GameObject bulletPrefab;
-     [SerializeField] private float bulletSpeed = 1;
-     [SerializeField] private float delayBetweenShots = 1;
+     public GameObject bulletPrefab;
+     public float bulletSpeed = 1;
+     public float delayBetweenShots = 1;
 
      private float timeToNextShot;
 
@@ -45,8 +45,9 @@ public class ShooterEnemy : ChaserEnemy
      {
           GameObject projectile = Instantiate( bulletPrefab, transform.position, Quaternion.identity, null );
           Bullet bullet = projectile.GetComponent<Bullet>();
-          bullet.Damage = Damage;
-          bullet.KnockbackIntensity = KnockbackIntensity;
+          bullet.damage = damage;
+          bullet.knockbackIntensity = knockbackIntensity;
+          bullet.parent = GetComponent<Collider>();
 
           Vector3 direction = ( player.position - transform.position );
           direction.y = 0;

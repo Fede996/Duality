@@ -1,80 +1,64 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class Radial : MonoBehaviour
+public class Radial : ChaserEnemy
 {
+     [Header( "Projectile Settings" )]
+     public int numberOfProjectiles;
+     public int projectileSpeed;
+     public GameObject projectilePrefab;
+     public float frequency = 100;
+     public float radialSpeed;
 
-    [Header("Projectile Settings")]
-    public int numberOfProjectiles;
-    public int projectileSpeed;
-    public float Frequency = 100;
-    public GameObject ProjectilePrefab;
-    public float radialSpeed;
+     private const float radius = 3f;
+     private Vector3 startPoint;
+     private float elapsed = 0;
 
-    private Vector3 startPoint;
-    private const float radius = 3f;
-    private float _i;
-    private Rigidbody BulletController;
-    // Start is called before the first frame update
-    void Start()
-    {
-        _i = 0;
-        BulletController = GetComponent<Rigidbody>();
-    }
+     protected override void Update()
+     {
+          if( !isServer ) return;
 
-    // Update is called once per frame
-    void FixedUpdate()
-    {
+          elapsed += Time.deltaTime;
+          if( frequency - elapsed <= 0 )
+          {
+               startPoint = transform.position;
+               SpawnProjectile( numberOfProjectiles );
 
-        _i += Time.deltaTime ;
+               elapsed = 0;
+          }
 
+          transform.Rotate( 0f, Time.deltaTime * radialSpeed, 0f );
 
+          base.Update();
+     }
 
+     private void SpawnProjectile( int numberOfProjectiles )
+     {
+          float angleStep = 360f / numberOfProjectiles;
+          float angle = 0f;
 
-        if (Mathf.Abs(_i - Frequency) < 0.01f) {
+          for( int i = 0; i < numberOfProjectiles; i++ )
+          {
+               float projectileDirXPosition = startPoint.x + Mathf.Sin( ( angle + transform.rotation.y * Mathf.PI *radialSpeed ) * Mathf.PI  / 180 ) * radius;
+               float projectileDirYPosition = startPoint.y + Mathf.Cos( ( angle + transform.rotation.y * Mathf.PI * radialSpeed ) * Mathf.PI  / 180 ) * radius;
 
-            startPoint = transform.position;
-            SpawnProjectile(numberOfProjectiles);
+               //Debug.Log(transform.rotation.y * Mathf.PI * radialSpeed);
 
-            _i = 0;
-        }
+               Vector3 projectileVector = new Vector3( projectileDirXPosition, projectileDirYPosition, 0 );
+               Vector3 projectileMoveDirection = ( projectileVector - startPoint ).normalized * projectileSpeed;
 
-        transform.Rotate( 0f, Time.deltaTime * radialSpeed , 0f);
+               GameObject tmpObj = Instantiate( projectilePrefab, startPoint , Quaternion.identity );
+               tmpObj.GetComponent<Rigidbody>().velocity = new Vector3( projectileMoveDirection.x, 0, projectileMoveDirection.y );
+               Bullet bullet = tmpObj.GetComponent<Bullet>();
+               bullet.damage = damage;
+               bullet.knockbackIntensity = knockbackIntensity;
+               bullet.parent = GetComponent<Collider>();
 
-    }
+               NetworkServer.Spawn( tmpObj );
 
-
-
-    private void SpawnProjectile(int _numberOfProjectiles)
-    {
-
-        float angleStep = 360f   / _numberOfProjectiles;
-        float angle = 0f;
-
-        for(int i = 0; i < _numberOfProjectiles ; i++)
-        {
-            float projectileDirXPosition = startPoint.x + Mathf.Sin(((angle + transform.rotation.y * Mathf.PI *radialSpeed) * Mathf.PI) / 180) * radius;
-            float projectileDirYPosition = startPoint.y + Mathf.Cos(((angle + transform.rotation.y * Mathf.PI * radialSpeed) * Mathf.PI) / 180) * radius;
-
-            //Debug.Log(transform.rotation.y * Mathf.PI * radialSpeed);
-
-            Vector3 projectileVector = new Vector3(projectileDirXPosition, projectileDirYPosition, 0);
-            Vector3 projectileMoveDirection = (projectileVector - startPoint).normalized * projectileSpeed;
-
-
-            GameObject tmpObj = Instantiate(ProjectilePrefab, startPoint , Quaternion.identity);
-
-            tmpObj.GetComponent<Rigidbody>().velocity = new Vector3(projectileMoveDirection.x, 0, projectileMoveDirection.y );
-
-            angle += angleStep;
-
-
-        }
-
-
-
-    }
-
-
+               angle += angleStep;
+          }
+     }
 }

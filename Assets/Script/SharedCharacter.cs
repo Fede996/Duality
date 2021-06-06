@@ -37,6 +37,7 @@ public class SharedCharacter : NetworkBehaviour
      [Header( "Player settings" )]
      public int maxLives = 5;
      public float timeBetweenHits = 1;
+     public ForceMode knockbackMode = ForceMode.Force;
      public int bullets = 20;
      public float stamina = 2000;
      public float staminaCost = 100;
@@ -44,9 +45,11 @@ public class SharedCharacter : NetworkBehaviour
      [Header( "References" )]
      public Transform headCameraSocket;
      public Transform legsCameraSocket;
-     public Transform Body;
-     public Weapon Weapon;
+     public Transform mechHead;
+     public Transform mechLegs;
 
+     [HideInInspector] public Weapon weapon;
+     private Animator animator;
      private Rigidbody _rigidbody;
      private float _playerHeight;
      private RaycastHit _slopeHit;
@@ -57,11 +60,11 @@ public class SharedCharacter : NetworkBehaviour
      // Commands from controllers
 
      public Role localRole;
-     
+
      public void Init( Role playerRole )
      {
           localRole = playerRole;
-          OnLivesChanged( Lives, Lives );
+          OnLivesChanged( lives, lives );
 
           if( playerRole == Role.Head )
           {
@@ -76,30 +79,24 @@ public class SharedCharacter : NetworkBehaviour
           }
      }
 
-     public void ToggleFire()
-     {
-          Weapon.autoFire = !Weapon.autoFire;
-          UI.SetFireMode( Weapon.autoFire ? "AUTO" : "SINGLE" );
-     }
-
      [Server]
-     public void OnEndLevel()
+     public void OnEndLevel( bool gameOver )
      {
+          foreach( GamePlayerController player in FindObjectsOfType<GamePlayerController>() )
+          {
+               player.OnEndLevel( gameOver );
+          }
+
           Camera.main.transform.parent = null;
-          RpcOnEndLevel();
+          RpcOnEndLevel( gameOver );
 
-          StartCoroutine( DestroyPlayer() );
-     }
-
-     [Server]
-     private IEnumerator DestroyPlayer()
-     {
-          yield return new WaitForSeconds( 1 );
           NetworkServer.Destroy( gameObject );
+
+          ( ( LobbyRoomManager )NetworkManager.singleton ).ReturnToLobby();
      }
 
      [ClientRpc]
-     private void RpcOnEndLevel()
+     private void RpcOnEndLevel( bool gameOver )
      {
           Camera.main.transform.parent = null;
      }
@@ -110,6 +107,10 @@ public class SharedCharacter : NetworkBehaviour
      private void Start()
      {
           UI = FindObjectOfType<UiManager>();
+          weapon = GetComponent<Weapon>();
+          animator = GetComponentInChildren<Animator>();
+
+          animator.SetFloat( "WalkSpeed", 0 );
 
           _rigidbody = GetComponent<Rigidbody>();
           _rigidbody.freezeRotation = true;
@@ -129,30 +130,38 @@ public class SharedCharacter : NetworkBehaviour
           _playerHeight = collider.bounds.size.y;
           collider.material = physicMaterial;
 
-          Lives = maxLives;
+          lives = maxLives;
 
           DontDestroyOnLoad( gameObject );
      }
 
      private void Update()
      {
+          // solo per server
           if( isServer )
           {
                _isGrounded = Physics.CheckSphere( groundCheck.position, groundDistance, groundLayer );
 
                SetDrag();
                SetFriction();
+
+               if( _invincibilityFrame > 0 )
+               {
+                    _invincibilityFrame -= Time.deltaTime;
+               }
           }
 
-          if( _invincibilityFrame > 0 )
-          {
-               _invincibilityFrame -= Time.deltaTime;
-          }
-
+          // solo per client
           if( isClient && localRole == Role.Legs )
           {
-               Body.rotation = Quaternion.Euler( Body.rotation.eulerAngles.x, Mathf.LerpAngle( Body.rotation.eulerAngles.y, turn, Time.deltaTime * 10 ), Body.rotation.eulerAngles.z );
+               mechHead.rotation = Quaternion.Euler( mechHead.rotation.eulerAngles.x, Mathf.LerpAngle( mechHead.rotation.eulerAngles.y, turn, Time.deltaTime * 10 ), mechHead.rotation.eulerAngles.z );
           }
+
+          // per tutti
+          Vector3 planarVelocity = _rigidbody.velocity;
+          planarVelocity.y = 0;
+          mechLegs.LookAt( transform.position + planarVelocity );
+          animator.SetFloat( "WalkSpeed", planarVelocity.magnitude );
      }
 
      private void FixedUpdate()
@@ -160,19 +169,6 @@ public class SharedCharacter : NetworkBehaviour
           if( isServer )
           {
                MovePlayer( moveDirection );
-          }
-     }
-
-     [Server]
-     private void OnControllerColliderHit( ControllerColliderHit hit )
-     {
-          if( !isServer ) return;
-
-          Enemy enemy = hit.gameObject.GetComponent<Enemy>();
-          if( enemy != null && _invincibilityFrame <= 0 )
-          {
-               Lives -= enemy.Damage;
-               _invincibilityFrame = timeBetweenHits;
           }
      }
 
@@ -187,9 +183,38 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( _invincibilityFrame <= 0 )
           {
-               Lives -= damage;
-               _invincibilityFrame = timeBetweenHits;
+               lives -= damage;
+
+               if( lives <= 0 )
+               {
+                    Die();
+               }
+               else
+               {
+                    _invincibilityFrame = timeBetweenHits;
+                    _rigidbody.AddForce( knockback, knockbackMode );
+               }
           }
+     }
+
+     [Server]
+     private void Die()
+     {
+          RpcDie();
+     }
+
+     [ClientRpc]
+     private void RpcDie()
+     {
+          UI.gameOver.SetActive( true );
+          Cursor.lockState = CursorLockMode.Confined;
+          Cursor.visible = true;
+     }
+
+     [Command( requiresAuthority = false )]
+     public void CmdReturnToLobby()
+     {
+          OnEndLevel( lives <= 0 );
      }
 
      // =====================================================================
@@ -239,17 +264,17 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Rotate( float turnAmount, float tilt )
      {
-          headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 90f, 0f );
-          Body.Rotate( Vector3.up * turnAmount );
+          headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 0, 0 );
+          mechHead.Rotate( Vector3.up * turnAmount );
      }
 
      private IEnumerator UpdateRotation()
      {
-          float prevTurn = Body.rotation.eulerAngles.y;
+          float prevTurn = mechHead.rotation.eulerAngles.y;
 
           for(; ; )
           {
-               float currTurn = Body.rotation.eulerAngles.y;
+               float currTurn = mechHead.rotation.eulerAngles.y;
 
                if( currTurn != prevTurn )
                {
@@ -340,7 +365,7 @@ public class SharedCharacter : NetworkBehaviour
      [SyncVar( hook = nameof( OnGambePointsChanged ) )]
      public int GambePoints = 0;
      [SyncVar( hook = nameof( OnLivesChanged ) )]
-     public int Lives = 5;
+     public int lives = 5;
 
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {

@@ -35,3 +35,18 @@ a. aggiunto modello mech a player character;
 
 b. fixato problema della doppia network identity sul player (solo su nuovo personaggio-mech);
 
+
+<=== 06/06/2021 | Fede ======================>
+
+a. aggiunta rotazione indipendente a gambe e testa del mech;
+
+b. aggiunta animazione alle gambe del mech;
+
+c. modificata logica di collisione con i nemici - riaggiunto knockback quando si viene colpiti;
+
+d. modificata logica dei proiettili; 
+
+e. aggiunta schermata di game over quando si finiscono le vite;
+
+f. modificato nemico 'Radial' per renderlo compatibile tra client e server;
+

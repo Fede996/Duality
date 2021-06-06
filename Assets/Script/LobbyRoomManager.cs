@@ -95,7 +95,7 @@ public class LobbyRoomManager : NetworkRoomManager
 
           if( sceneName != offlineScene && sceneName != RoomScene )
           {
-               Transform spawn = GameObject.Find( "Player spawn" ).transform;
+               Transform spawn = GameObject.FindWithTag( "Spawn" ).transform;
                GameObject pawn = Instantiate( playerPawn, spawn.position, spawn.rotation );
                NetworkServer.Spawn( pawn );
 

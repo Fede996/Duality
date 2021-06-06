@@ -1,11 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
-public class DungeonGenerator : MonoBehaviour
+public class DungeonGenerator : NetworkBehaviour
 {
-     public GameObject player;
-
      [Header( "Settings" )]
      public Transform root;
      public Vector2 mapSize;
@@ -34,16 +33,10 @@ public class DungeonGenerator : MonoBehaviour
 
      private void Start()
      {
-          Generate( numberOfRooms );
-     }
-
-     private void Update()
-     {
-          //if( Input.GetKeyDown( KeyCode.G ) )
-          //{
-          //     Clear();
-          //     Generate( numberOfRooms );
-          //}
+          if( isServer )
+          {
+               Generate( numberOfRooms );
+          }
      }
 
      // =======================================================
@@ -72,9 +65,10 @@ public class DungeonGenerator : MonoBehaviour
           }
      }
 
+     [Server]
      private void Generate( int numberOfRooms )
      {
-          if( map == null ) 
+          if( map == null )
                InitMap();
 
           // valori ammessi per le celle:
@@ -190,66 +184,67 @@ public class DungeonGenerator : MonoBehaviour
                     }
                }
                room.transform.localPosition = position;
+               NetworkServer.Spawn( room );
 
                // calcolo porte
                GameObject wall = null;
                if( x + 1 <= map.Length - 1 && map[x + 1][y] != 0 )
                {
                     // porta a est
-                    wall = GameObject.Instantiate( walls[3], room.transform );
+                    wall = Instantiate( walls[3], room.transform );
                }
                else
                {
-                    wall = GameObject.Instantiate( walls[1], room.transform );
+                    wall = Instantiate( walls[1], room.transform );
                }
                wall.transform.localPosition = new Vector3( roomSize.x / 2 - wallWidth / 2, 0, 0 );
+               NetworkServer.Spawn( wall );
 
                if( x != 0 && map[x - 1][y] != 0 )
                {
                     // porta a ovest
-                    wall = GameObject.Instantiate( walls[3], room.transform );
+                    wall = Instantiate( walls[3], room.transform );
                }
                else
                {
-                    wall = GameObject.Instantiate( walls[1], room.transform );
+                    wall = Instantiate( walls[1], room.transform );
                }
                wall.transform.localPosition = new Vector3( -roomSize.x / 2 + wallWidth / 2, 0, 0 );
+               NetworkServer.Spawn( wall );
 
                if( y + 1 <= map[x].Length - 1 && map[x][y + 1] != 0 )
                {
                     // porta a nord
-                    wall = GameObject.Instantiate( walls[2], room.transform );
+                    wall = Instantiate( walls[2], room.transform );
                }
                else
                {
-                    wall = GameObject.Instantiate( walls[0], room.transform );
+                    wall = Instantiate( walls[0], room.transform );
                }
                wall.transform.localPosition = new Vector3( 0, 0, roomSize.y / 2 - wallWidth / 2 );
+               NetworkServer.Spawn( wall );
 
                if( y != 0 && map[x][y - 1] != 0 )
                {
                     // porta a sud
-                    wall = GameObject.Instantiate( walls[2], room.transform );
+                    wall = Instantiate( walls[2], room.transform );
                }
                else
                {
-                    wall = GameObject.Instantiate( walls[0], room.transform );
+                    wall = Instantiate( walls[0], room.transform );
                }
                wall.transform.localPosition = new Vector3( 0, 0, -roomSize.y / 2 + wallWidth / 2 );
-
+               NetworkServer.Spawn( wall );
           }
-
-          // spawno il giocatore
-          Transform spawn = GameObject.Find( "Player spawn" ).transform; 
-          Instantiate( player, spawn.position, spawn.rotation );
      }
 
+     [Server]
      private void Clear()
      {
           roomLocations.Clear();
           for( int i = 0; i < root.childCount; i++ )
           {
-               Destroy( root.GetChild( i ).gameObject );
+               NetworkServer.Destroy( root.GetChild( i ).gameObject );
           }
           InitMap();
      }

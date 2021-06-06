@@ -10,13 +10,7 @@ public class LevelEnd : MonoBehaviour
      {
           if( other.CompareTag( "Player" ) )
           {
-               foreach( GamePlayerController player in FindObjectsOfType<GamePlayerController>() )
-               {
-                    player.OnEndLevel();
-               }
-               other.GetComponent<SharedCharacter>().OnEndLevel();
-
-               ( ( LobbyRoomManager )NetworkManager.singleton ).ReturnToLobby();
+               other.GetComponent<SharedCharacter>().OnEndLevel( false );
           }
      }
 }
