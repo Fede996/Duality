@@ -51,7 +51,7 @@ public class ShooterEnemy : ChaserEnemy
 
           Vector3 direction = ( player.position - transform.position );
           direction.y = 0;
-          bullet.GetComponent<Rigidbody>().velocity = direction.normalized * bulletSpeed;
+          bullet.initialVelocity = direction.normalized * bulletSpeed;
 
           NetworkServer.Spawn( projectile );
      }

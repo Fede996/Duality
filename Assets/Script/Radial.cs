@@ -50,11 +50,11 @@ public class Radial : ChaserEnemy
                Vector3 projectileMoveDirection = ( projectileVector - startPoint ).normalized * projectileSpeed;
 
                GameObject tmpObj = Instantiate( projectilePrefab, startPoint , Quaternion.identity );
-               tmpObj.GetComponent<Rigidbody>().velocity = new Vector3( projectileMoveDirection.x, 0, projectileMoveDirection.y );
                Bullet bullet = tmpObj.GetComponent<Bullet>();
                bullet.damage = damage;
                bullet.knockbackIntensity = knockbackIntensity;
                bullet.parent = GetComponent<Collider>();
+               bullet.initialVelocity = new Vector3( projectileMoveDirection.x, 0, projectileMoveDirection.y );
 
                NetworkServer.Spawn( tmpObj );
 

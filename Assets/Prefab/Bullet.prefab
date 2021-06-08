@@ -151,6 +151,7 @@ MonoBehaviour:
   timeToLive: 10
   damage: 1
   knockbackIntensity: 500
+  initialVelocity: {x: 0, y: 0, z: 0}
   parent: {fileID: 0}
 --- !u!198 &2252558020150700463
 ParticleSystem:

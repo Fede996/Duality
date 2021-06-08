@@ -88,6 +88,12 @@ public class SharedCharacter : NetworkBehaviour
           }
 
           Camera.main.transform.parent = null;
+          if( localRole == Role.Legs )
+          {
+               Camera.main.orthographic = false;
+               DontDestroyOnLoad( Camera.main.gameObject );
+          }
+
           RpcOnEndLevel( gameOver );
 
           NetworkServer.Destroy( gameObject );
@@ -99,6 +105,11 @@ public class SharedCharacter : NetworkBehaviour
      private void RpcOnEndLevel( bool gameOver )
      {
           Camera.main.transform.parent = null;
+          if( localRole == Role.Legs )
+          {
+               Camera.main.orthographic = false;
+               DontDestroyOnLoad( Camera.main.gameObject );
+          }
      }
 
      // =====================================================================

@@ -203,8 +203,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7323076034446573693}
-  - component: {fileID: 706806743262850079}
   - component: {fileID: 3456628152068746313}
+  - component: {fileID: 706806743262850079}
   m_Layer: 0
   m_Name: RoomBase
   m_TagString: Untagged
@@ -230,21 +230,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &706806743262850079
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7323076034446573692}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 410b9c92270d61649a17446a1c0e2ff9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  syncMode: 0
-  syncInterval: 0.1
-  roomCameraSocket: {fileID: 7323076035107139319}
 --- !u!114 &3456628152068746313
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -262,6 +247,29 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
+--- !u!114 &706806743262850079
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7323076034446573692}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 410b9c92270d61649a17446a1c0e2ff9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  roomSize: {x: 16, y: 9}
+  walls:
+  - {fileID: 1356251252866254583, guid: d44b83d0db834b74a82e04b88cd67120, type: 3}
+  - {fileID: 4304618897675715009, guid: 05aa380d979bd7e40a86a8926fbd2c3d, type: 3}
+  - {fileID: 3533046512762578454, guid: 4e09d58ca7aee5d4983cfd95951ea948, type: 3}
+  - {fileID: 3800523845672706638, guid: f164485ec2ed21848a89215a3ba5b9cc, type: 3}
+  wallWidth: 0.5
+  roomCameraSocket: {fileID: 7323076035107139319}
+  content: {fileID: 0}
 --- !u!1 &7323076035107139318
 GameObject:
   m_ObjectHideFlags: 0

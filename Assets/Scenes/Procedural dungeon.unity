@@ -291,7 +291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5d4a292280c9e394ba63da1438df1fcb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 8291749506869361797, guid: 80fada7ef188e604f8fff45eb29a65e1, type: 3}
+  syncMode: 0
+  syncInterval: 0.1
   root: {fileID: 518408039}
   mapSize: {x: 100, y: 100}
   numberOfRooms: 10
@@ -299,13 +300,8 @@ MonoBehaviour:
   endRoom: {fileID: 3749318095103347248, guid: d118a22b3677d7d4b82213a9fded2e81, type: 3}
   roomPrefab: {fileID: 7323076034446573692, guid: 895404d1fe2895648bfb1ead238a27c5, type: 3}
   roomSize: {x: 16, y: 9}
-  walls:
-  - {fileID: 1356251252866254583, guid: d44b83d0db834b74a82e04b88cd67120, type: 3}
-  - {fileID: 4304618897675715009, guid: 05aa380d979bd7e40a86a8926fbd2c3d, type: 3}
-  - {fileID: 3533046512762578454, guid: 4e09d58ca7aee5d4983cfd95951ea948, type: 3}
-  - {fileID: 3800523845672706638, guid: f164485ec2ed21848a89215a3ba5b9cc, type: 3}
-  wallWidth: 0.5
-  roomLocations: []
+  possibleRoomContents:
+  - {fileID: 7323076034446573692, guid: 95d3c80322c88f1419dbd177399792dd, type: 3}
 --- !u!114 &739045816
 MonoBehaviour:
   m_ObjectHideFlags: 0

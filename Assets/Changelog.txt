@@ -50,3 +50,11 @@ e. aggiunta schermata di game over quando si finiscono le vite;
 
 f. modificato nemico 'Radial' per renderlo compatibile tra client e server;
 
+
+<=== 08/06/2021 | Fede ======================>
+
+a. completato meccanismo di spawn del contenuto delle stanze generato on-the-fly;
+
+b. aggiunti componenti ad hoc che devono essere integrati nei prefab per renderli spawnabili come contenuto delle stanze;
+
+c. rimosso un package (PyroParticles) che mi impediva la compilazione (ho provato a ripristinarlo ma senza successo...)

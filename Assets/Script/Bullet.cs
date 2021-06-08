@@ -8,16 +8,20 @@ using Mirror;
 public class Bullet : NetworkBehaviour
 {
      [Header( "Bullet Settings" )]
-     public float timeToLive = 5;
-     public int damage = 1;
-     public float knockbackIntensity = .5f;
+     [SyncVar] public float timeToLive = 5;
+     [SyncVar] public int damage = 1;
+     [SyncVar] public float knockbackIntensity = 500f;
+     [SyncVar] public Vector3 initialVelocity;
      public Collider parent;
 
      // =====================================================================
 
      private void Start()
      {
-          Physics.IgnoreCollision( GetComponent<Collider>(), parent );
+          if( isServer )
+               Physics.IgnoreCollision( GetComponent<Collider>(), parent );
+
+          GetComponent<Rigidbody>().velocity = initialVelocity;
      }
 
      private void Update()
@@ -34,9 +38,10 @@ public class Bullet : NetworkBehaviour
           }
      }
 
-     [Server]
      private void OnTriggerEnter( Collider other )
      {
+          if( !isServer ) return;
+
           if( !other.gameObject.CompareTag( "Enemy" ) )
           {
                if( other.gameObject.CompareTag( "Player" ) )
@@ -51,9 +56,10 @@ public class Bullet : NetworkBehaviour
           }
      }
 
-     [Server]
      private void OnTriggerStay( Collider other )
      {
+          if( !isServer ) return;
+
           if( !other.gameObject.CompareTag( "Enemy" ) )
           {
                if( other.gameObject.CompareTag( "Player" ) )

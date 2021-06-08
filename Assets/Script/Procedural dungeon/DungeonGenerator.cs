@@ -15,17 +15,9 @@ public class DungeonGenerator : NetworkBehaviour
      public GameObject endRoom;
      public GameObject roomPrefab;
      public Vector2 roomSize;
-     // Ordine di inserimento mura:
-     // 1) muro nord/sud
-     // 2) muro est/ovest
-     // 3) muro nord/sud con porta
-     // 4) muro est/ovest con porta
-     public List<GameObject> walls;
-     public float wallWidth;
+     public List<GameObject> possibleRoomContents;
 
-     [Header( "Debug" )]
-     public List<Vector2> roomLocations;
-
+     private List<Vector2> roomLocations;
      private int[][] map;
 
      // =======================================================
@@ -184,57 +176,33 @@ public class DungeonGenerator : NetworkBehaviour
                     }
                }
                room.transform.localPosition = position;
-               NetworkServer.Spawn( room );
+               GameObject content = Instantiate( possibleRoomContents[Random.Range( 0, possibleRoomContents.Count )], position, Quaternion.identity, null );
 
                // calcolo porte
-               GameObject wall = null;
+               List<Directions> dirs = new List<Directions>();
                if( x + 1 <= map.Length - 1 && map[x + 1][y] != 0 )
                {
-                    // porta a est
-                    wall = Instantiate( walls[3], room.transform );
+                    dirs.Add( Directions.East );
                }
-               else
-               {
-                    wall = Instantiate( walls[1], room.transform );
-               }
-               wall.transform.localPosition = new Vector3( roomSize.x / 2 - wallWidth / 2, 0, 0 );
-               NetworkServer.Spawn( wall );
 
                if( x != 0 && map[x - 1][y] != 0 )
                {
-                    // porta a ovest
-                    wall = Instantiate( walls[3], room.transform );
+                    dirs.Add( Directions.West );
                }
-               else
-               {
-                    wall = Instantiate( walls[1], room.transform );
-               }
-               wall.transform.localPosition = new Vector3( -roomSize.x / 2 + wallWidth / 2, 0, 0 );
-               NetworkServer.Spawn( wall );
 
                if( y + 1 <= map[x].Length - 1 && map[x][y + 1] != 0 )
                {
-                    // porta a nord
-                    wall = Instantiate( walls[2], room.transform );
+                    dirs.Add( Directions.North );
                }
-               else
-               {
-                    wall = Instantiate( walls[0], room.transform );
-               }
-               wall.transform.localPosition = new Vector3( 0, 0, roomSize.y / 2 - wallWidth / 2 );
-               NetworkServer.Spawn( wall );
 
                if( y != 0 && map[x][y - 1] != 0 )
                {
-                    // porta a sud
-                    wall = Instantiate( walls[2], room.transform );
+                    dirs.Add( Directions.South );
                }
-               else
-               {
-                    wall = Instantiate( walls[0], room.transform );
-               }
-               wall.transform.localPosition = new Vector3( 0, 0, -roomSize.y / 2 + wallWidth / 2 );
-               NetworkServer.Spawn( wall );
+               room.GetComponent<Room>().doors.AddRange( dirs );
+               room.GetComponent<Room>().content = content.GetComponent<ContentLoader>();
+
+               NetworkServer.Spawn( room );
           }
      }
 

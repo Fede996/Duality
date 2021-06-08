@@ -1,7 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Mirror;
 
+
+[RequireComponent( typeof( Collider ) )]
 public class RoomLoader : MonoBehaviour
 {
      public Room parentRoom;
@@ -16,6 +19,8 @@ public class RoomLoader : MonoBehaviour
 
      private void OnTriggerEnter( Collider other )
      {
+          if( !NetworkServer.active ) return;
+
           if( other.CompareTag( "Player" ) )
           {
                // sono entrato nella stanza
@@ -25,6 +30,8 @@ public class RoomLoader : MonoBehaviour
 
      private void OnTriggerExit( Collider other )
      {
+          if( !NetworkServer.active ) return;
+
           if( other.CompareTag( "Player" ) )
           {
                // sono uscito dalla stanza

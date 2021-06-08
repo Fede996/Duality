@@ -2,33 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System;
 
 [RequireComponent( typeof( Collider ) )]
-
-
-
-
 public class GambePointsTarget : DestroyableTarget
 {
      [Header( "Settings" )]
-     [SerializeField] private int points = 1;
+     public int points = 1;
+     public int ammo = 20;
 
-     [Header("Objects")]
-     private Weapon weapon ;
-     
-     
      [Server]
      private void OnTriggerEnter( Collider other )
      {
-          SharedCharacter player = other.GetComponent<SharedCharacter>();
-
-          if( player != null )
+          if( other.CompareTag( "Player" ) )
           {
-
-               weapon = FindObjectOfType<Weapon>();
-               
-               weapon.numberOfBullets += 20;
-               player.GambePoints += points;
+               other.GetComponent<Weapon>().numberOfBullets += ammo;
+               other.GetComponent<SharedCharacter>().GambePoints += points;
                base.OnHit();
           }
      }
