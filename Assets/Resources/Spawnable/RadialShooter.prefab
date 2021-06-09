@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &2769380726499287794
+--- !u!1 &4150327268530694603
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -8,51 +8,52 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 2769380726499287793}
-  - component: {fileID: 2769380726499287788}
-  - component: {fileID: 2769380726499287789}
-  - component: {fileID: 2769380726499287790}
-  - component: {fileID: 4815211648532543480}
-  - component: {fileID: 2769380726499287791}
-  - component: {fileID: -424669545066157313}
-  - component: {fileID: 3952787997666008116}
-  - component: {fileID: -3080220095148608809}
-  m_Layer: 0
-  m_Name: Shooter
+  - component: {fileID: 4150327268530694600}
+  - component: {fileID: 4150327268530694613}
+  - component: {fileID: 4150327268530694612}
+  - component: {fileID: 4150327268530694615}
+  - component: {fileID: 1383500140502537131}
+  - component: {fileID: 2967065172593694477}
+  - component: {fileID: 4150327268530694614}
+  - component: {fileID: 7344659591705764294}
+  - component: {fileID: 2303096087549116155}
+  - component: {fileID: 7820791710379956854}
+  m_Layer: 7
+  m_Name: RadialShooter
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &2769380726499287793
+--- !u!4 &4150327268530694600
 Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 54, y: 1, z: 49}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &2769380726499287788
+--- !u!33 &4150327268530694613
 MeshFilter:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   m_Mesh: {fileID: 10208, guid: 0000000000000000e000000000000000, type: 0}
---- !u!23 &2769380726499287789
+--- !u!23 &4150327268530694612
 MeshRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -87,13 +88,13 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2769380726499287790
+--- !u!136 &4150327268530694615
 CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
@@ -101,13 +102,13 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &4815211648532543480
+--- !u!54 &1383500140502537131
 Rigidbody:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
@@ -117,13 +118,35 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
---- !u!114 &2769380726499287791
+--- !u!195 &2967065172593694477
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4150327268530694603}
+  m_Enabled: 0
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 0
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 1
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &4150327268530694614
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
@@ -134,13 +157,13 @@ MonoBehaviour:
   visible: 0
   m_AssetId: 
   hasSpawned: 0
---- !u!114 &-424669545066157313
+--- !u!114 &7344659591705764294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2f74aedd71d9a4f55b3ce499326d45fb, type: 3}
@@ -155,38 +178,16 @@ MonoBehaviour:
   compressRotation: 1
   interpolateScale: 0
   syncScale: 0
---- !u!195 &3952787997666008116
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
---- !u!114 &-3080220095148608809
+--- !u!114 &2303096087549116155
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2769380726499287794}
+  m_GameObject: {fileID: 4150327268530694603}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c8dbf62566b9c34ba0a0e18a5302c63, type: 3}
+  m_Script: {fileID: 11500000, guid: 996b22305777b5842bb9ddc08b4cde96, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   syncMode: 0
@@ -197,6 +198,23 @@ MonoBehaviour:
   knockbackIntensity: 500
   health: 0
   movementSpeed: 0
-  bulletPrefab: {fileID: 908232412765883618, guid: 26a825120d3c2d44c88f4d9f9a28d9c4, type: 3}
-  bulletSpeed: 5
-  delayBetweenShots: 1
+  numberOfProjectiles: 3
+  projectileSpeed: 3
+  projectilePrefab: {fileID: 908232412765883618, guid: 26a825120d3c2d44c88f4d9f9a28d9c4, type: 3}
+  frequency: 1
+  radialSpeed: 30
+--- !u!114 &7820791710379956854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4150327268530694603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c966f0ab1605a95499748330154948f8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  spawnablePrefabName: RadialShooter

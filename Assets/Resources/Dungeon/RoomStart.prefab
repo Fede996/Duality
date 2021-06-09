@@ -186,6 +186,9 @@ MonoBehaviour:
   - {fileID: 3800523845672706638, guid: f164485ec2ed21848a89215a3ba5b9cc, type: 3}
   wallWidth: 0.5
   roomCameraSocket: {fileID: 1551758857971461515}
+  floor: {fileID: 4917972118936098629}
+  debugNavMesh: 0
+  content: {fileID: 0}
 --- !u!1 &1719596305333865549
 GameObject:
   m_ObjectHideFlags: 0
@@ -408,7 +411,7 @@ GameObject:
   - component: {fileID: 5092273690966764509}
   m_Layer: 0
   m_Name: Trigger
-  m_TagString: Untagged
+  m_TagString: IgnoreOnTriggers
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

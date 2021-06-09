@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using Mirror;
 
 public class DataLoader : MonoBehaviour
 {
@@ -71,6 +73,11 @@ public class DataLoader : MonoBehaviour
      // ==================================================================================
      // Unity events
 
+     private void Awake()
+     {
+          LoadPrefabs();
+     }
+
      private void Start()
      {
           if( clearPlayerPrefs )
@@ -89,6 +96,42 @@ public class DataLoader : MonoBehaviour
                player.playerData.Save();
           }
           SaveGlobalData();
+     }
+
+     // ==================================================================================
+     // Spawnable prefabs
+
+     [Header( "Prefabs loader" )]
+     [Tooltip( "Assets/Resources/[Insert folder path]" )]
+     public string[] folderPaths = null;
+     private bool loaded = false;
+
+     private void LoadPrefabs()
+     {
+          LobbyRoomManager manager = FindObjectOfType<LobbyRoomManager>();
+
+          if( !loaded )
+          {
+               if( folderPaths == null ) return;
+
+               int c = 0;
+               print( "Load prefabs started..." );
+               for( int i = 0; i < folderPaths.Length; i++ )
+               {
+                    List<GameObject> objs = Resources.LoadAll( folderPaths[i], typeof( GameObject ) ).Cast<GameObject>().ToList();
+
+                    if( objs == null ) continue;
+
+                    foreach( GameObject o in objs )
+                    {
+                         manager.spawnPrefabs.Add( o );
+                         c++;
+                    }
+               }
+               print( $"Load complete!\nPrefabs loaded: {c}" );
+
+               loaded = true;
+          }
      }
 }
 

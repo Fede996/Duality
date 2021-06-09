@@ -60,6 +60,7 @@ public class SharedCharacter : NetworkBehaviour
      // Commands from controllers
 
      public Role localRole;
+     public bool initialized = false;
 
      public void Init( Role playerRole )
      {
@@ -70,6 +71,7 @@ public class SharedCharacter : NetworkBehaviour
           {
                Camera.main.transform.parent = headCameraSocket;
                Camera.main.transform.Reset();
+               Camera.main.orthographic = false;
                StartCoroutine( UpdateRotation() );
           }
           else
@@ -77,6 +79,8 @@ public class SharedCharacter : NetworkBehaviour
                Camera.main.transform.parent = legsCameraSocket;
                Camera.main.transform.Reset();
           }
+
+          initialized = true;
      }
 
      [Server]

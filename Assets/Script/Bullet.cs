@@ -42,7 +42,7 @@ public class Bullet : NetworkBehaviour
      {
           if( !isServer ) return;
 
-          if( !other.gameObject.CompareTag( "Enemy" ) )
+          if( !other.gameObject.CompareTag( "Enemy" ) && !other.gameObject.CompareTag( "IgnoreOnTriggers" ) )
           {
                if( other.gameObject.CompareTag( "Player" ) )
                {
@@ -60,7 +60,7 @@ public class Bullet : NetworkBehaviour
      {
           if( !isServer ) return;
 
-          if( !other.gameObject.CompareTag( "Enemy" ) )
+          if( !other.gameObject.CompareTag( "Enemy" ) && !other.gameObject.CompareTag( "IgnoreOnTriggers" ) )
           {
                if( other.gameObject.CompareTag( "Player" ) )
                {

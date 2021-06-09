@@ -27,12 +27,14 @@ public class Weapon : NetworkBehaviour
 
      private float timeLastFired;
      private UiManager UI;
+     private SharedCharacter player;
 
      // =====================================================================
 
      private void Start()
      {
           UI = FindObjectOfType<UiManager>();
+          player = GetComponentInParent<SharedCharacter>();
 
           if( muzzleSoundSource != null )
                muzzleSoundSource.clip = muzzleSound;
@@ -55,7 +57,18 @@ public class Weapon : NetworkBehaviour
           if (numberOfBullets != 0)
           {
                numberOfBullets--;
-               CmdFireWeapon();
+               CmdFireWeapon( cameraTransform.position, cameraTransform.forward );
+
+               foreach( Transform parent in muzzleTransforms )
+               {
+                    Instantiate( muzzlePrefab, parent );
+               }
+
+               if( muzzleSoundSource != null )
+               {
+                    muzzleSoundSource.pitch = Random.Range( audioPitch.x, audioPitch.y );
+                    muzzleSoundSource.Play();
+               }
           }
      }
 
@@ -68,11 +81,11 @@ public class Weapon : NetworkBehaviour
      // =====================================================================
 
      [Command( requiresAuthority = false )]
-     private void CmdFireWeapon()
+     private void CmdFireWeapon( Vector3 position, Vector3 forward )
      {
           RpcFireWeapon();
 
-          if( Physics.Raycast( cameraTransform.position, cameraTransform.forward, out RaycastHit hit, range ) )
+          if( Physics.Raycast( position, forward, out RaycastHit hit, range ) )
           {
                Target target = hit.collider.GetComponent<Target>();
                if( target != null )
@@ -87,15 +100,18 @@ public class Weapon : NetworkBehaviour
      [ClientRpc]
      private void RpcFireWeapon()
      {
-          foreach( Transform parent in muzzleTransforms )
+          if( player.localRole == Role.Legs )
           {
-               Instantiate( muzzlePrefab, parent );
-          }
+               foreach( Transform parent in muzzleTransforms )
+               {
+                    Instantiate( muzzlePrefab, parent );
+               }
 
-          if( muzzleSoundSource != null )
-          {
-               muzzleSoundSource.pitch = Random.Range( audioPitch.x, audioPitch.y );
-               muzzleSoundSource.Play();
+               if( muzzleSoundSource != null )
+               {
+                    muzzleSoundSource.pitch = Random.Range( audioPitch.x, audioPitch.y );
+                    muzzleSoundSource.Play();
+               } 
           }
      }
 }

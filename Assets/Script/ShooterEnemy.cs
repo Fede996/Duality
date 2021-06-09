@@ -7,8 +7,8 @@ public class ShooterEnemy : ChaserEnemy
 {
      [Header( "Shooting" )]
      public GameObject bulletPrefab;
-     public float bulletSpeed = 1;
-     public float delayBetweenShots = 1;
+     public float bulletSpeed;
+     public float delayBetweenShots;
 
      private float timeToNextShot;
 
@@ -25,6 +25,8 @@ public class ShooterEnemy : ChaserEnemy
      {
           if( !isServer ) return;
 
+          base.Update();
+
           if( timeToNextShot > 0 )
           {
                timeToNextShot -= Time.deltaTime;
@@ -34,8 +36,6 @@ public class ShooterEnemy : ChaserEnemy
                ShootBullet();
                timeToNextShot = delayBetweenShots;
           }
-
-          base.Update();
      }
 
      // =====================================================================
@@ -49,6 +49,8 @@ public class ShooterEnemy : ChaserEnemy
           bullet.knockbackIntensity = knockbackIntensity;
           bullet.parent = GetComponent<Collider>();
 
+          if( player == null )
+               player = FindObjectOfType<SharedCharacter>().transform;
           Vector3 direction = ( player.position - transform.position );
           direction.y = 0;
           bullet.initialVelocity = direction.normalized * bulletSpeed;

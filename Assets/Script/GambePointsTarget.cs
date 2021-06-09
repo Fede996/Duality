@@ -11,14 +11,16 @@ public class GambePointsTarget : DestroyableTarget
      public int points = 1;
      public int ammo = 20;
 
-     [Server]
      private void OnTriggerEnter( Collider other )
      {
-          if( other.CompareTag( "Player" ) )
+          if( isServer )
           {
-               other.GetComponent<Weapon>().numberOfBullets += ammo;
-               other.GetComponent<SharedCharacter>().GambePoints += points;
-               base.OnHit();
+               if( other.CompareTag( "Player" ) )
+               {
+                    other.GetComponent<Weapon>().numberOfBullets += ammo;
+                    other.GetComponent<SharedCharacter>().GambePoints += points;
+                    base.OnHit();
+               } 
           }
      }
 

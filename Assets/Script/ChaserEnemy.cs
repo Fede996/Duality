@@ -10,7 +10,7 @@ using UnityEngine.AI;
 public class ChaserEnemy : Enemy
 {
      [Header( "Movement" )]
-     public float movementSpeed = 1;
+     public float movementSpeed;
 
      private NavMeshAgent agent;
      protected Transform player;
@@ -34,7 +34,17 @@ public class ChaserEnemy : Enemy
      {
           if( !isServer ) return;
 
-          if( movementSpeed != 0 && player != null )
+          if( agent == null )
+               agent = GetComponent<NavMeshAgent>();
+
+          if( player == null )
+          {
+               SharedCharacter character = FindObjectOfType<SharedCharacter>();
+               if( character != null )
+                    player = character.transform;
+          }
+
+          if( movementSpeed != 0 && player != null && agent.enabled )
           {
                agent.SetDestination( player.position ); 
           }

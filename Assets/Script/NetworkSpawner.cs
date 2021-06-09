@@ -15,13 +15,12 @@ public class NetworkSpawner : NetworkBehaviour
      {
           if( NetworkServer.active )
           {
-               if( transform.parent != null )
+               if( transform.parent != null && ( loader = GetComponentInParent<ContentLoader>() ) != null )
                {
-                    // sono in una scena
+                    // sono stato istanziato da un laoder
                     prefab = NetworkManager.singleton.spawnPrefabs.Find( o => o.name == spawnablePrefabName );
                     GameObject obj = Instantiate( prefab, transform.position, transform.rotation, null );
                     
-                    loader = GetComponentInParent<ContentLoader>();
                     obj.GetComponent<NetworkSpawner>().loader = loader;
                     loader.childObjects.Add( obj );
                     
@@ -30,8 +29,9 @@ public class NetworkSpawner : NetworkBehaviour
                else
                {
                     // sono stato già rigenerato senza parent
+                    // o non sono filgio di un loader...
                     NetworkServer.Spawn( gameObject );
-                    
+
                     if( loader != null )
                     {
                          RpcDisable();
