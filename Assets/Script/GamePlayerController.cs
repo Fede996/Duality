@@ -18,6 +18,8 @@ public class GamePlayerController : NetworkBehaviour
      protected SharedCharacter player;
      private UiManager UI;
      private float tilt = 0;
+     public GameObject grenadePrefab;
+     public float grenadeLaunchForce = 10f;
 
      // =====================================================================
      // Sync data
@@ -89,6 +91,7 @@ public class GamePlayerController : NetworkBehaviour
                     // Mostro la traiettoria della granata
                     if (Input.GetButton("Fire"))
                     {
+                         ThrowGrenade();
                          //Sparo la granata
                          //Farò lo spawn della granata nella posizione del player
                          //Cancello la traiettoria
@@ -103,11 +106,12 @@ public class GamePlayerController : NetworkBehaviour
                {
                     if( Input.GetButtonDown( "Fire" ) )
                          player.weapon.FireWeapon();
+                         
                }
 
                //Cancello la traiettoria
           }
-          else
+          else 
           {
                float horizontal = Input.GetAxis( "Horizontal" );
                float vertical = Input.GetAxis( "Vertical" );
@@ -118,6 +122,14 @@ public class GamePlayerController : NetworkBehaviour
           }
      }
 
+
+     void ThrowGrenade()
+     {
+          GameObject grenade = Instantiate(grenadePrefab, player.transform.position, player.transform.rotation);
+          Rigidbody rb = grenade.GetComponent<Rigidbody>();
+          rb.AddForce(player.headCameraSocket.transform.forward * grenadeLaunchForce, ForceMode.VelocityChange);
+     }
+      
      // =====================================================================
      // Game events
 
