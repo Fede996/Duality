@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.SceneManagement;
+using System.Linq;
 
 public class LobbyRoomManager : NetworkRoomManager
 {
@@ -91,8 +92,6 @@ public class LobbyRoomManager : NetworkRoomManager
 
      public override void OnServerSceneChanged( string sceneName )
      {
-          base.OnServerSceneChanged( sceneName );
-
           if( sceneName != offlineScene && sceneName != RoomScene )
           {
                Transform spawn = GameObject.FindWithTag( "Spawn" ).transform;
@@ -108,6 +107,31 @@ public class LobbyRoomManager : NetworkRoomManager
                Cursor.lockState = CursorLockMode.Confined;
                player.SetupLobby();
           }
+
+          base.OnServerSceneChanged( sceneName );
+     }
+
+     [Server]
+     private IEnumerator WaitPlayersReady()
+     {
+          for(; ; )
+          {
+               GamePlayerController[] players = FindObjectsOfType<GamePlayerController>();
+               if( players != null &&
+                   players.Length == ( ( LobbyRoomManager )NetworkManager.singleton ).roomSlots.Count() &&
+                   players.All( p => p.connectionToClient.isReady ) )
+               {
+                    Transform spawn = GameObject.FindWithTag( "Spawn" ).transform;
+                    GameObject pawn = Instantiate( playerPawn, spawn.position, spawn.rotation );
+                    NetworkServer.Spawn( pawn );
+
+                    break;
+               }
+
+               yield return null;
+          }
+
+          print( "DONE" );
      }
 
      // =====================================================================

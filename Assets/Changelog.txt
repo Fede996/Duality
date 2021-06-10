@@ -66,3 +66,7 @@ a. risolti diversi bug nello spawn delle stanze e del loro contenuto;
 
 b. aggiunto supporto alla generazione procedurale di nemici, navmesh e la maggior parte dei prefab esistenti;
 
+
+<=== 10/06/2021 | Fede ======================>
+
+a. risolto bug che impediva a un client di caricare il contenuto delle stanze del dungeon sotto determinate condizioni;

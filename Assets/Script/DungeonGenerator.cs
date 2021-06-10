@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using System.Linq;
 
 public class DungeonGenerator : NetworkBehaviour
 {
@@ -27,8 +28,27 @@ public class DungeonGenerator : NetworkBehaviour
      {
           if( isServer )
           {
-               Generate( numberOfRooms );
+               StartCoroutine( WaitPlayersReady() );
           }
+     }
+
+     [Server]
+     private IEnumerator WaitPlayersReady()
+     {
+          for( ; ; )
+          {
+               GamePlayerController[] players = FindObjectsOfType<GamePlayerController>();
+               if( players != null && 
+                   players.Length == ( ( LobbyRoomManager )NetworkManager.singleton ).roomSlots.Count() && 
+                   players.All( p => p.connectionToClient.isReady ) )
+               {
+                    break;
+               }
+               
+               yield return null;
+          }
+
+          Generate( numberOfRooms );
      }
 
      // =======================================================
@@ -58,7 +78,7 @@ public class DungeonGenerator : NetworkBehaviour
      }
 
      [Server]
-     private void Generate( int numberOfRooms )
+     public void Generate( int numberOfRooms )
      {
           if( map == null )
                InitMap();
