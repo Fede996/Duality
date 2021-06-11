@@ -12,11 +12,11 @@ public class DungeonGenerator : NetworkBehaviour
      public int numberOfRooms;
 
      [Header( "Structure" )]
-     public GameObject startRoom;
-     public GameObject endRoom;
      public GameObject roomPrefab;
      public Vector2 roomSize;
      public List<GameObject> possibleRoomContents;
+     public GameObject startRoomContent;
+     public GameObject endRoomContent;
 
      private List<Vector2> roomLocations;
      private int[][] map;
@@ -170,33 +170,35 @@ public class DungeonGenerator : NetworkBehaviour
                // genero stanza
                Vector3 position = new Vector3( ( x - startX ) * roomSize.x, 0, ( y - startY ) * roomSize.y );
 
-               GameObject room = null;
+               GameObject room = Instantiate( roomPrefab, root );
+               room.transform.localPosition = position;
+               GameObject content = null;
                switch( map[x][y] )
                {
                     case 1:
                     {
                          // stanza normale
-                         room = Instantiate( roomPrefab, root );
                          room.name = "Room";
+                         content = Instantiate( possibleRoomContents[Random.Range( 0, possibleRoomContents.Count )], position, Quaternion.identity, null );
                          break;
                     }
                     case 2:
                     {
                          // prima stanza
-                         room = Instantiate( startRoom, root );
                          room.name = "Start room";
+                         if( startRoomContent != null )
+                              content = Instantiate( startRoomContent, position, Quaternion.identity, null );
                          break;
                     }
                     case 3:
                     {
                          // ultima stanza
-                         room = Instantiate( endRoom, root );
                          room.name = "End room";
+                         if( endRoomContent != null )
+                              content = Instantiate( endRoomContent, position, Quaternion.identity, null );
                          break;
                     }
                }
-               room.transform.localPosition = position;
-               GameObject content = Instantiate( possibleRoomContents[Random.Range( 0, possibleRoomContents.Count )], position, Quaternion.identity, null );
 
                // calcolo porte
                List<Directions> dirs = new List<Directions>();
@@ -220,7 +222,10 @@ public class DungeonGenerator : NetworkBehaviour
                     dirs.Add( Directions.South );
                }
                room.GetComponent<Room>().doors.AddRange( dirs );
-               room.GetComponent<Room>().content = content.GetComponent<ContentLoader>();
+               if( content != null )
+               {
+                    room.GetComponent<Room>().content = content.GetComponent<ContentLoader>(); 
+               }
 
                NetworkServer.Spawn( room );
           }

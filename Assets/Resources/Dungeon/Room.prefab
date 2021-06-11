@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 259304576451391044}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 2, z: 0}
-  m_LocalScale: {x: 16, y: 4, z: 9}
+  m_LocalScale: {x: 31, y: 4, z: 17}
   m_Children: []
   m_Father: {fileID: 7323076034446573693}
   m_RootOrder: 2
@@ -127,7 +127,7 @@ Transform:
   m_GameObject: {fileID: 3776298226051634233}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: -0.5, z: 0}
-  m_LocalScale: {x: 16, y: 1, z: 9}
+  m_LocalScale: {x: 32, y: 1, z: 18}
   m_Children: []
   m_Father: {fileID: 7323076034446573693}
   m_RootOrder: 0
@@ -159,7 +159,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 5280f637ec7f18245b15f5212062bbfa, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -206,7 +206,7 @@ GameObject:
   - component: {fileID: 3456628152068746313}
   - component: {fileID: 706806743262850079}
   m_Layer: 0
-  m_Name: RoomBase
+  m_Name: Room
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -261,7 +261,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   syncMode: 0
   syncInterval: 0.1
-  roomSize: {x: 16, y: 9}
+  roomSize: {x: 32, y: 18}
   walls:
   - {fileID: 1356251252866254583, guid: d44b83d0db834b74a82e04b88cd67120, type: 3}
   - {fileID: 4304618897675715009, guid: 05aa380d979bd7e40a86a8926fbd2c3d, type: 3}
@@ -270,6 +270,7 @@ MonoBehaviour:
   wallWidth: 0.5
   roomCameraSocket: {fileID: 7323076035107139319}
   floor: {fileID: 3776298226051634233}
+  navMeshHeight: 8
   debugNavMesh: 0
   content: {fileID: 0}
 --- !u!1 &7323076035107139318

@@ -18,8 +18,11 @@ public class GamePlayerController : NetworkBehaviour
      protected SharedCharacter player;
      private UiManager UI;
      private float tilt = 0;
+
+     [Header( "Grenade" )]
      public GameObject grenadePrefab;
      public float grenadeLaunchForce = 10f;
+     public Transform grenadeSocket;
 
      // =====================================================================
      // Sync data
@@ -77,24 +80,22 @@ public class GamePlayerController : NetworkBehaviour
                float mouseY = Input.GetAxis( "Mouse Y" ) * sensitivityY;
 
                tilt -= mouseY;
-               tilt = Mathf.Clamp( tilt, -90, 90 );
+               tilt = Mathf.Clamp( tilt, -80, 80 );
 
                player.Rotate( mouseX, tilt );
 
-               if( Input.GetButtonDown( "ToggleFire" ) ) 
+               if( Input.GetButtonDown( "ToggleFire" ) )
                     player.weapon.ToggleFire();
 
-
-               if (Input.GetButton("Grenade"))
+               if( Input.GetButton( "Grenade" ) )
                {
-
                     // Mostro la traiettoria della granata
-                    if (Input.GetButton("Fire"))
+                    if( Input.GetButtonDown( "Fire" ) )
                     {
-                         ThrowGrenade();
                          //Sparo la granata
                          //Farò lo spawn della granata nella posizione del player
                          //Cancello la traiettoria
+                         ThrowGrenade();
                          return;
                     }
                }
@@ -106,12 +107,12 @@ public class GamePlayerController : NetworkBehaviour
                {
                     if( Input.GetButtonDown( "Fire" ) )
                          player.weapon.FireWeapon();
-                         
+
                }
 
                //Cancello la traiettoria
           }
-          else 
+          else
           {
                float horizontal = Input.GetAxis( "Horizontal" );
                float vertical = Input.GetAxis( "Vertical" );
@@ -122,14 +123,14 @@ public class GamePlayerController : NetworkBehaviour
           }
      }
 
-
-     void ThrowGrenade()
+     private void ThrowGrenade()
      {
-          GameObject grenade = Instantiate(grenadePrefab, player.transform.position, player.transform.rotation);
+          grenadeSocket = GameObject.Find( "Grenade socket" ).transform;
+          GameObject grenade = Instantiate( grenadePrefab, grenadeSocket.position, grenadeSocket.rotation, null );
           Rigidbody rb = grenade.GetComponent<Rigidbody>();
-          rb.AddForce(player.headCameraSocket.transform.forward * grenadeLaunchForce, ForceMode.VelocityChange);
+          rb.AddForce( player.headCameraSocket.transform.forward * grenadeLaunchForce, ForceMode.Force );
      }
-      
+
      // =====================================================================
      // Game events
 
@@ -159,6 +160,22 @@ public class GamePlayerController : NetworkBehaviour
           playerData.cash += gainedCash;
           FindObjectOfType<CameraController>().playerData = playerData;
           playerData.Save();
+     }
+
+     public void DisableInput()
+     {
+          if( isLocalPlayer )
+          {
+               disableInput = true;
+          }
+     }
+
+     public void EnableInput()
+     {
+          if( isLocalPlayer )
+          {
+               disableInput = false;
+          }
      }
 }
 

@@ -47,6 +47,7 @@ public class SharedCharacter : NetworkBehaviour
      public Transform legsCameraSocket;
      public Transform mechHead;
      public Transform mechLegs;
+     public MeshRenderer hideInHead;
 
      [HideInInspector] public Weapon weapon;
      private Animator animator;
@@ -72,6 +73,8 @@ public class SharedCharacter : NetworkBehaviour
                Camera.main.transform.parent = headCameraSocket;
                Camera.main.transform.Reset();
                Camera.main.orthographic = false;
+               Camera.main.fieldOfView = 60;
+               hideInHead.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.ShadowsOnly;
                StartCoroutine( UpdateRotation() );
           }
           else
@@ -221,15 +224,23 @@ public class SharedCharacter : NetworkBehaviour
      [ClientRpc]
      private void RpcDie()
      {
+          foreach( GamePlayerController controller in FindObjectsOfType<GamePlayerController>() )
+          {
+               controller.DisableInput();
+          }
+
           UI.gameOver.SetActive( true );
           Cursor.lockState = CursorLockMode.Confined;
           Cursor.visible = true;
      }
 
      [Command( requiresAuthority = false )]
-     public void CmdReturnToLobby()
+     public void CmdReturnToLobby( bool forced )
      {
-          OnEndLevel( lives <= 0 );
+          if( forced )
+               OnEndLevel( true );
+          else
+               OnEndLevel( lives <= 0 );
      }
 
      // =====================================================================

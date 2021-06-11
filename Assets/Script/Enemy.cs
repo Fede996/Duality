@@ -9,8 +9,9 @@ public class Enemy : SolidTarget
      public float maxHealth = 100;
      public int damage = 1;
      public float knockbackIntensity = 1000f;
+     public bool needToKillToComplete;
 
-     public float health;
+     private float health;
 
      protected virtual void Start()
      {

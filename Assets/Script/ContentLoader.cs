@@ -32,4 +32,21 @@ public class ContentLoader : NetworkBehaviour
                }
           }
      }
+
+     [Server]
+     public bool IsCompleted()
+     {
+          foreach( GameObject obj in childObjects )
+          {
+               if( obj != null )
+               {
+                    Enemy enemy = obj.GetComponent<Enemy>();
+                    if( enemy != null && enemy.needToKillToComplete )
+                    {
+                         return false;
+                    } 
+               }
+          }
+          return true;
+     }
 }

@@ -12,37 +12,37 @@ public class Grenade : NetworkBehaviour
      public GameObject explosionEffect;
      float countdown;
      bool hasExploded = false;
-    // Start is called before the first frame update
-    void Start()
-    {
+     // Start is called before the first frame update
+     void Start()
+     {
           countdown = delay;
           //Far fare alla granata il suo movimento di lancio
-    }
+     }
 
-    // Update is called once per frame
-    void Update()
-    {
+     // Update is called once per frame
+     void Update()
+     {
           countdown -= Time.deltaTime;
-          if(countdown <= 0 && !hasExploded)
+          if( countdown <= 0 && !hasExploded )
           {
                Explode();
                hasExploded = true;
           }
-    }
+     }
 
      void Explode()
      {
           Collider[] colliders = Physics.OverlapSphere(transform.position, explosionRadius);
-          foreach(Collider nearbyObject in colliders)
+          foreach( Collider nearbyObject in colliders )
           {
                Rigidbody rb = nearbyObject.GetComponent<Rigidbody>();
-               if(rb!= null)
+               if( rb != null )
                {
-                    rb.AddExplosionForce(explosionForce, transform.position, explosionRadius);
+                    rb.AddExplosionForce( explosionForce, transform.position, explosionRadius );
                }
           }
 
-          Instantiate(explosionEffect, transform.position, transform.rotation);
-          Destroy(gameObject);
+          Instantiate( explosionEffect, transform.position, transform.rotation );
+          Destroy( gameObject );
      }
 }

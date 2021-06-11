@@ -1063,6 +1063,36 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!1 &2729796522819675292
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1266943859636436217}
+  m_Layer: 7
+  m_Name: Grenade socket
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1266943859636436217
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2729796522819675292}
+  m_LocalRotation: {x: 0, y: -0.7071068, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0.705, y: 1.33, z: 0.5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 4503495187699121360}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!1 &3012321209439671468
 GameObject:
   m_ObjectHideFlags: 0
@@ -1545,6 +1575,7 @@ Transform:
   - {fileID: 2427329463328016165}
   - {fileID: 1941352850941220597}
   - {fileID: 8295984191072193925}
+  - {fileID: 1266943859636436217}
   m_Father: {fileID: 5579281804836223983}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2026,8 +2057,10 @@ MonoBehaviour:
   legsCameraSocket: {fileID: 5579281804613768412}
   mechHead: {fileID: 4503495187699121360}
   mechLegs: {fileID: 3784722199455247352}
+  hideInHead: {fileID: 4728141939722250880}
   weapon: {fileID: 0}
   localRole: 0
+  initialized: 0
   TestaPoints: 0
   GambePoints: 0
   lives: 5
@@ -2083,7 +2116,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5579281804888155969}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.6, z: 0}
+  m_LocalPosition: {x: 0, y: 1.6, z: -0.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 4503495187699121360}

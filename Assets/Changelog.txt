@@ -70,3 +70,14 @@ b. aggiunto supporto alla generazione procedurale di nemici, navmesh e la maggio
 <=== 10/06/2021 | Fede ======================>
 
 a. risolto bug che impediva a un client di caricare il contenuto delle stanze del dungeon sotto determinate condizioni;
+
+
+<=== 11/06/2021 | Fede ======================>
+
+a. aggiunta opzione 'Leave' al menu in game;
+
+b. disabilitati input di gioco quando il menu di pausa è aperto;
+
+c. raddoppiate le dimensioni delle stanze;
+
+d. aggiunte porte (che si aprono solo quando la stanza è stata completata) fra le stanze;

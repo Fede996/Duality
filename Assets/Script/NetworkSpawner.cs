@@ -9,7 +9,7 @@ public class NetworkSpawner : NetworkBehaviour
      public string spawnablePrefabName;
 
      private GameObject prefab;
-     private ContentLoader loader;
+     [HideInInspector] public ContentLoader loader;
 
      private void Start()
      {

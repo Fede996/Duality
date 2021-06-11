@@ -29,13 +29,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3327561524754092704}
-  m_LocalRotation: {x: 0.6560051, y: 0.013407108, z: -0.03558756, w: -0.75379777}
-  m_LocalPosition: {x: -197.77036, y: -0.93533754, z: 62.323364}
-  m_LocalScale: {x: 100, y: 100, z: 100}
+  m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 15, y: 15, z: 15}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 278.872, y: -25.71, z: 27.512}
+  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 0}
 --- !u!33 &1353846990811088831
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -115,10 +115,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  m_Radius: 0.012828028
-  m_Height: 0.016898444
-  m_Direction: 1
-  m_Center: {x: -0.00000011931691, y: 0.00005080652, z: 0.012828011}
+  m_Radius: 0.01
+  m_Height: 0.0275
+  m_Direction: 2
+  m_Center: {x: 0, y: 0, z: 0.0125}
 --- !u!114 &-1090422769907596283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -151,4 +151,6 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   delay: 3
+  explosionRadius: 5
+  explosionForce: 10
   explosionEffect: {fileID: 131164, guid: 3c5f4e32698bdb04eaed647f60310510, type: 3}

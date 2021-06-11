@@ -196,7 +196,7 @@ MonoBehaviour:
   maxHealth: 100
   damage: 1
   knockbackIntensity: 500
-  health: 0
+  needToKillToComplete: 0
   movementSpeed: 0
   bulletPrefab: {fileID: 908232412765883618, guid: 26a825120d3c2d44c88f4d9f9a28d9c4, type: 3}
   bulletSpeed: 5
@@ -216,3 +216,4 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   spawnablePrefabName: Shooter
+  loader: {fileID: 0}

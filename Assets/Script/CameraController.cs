@@ -20,6 +20,7 @@ public class CameraController : MonoBehaviour
      public AnimationClip[] clips;
 
      public Status currentStatus = Status.DoNothing;
+     public Status prevStatus = Status.DoNothing;
      private Vector2 initialAngles;
      private Animation anim;
      private UiManager UI;
@@ -151,19 +152,20 @@ public class CameraController : MonoBehaviour
 
      public void SetupLobby()
      {
+          GetComponent<Camera>().fieldOfView = 50;
           Transform final = GameObject.Find( "Camera target position" ).transform;
           transform.position = final.position;
           transform.rotation = final.rotation;
           UI.UpdatePlayerData();
      }
+}
 
-     // ==================================================================================
-     // Enums
+// ==================================================================================
+// Enums
 
-     public enum Status
-     {
-          DoNothing,
-          InScreen,
-          OffScreen,
-     }
+public enum Status
+{
+     DoNothing,
+     InScreen,
+     OffScreen,
 }

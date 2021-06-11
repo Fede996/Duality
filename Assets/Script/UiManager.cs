@@ -32,6 +32,8 @@ public class UiManager : MonoBehaviour
      public Text readyP1;
      public Text leaderP1;
      public Image imageP1;
+     //public GameObject headP1;
+     //public GameObject legsP1;
      public Slider colorSlider;
      public GameObject UiPlayer2;
      public Text nameP2;
@@ -43,6 +45,9 @@ public class UiManager : MonoBehaviour
      [Header( "Esc menu" )]
      public GameObject escMenu;
      public GameObject pausePage;
+     public Button exit;
+     public Button leave;
+     public GameObject leaveDisclaimer;
      public Text quality;
      public Slider qualitySlider;
      public Button applyButton;
@@ -124,15 +129,51 @@ public class UiManager : MonoBehaviour
                     escMenu.SetActive( false );
                     Cursor.visible = prevCursorVisible;
                     Cursor.lockState = preCursorLock;
+
+                    if( gameUiRoot.activeInHierarchy )
+                    {
+                         // sono in game
+                         foreach( GamePlayerController controller in FindObjectsOfType<GamePlayerController>() )
+                         {
+                              controller.EnableInput();
+                         }
+                    }
+                    else
+                    {
+                         // sono in lobby
+                         player.currentStatus = player.prevStatus;
+                    }
                }
                else
                {
                     prevCursorVisible = Cursor.visible;
                     preCursorLock = Cursor.lockState;
                     escMenu.SetActive( true );
+                    leaveDisclaimer.SetActive( false );
                     pausePage.SetActive( true );
                     Cursor.visible = true;
                     Cursor.lockState = CursorLockMode.Confined;
+
+                    if( gameUiRoot.activeInHierarchy )
+                    {
+                         // sono in game
+                         foreach( GamePlayerController controller in FindObjectsOfType<GamePlayerController>() )
+                         {
+                              controller.DisableInput();
+                         }
+
+                         leave.gameObject.SetActive( true );
+                         exit.gameObject.SetActive( false );
+                    }
+                    else
+                    {
+                         // sono in lobby
+                         player.prevStatus = player.currentStatus;
+                         player.currentStatus = Status.DoNothing;
+
+                         leave.gameObject.SetActive( false );
+                         exit.gameObject.SetActive( true );
+                    }
                }
           }
      }
@@ -279,6 +320,16 @@ public class UiManager : MonoBehaviour
      {
           colorSlider.value = playerData.color;
           roleP1.text = playerData.role;
+          //if( playerData.role == "HEAD" )
+          //{
+          //     headP1.SetActive( true );
+          //     legsP1.SetActive( false );
+          //}
+          //else
+          //{
+          //     headP1.SetActive( false );
+          //     legsP1.SetActive( true );
+          //}
           readyP1.text = "<color=red>NOT READY</color>";
 
           if( leader )
@@ -332,6 +383,16 @@ public class UiManager : MonoBehaviour
      {
           playerData.role = playerData.role == "HEAD" ? "LEGS" : "HEAD";
           roleP1.text = playerData.role;
+          //if( playerData.role == "HEAD" )
+          //{
+          //     headP1.SetActive( true );
+          //     legsP1.SetActive( false );
+          //}
+          //else
+          //{
+          //     headP1.SetActive( false );
+          //     legsP1.SetActive( true );
+          //}
           dirty = true;
      }
 
@@ -373,6 +434,11 @@ public class UiManager : MonoBehaviour
      public void OnButtonExit()
      {
           Application.Quit();
+     }
+
+     public void OnButtonLeave()
+     {
+          FindObjectOfType<SharedCharacter>().CmdReturnToLobby( true );
      }
 
      public void OnButtonOptions()
@@ -426,7 +492,7 @@ public class UiManager : MonoBehaviour
 
      public void OnButtonReturnToLobby()
      {
-          FindObjectOfType<SharedCharacter>().CmdReturnToLobby();
+          FindObjectOfType<SharedCharacter>().CmdReturnToLobby( false );
      }
 
      // ==================================================================================

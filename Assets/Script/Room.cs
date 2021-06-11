@@ -20,6 +20,7 @@ public class Room : NetworkBehaviour
 
      [Header( "Navigation" )]
      public GameObject floor;
+     public float navMeshHeight;
      public bool debugNavMesh;
 
      [HideInInspector] public ContentLoader content;
@@ -40,77 +41,23 @@ public class Room : NetworkBehaviour
      {
           // carica il contenuto della stanza
           if( content != null )
+          {
                content.Load();
+               BuildNavMesh();
+          }
 
           RpcSetupCamera();
-
-          BuildNavMesh();
-     }
-
-     [Server]
-     private void BuildNavMesh()
-     {
-          foreach( NavMeshAgent agent in FindObjectsOfType<NavMeshAgent>() )
-          {
-               agent.enabled = false;
-          }
-
-          NavMeshBuildSettings settings = new NavMeshBuildSettings()
-          {
-               agentHeight = 2,
-               agentRadius = 0.5f,
-               agentSlope = 45,
-               agentClimb = 0.75f,
-               agentTypeID = 0
-          };
-
-          List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
-          Bounds bounds = new Bounds( transform.position, new Vector3( roomSize.x, 10, roomSize.y ) );
-          NavMeshBuilder.CollectSources( bounds, LayerMask.GetMask( "Default", "Ground" ), NavMeshCollectGeometry.RenderMeshes, 0, new List<NavMeshBuildMarkup>(), sources );
-
-          NavMeshData navMesh = NavMeshBuilder.BuildNavMeshData( settings, sources, bounds, Vector3.zero, Quaternion.identity );
-          NavMesh.RemoveAllNavMeshData();
-          NavMesh.AddNavMeshData( navMesh );
-
-          if( debugNavMesh )
-          {
-               NavMeshVisualizator vis = FindObjectOfType<NavMeshVisualizator>();
-               vis.transform.position = navMesh.position;
-               vis.transform.rotation = navMesh.rotation;
-               vis.ShowMesh();
-          }
-
-          foreach( GameObject o in content.childObjects )
-          {
-               if( o != null )
-               {
-                    NavMeshAgent agent = o.GetComponent<NavMeshAgent>();
-                    if( agent != null )
-                    {
-                         agent.enabled = true;
-                    }
-               }
-          }
      }
 
      [Server]
      public void Unload()
      {
           // disabilita il contenuto della stanza
-          foreach( GameObject o in content.childObjects )
-          {
-               if( o != null )
-               {
-                    NavMeshAgent agent = o.GetComponent<NavMeshAgent>();
-                    if( agent != null )
-                    {
-                         agent.enabled = false;
-                    }
-               }
-          }
-
           if( content != null )
+          {
+               DisableNavMesh();
                content.Unload();
+          }
      }
 
      private void SetupWalls()
@@ -159,6 +106,68 @@ public class Room : NetworkBehaviour
           wall.transform.localPosition = new Vector3( 0, 0, -roomSize.y / 2 + wallWidth / 2 );
      }
 
+     [Server]
+     private void BuildNavMesh()
+     {
+          foreach( NavMeshAgent agent in FindObjectsOfType<NavMeshAgent>() )
+          {
+               agent.enabled = false;
+          }
+
+          NavMeshBuildSettings settings = new NavMeshBuildSettings()
+          {
+               agentHeight = 2,
+               agentRadius = 0.5f,
+               agentSlope = 45,
+               agentClimb = 0.75f,
+               agentTypeID = 0
+          };
+
+          List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
+          Bounds bounds = new Bounds( transform.position, new Vector3( roomSize.x, navMeshHeight, roomSize.y ) );
+          NavMeshBuilder.CollectSources( bounds, LayerMask.GetMask( "Default", "Ground" ), NavMeshCollectGeometry.RenderMeshes, 0, new List<NavMeshBuildMarkup>(), sources );
+
+          NavMeshData navMesh = NavMeshBuilder.BuildNavMeshData( settings, sources, bounds, Vector3.zero, Quaternion.identity );
+          NavMesh.RemoveAllNavMeshData();
+          NavMesh.AddNavMeshData( navMesh );
+
+          if( debugNavMesh )
+          {
+               NavMeshVisualizator vis = FindObjectOfType<NavMeshVisualizator>();
+               vis.transform.position = navMesh.position;
+               vis.transform.rotation = navMesh.rotation;
+               vis.ShowMesh();
+          }
+
+          foreach( GameObject o in content.childObjects )
+          {
+               if( o != null )
+               {
+                    NavMeshAgent agent = o.GetComponent<NavMeshAgent>();
+                    if( agent != null )
+                    {
+                         agent.enabled = true;
+                    }
+               }
+          }
+     }
+
+     [Server]
+     private void DisableNavMesh()
+     {
+          foreach( GameObject o in content.childObjects )
+          {
+               if( o != null )
+               {
+                    NavMeshAgent agent = o.GetComponent<NavMeshAgent>();
+                    if( agent != null )
+                    {
+                         agent.enabled = false;
+                    }
+               }
+          }
+     }
+
      [ClientRpc]
      private void RpcSetupCamera()
      {
@@ -178,7 +187,7 @@ public class Room : NetworkBehaviour
                          Camera.main.transform.parent = roomCameraSocket;
                          Camera.main.transform.Reset();
                          Camera.main.orthographic = true;
-                         Camera.main.orthographicSize = 4.5f;
+                         Camera.main.orthographicSize = roomSize.y / 2;
                     }
 
                     break;
