@@ -7,8 +7,10 @@ using Mirror;
 [RequireComponent( typeof( NetworkSpawner ) )]
 public class Door : NetworkBehaviour
 {
-     public Material closed;
-     public Material open;
+     [SyncVar]
+     public Directions direction;
+     public Color locked;
+     public Color open;
 
      private ContentLoader loader;
 
@@ -26,7 +28,8 @@ public class Door : NetworkBehaviour
      {
           yield return new WaitForSecondsRealtime( 0.5f );
 
-          GetComponent<Collider>().enabled = true;
+          if( !GetComponent<NetworkSpawner>().loader.IsCompleted() )
+               GetComponent<Collider>().enabled = true;
      }
 
      [Server]
@@ -45,9 +48,10 @@ public class Door : NetworkBehaviour
      [Server]
      private void Open()
      {
-          GetComponent<Collider>().enabled = false;
-          GetComponent<Renderer>().material = open;
           RpcOpen();
+          GetComponent<Collider>().enabled = false;
+          var c = GetComponent<ParticleSystem>().colorOverLifetime;
+          c.color = open;
      }
 
      [Server]
@@ -59,6 +63,7 @@ public class Door : NetworkBehaviour
      [ClientRpc]
      private void RpcOpen()
      {
-          GetComponent<Renderer>().material = open;
+          var main = GetComponent<ParticleSystem>().main;
+          main.startColor = new ParticleSystem.MinMaxGradient( open );
      }
 }

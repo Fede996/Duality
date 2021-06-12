@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
 using UnityEngine.AI;
+using System.Linq;
 
 public class Room : NetworkBehaviour
 {
@@ -44,6 +45,11 @@ public class Room : NetworkBehaviour
           {
                content.Load();
                BuildNavMesh();
+
+               foreach( Directions dir in doors )
+               {
+                    content.childObjects.Where( o => o.GetComponent<Door>() != null && o.GetComponent<Door>().direction == dir ).First().GetComponent<ParticleSystem>().Play();
+               }
           }
 
           RpcSetupCamera();
@@ -178,7 +184,7 @@ public class Room : NetworkBehaviour
      {
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
 
-          for( ; ; )
+          for(; ; )
           {
                if( player.initialized )
                {
