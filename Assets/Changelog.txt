@@ -81,3 +81,13 @@ b. disabilitati input di gioco quando il menu di pausa è aperto;
 c. raddoppiate le dimensioni delle stanze;
 
 d. aggiunte porte (che si aprono solo quando la stanza è stata completata) fra le stanze;
+
+
+<=== 12/06/2021 | Fede ======================>
+
+a. migliorata illuminazione;
+
+b. aggiunto post-processing;
+
+c. aggiunto effetto nebbia alle porte tra una stanza e l'altra;
+
