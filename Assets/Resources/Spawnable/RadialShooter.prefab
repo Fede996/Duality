@@ -196,7 +196,9 @@ MonoBehaviour:
   maxHealth: 100
   damage: 1
   knockbackIntensity: 500
-  health: 0
+  needToKillToComplete: 1
+  rewardExp: 10
+  rewardCash: 10
   movementSpeed: 0
   numberOfProjectiles: 3
   projectileSpeed: 3
@@ -218,3 +220,4 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   spawnablePrefabName: RadialShooter
+  loader: {fileID: 0}

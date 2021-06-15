@@ -83,22 +83,30 @@ public class Weapon : NetworkBehaviour
      [Command( requiresAuthority = false )]
      private void CmdFireWeapon( Vector3 position, Vector3 forward )
      {
-          RpcFireWeapon();
-
+          bool displayHitmarker = false;
+          
           if( Physics.Raycast( position, forward, out RaycastHit hit, range ) )
           {
                Target target = hit.collider.GetComponent<Target>();
                if( target != null )
+               {
                     target.OnHit( hit );
+                    displayHitmarker = true;
+               }
 
                Enemy enemy = hit.collider.GetComponent<Enemy>();
                if( enemy != null )
+               {
                     enemy.TakeDamage( damage );
+                    displayHitmarker = true;
+               }
           }
+
+          RpcFireWeapon( displayHitmarker );
      }
 
      [ClientRpc]
-     private void RpcFireWeapon()
+     private void RpcFireWeapon( bool displayHitmarker )
      {
           if( player.localRole == Role.Legs )
           {
@@ -112,6 +120,13 @@ public class Weapon : NetworkBehaviour
                     muzzleSoundSource.pitch = Random.Range( audioPitch.x, audioPitch.y );
                     muzzleSoundSource.Play();
                } 
+          }
+          else
+          {
+               if( displayHitmarker )
+               {
+                    UI.ShowHitmarker();
+               }
           }
      }
 }

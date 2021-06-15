@@ -46,9 +46,12 @@ public class Room : NetworkBehaviour
                content.Load();
                BuildNavMesh();
 
-               foreach( Directions dir in doors )
+               foreach( Door door in content.childObjects.Select( o => o.GetComponent<Door>() ) )
                {
-                    content.childObjects.Where( o => o.GetComponent<Door>() != null && o.GetComponent<Door>().direction == dir ).First().GetComponent<ParticleSystem>().Play();
+                    if( door != null )
+                    {
+                         door.Init( doors.Contains( door.direction ) );
+                    }
                }
           }
 

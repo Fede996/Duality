@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.Rendering.PostProcessing;
 
 public class UiManager : MonoBehaviour
 {
@@ -51,15 +52,19 @@ public class UiManager : MonoBehaviour
      public Text quality;
      public Slider qualitySlider;
      public Button applyButton;
+     public Toggle statsToggle;
+     public GameObject statsPanel;
+     public Toggle postProcessingToggle;
 
      [Header( "Game" )]
      public GameObject gameUiRoot;
-     public Text lives;
      public Text points;
      public GameObject sight;
      public GameObject weaponInfo;
      public Text fireMode;
      public GameObject gameOver;
+     public GameObject lifePanel;
+     public GameObject lifePrefab;
 
      [Header( "Animation" )]
      public AnimationClip[] clips;
@@ -472,17 +477,46 @@ public class UiManager : MonoBehaviour
           applyButton.enabled = false;
      }
 
+     public void OnToggleStats()
+     {
+          statsPanel.SetActive( statsToggle.isOn );
+     }
+
+     public void OnTogglePostPorcessing()
+     {
+          GetComponentInParent<PostProcessLayer>().enabled = postProcessingToggle.isOn;
+     }
+
      // Game UI page
      // ------------
 
      public void SetLives( int value )
      {
-          lives.text = value.ToString();
+          for( int i = 0; i < lifePanel.transform.childCount; i++ )
+          {
+               Destroy( lifePanel.transform.GetChild( i ).gameObject );
+          }
+
+          for( int i = 0; i < value; i++ )
+          {
+               GameObject life = Instantiate( lifePrefab, lifePanel.transform );
+               life.GetComponent<RectTransform>().anchoredPosition = new Vector2( i * 55, 0 );
+          }
      }
 
      public void SetPoints( int value )
      {
           points.text = value.ToString();
+     }
+
+     public void ShowHitmarker()
+     {
+          anim.Play( "UI_hitmarker" );
+     }
+
+     public void ShowDamageOverlay()
+     {
+          anim.Play( "UI_damage" );
      }
 
      public void SetFireMode( string mode )

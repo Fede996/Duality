@@ -10,6 +10,8 @@ public class Enemy : SolidTarget
      public int damage = 1;
      public float knockbackIntensity = 1000f;
      public bool needToKillToComplete;
+     public float rewardExp;
+     public float rewardCash;
 
      private float health;
 
@@ -50,6 +52,13 @@ public class Enemy : SolidTarget
           health -= damage;
 
           if( health <= 0 )
+          {
                NetworkServer.Destroy( gameObject );
+               foreach( GamePlayerController player in FindObjectsOfType<GamePlayerController>() )
+               {
+                    player.gainedExp += rewardExp;
+                    player.gainedCash += rewardCash;
+               }
+          }
      }
 }

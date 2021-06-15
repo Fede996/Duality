@@ -46,6 +46,26 @@ public class Door : NetworkBehaviour
      }
 
      [Server]
+     public void Init( bool enabled )
+     {
+          if( enabled )
+          {
+               GetComponent<ParticleSystem>().Play();
+               RpcInit();
+          }
+          else
+          {
+               NetworkServer.Destroy( gameObject );
+          }
+     }
+
+     [ClientRpc]
+     private void RpcInit()
+     {
+          GetComponent<ParticleSystem>().Play();
+     }
+
+     [Server]
      private void Open()
      {
           RpcOpen();
@@ -54,16 +74,16 @@ public class Door : NetworkBehaviour
           c.color = open;
      }
 
-     [Server]
-     private void Close()
-     {
-          GetComponent<Collider>().enabled = true;
-     }
-
      [ClientRpc]
      private void RpcOpen()
      {
           var main = GetComponent<ParticleSystem>().main;
           main.startColor = new ParticleSystem.MinMaxGradient( open );
+     }
+
+     [Server]
+     private void Close()
+     {
+          GetComponent<Collider>().enabled = true;
      }
 }

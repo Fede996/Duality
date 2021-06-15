@@ -135,6 +135,8 @@ MonoBehaviour:
   damage: 1
   knockbackIntensity: 1000
   needToKillToComplete: 0
+  rewardExp: 1
+  rewardCash: 0
 --- !u!114 &-5625599364513414086
 MonoBehaviour:
   m_ObjectHideFlags: 0

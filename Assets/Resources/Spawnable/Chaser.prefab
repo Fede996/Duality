@@ -196,7 +196,9 @@ MonoBehaviour:
   maxHealth: 100
   damage: 1
   knockbackIntensity: 1000
-  health: 0
+  needToKillToComplete: 1
+  rewardExp: 2
+  rewardCash: 0
   movementSpeed: 2
 --- !u!114 &-7538158790615858668
 MonoBehaviour:
@@ -213,3 +215,4 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   spawnablePrefabName: Chaser
+  loader: {fileID: 0}

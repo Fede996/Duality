@@ -91,3 +91,15 @@ b. aggiunto post-processing;
 
 c. aggiunto effetto nebbia alle porte tra una stanza e l'altra;
 
+
+<=== 15/06/2021 | Fede ======================>
+
+a. aggiunti toggle 'Post-processing' e 'Statistiche' in menu opzioni;
+
+b. aggiunto hitmarker quando si colpisce un bersaglio o nemico;
+
+c. aggiunto effetto grafico quando si viene colpiti;
+
+d. modificata visualizzazione delle vite;
+
+e. aggiunti drop di exp e monete ai nemici;

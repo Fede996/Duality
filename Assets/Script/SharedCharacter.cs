@@ -203,16 +203,24 @@ public class SharedCharacter : NetworkBehaviour
           {
                lives -= damage;
 
-               if( lives <= 0 )
+               if( lives == 0 )
                {
+                    RpcTakeDamage();
                     Die();
                }
-               else
+               else if( lives > 0 )
                {
+                    RpcTakeDamage();
                     _invincibilityFrame = timeBetweenHits;
                     _rigidbody.AddForce( knockback, knockbackMode );
                }
           }
+     }
+
+     [ClientRpc]
+     private void RpcTakeDamage()
+     {
+          UI.ShowDamageOverlay();
      }
 
      [Server]
