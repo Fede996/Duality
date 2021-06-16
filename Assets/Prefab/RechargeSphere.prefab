@@ -4816,9 +4816,9 @@ GameObject:
   - component: {fileID: 9071619075924234354}
   - component: {fileID: 9071619075924234357}
   - component: {fileID: 9071619075924234356}
-  - component: {fileID: 9071619075924234359}
-  - component: {fileID: 9071619075924234352}
   - component: {fileID: 9071619075924234350}
+  - component: {fileID: -3144152084960252013}
+  - component: {fileID: 9071619075924234352}
   - component: {fileID: 9071619075924234353}
   m_Layer: 0
   m_Name: RechargeSphere
@@ -4904,32 +4904,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &9071619075924234359
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9071619075924234358}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c75650e416fd9f541abb6e0c6f3386bb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  worldScale: 300
---- !u!114 &9071619075924234352
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9071619075924234358}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 04595117e9526be4eb892f020fa0bd02, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 20
 --- !u!198 &9071619075924234350
 ParticleSystem:
   m_ObjectHideFlags: 0
@@ -9636,6 +9610,38 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     vectorLabel1_3: W
+--- !u!114 &-3144152084960252013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9071619075924234358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b91ecbcc199f4492b9a91e820070131, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneId: 0
+  serverOnly: 0
+  visible: 0
+  m_AssetId: 
+  hasSpawned: 0
+--- !u!114 &9071619075924234352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9071619075924234358}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04595117e9526be4eb892f020fa0bd02, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncMode: 0
+  syncInterval: 0.1
+  speed: 10
 --- !u!199 &9071619075924234353
 ParticleSystemRenderer:
   serializedVersion: 6

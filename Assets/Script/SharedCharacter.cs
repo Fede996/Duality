@@ -39,8 +39,12 @@ public class SharedCharacter : NetworkBehaviour
      public float timeBetweenHits = 1;
      public ForceMode knockbackMode = ForceMode.Force;
      public int bullets = 20;
-     public float stamina = 2000;
+
+     [Header( "Stamina system" )]
+     public float maxStamina = 2000;
      public float staminaCost = 100;
+     public float fatiguedSpeedMultiplier = 0.1f;
+     public float currentStamina;
 
      [Header( "References" )]
      public Transform headCameraSocket;
@@ -81,6 +85,8 @@ public class SharedCharacter : NetworkBehaviour
           {
                Camera.main.transform.parent = legsCameraSocket;
                Camera.main.transform.Reset();
+               currentStamina = maxStamina;
+               UI.SetFuel( 1 );
           }
 
           initialized = true;
@@ -260,15 +266,16 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Move( Vector3 movement )
      {
-          if( stamina > 0 && movement.sqrMagnitude != 0 )
+          if( currentStamina > 0 && movement.sqrMagnitude != 0 )
           {
-               stamina -= staminaCost;
+               currentStamina -= staminaCost * Time.deltaTime;
+               UI.SetFuel( currentStamina / maxStamina );
           }
 
-          if( stamina > 0 )
-               CmdSetMoveDirection( movement );
-          else
-               CmdSetMoveDirection( Vector3.zero );
+          if( currentStamina < 0 )
+               movement *= fatiguedSpeedMultiplier;
+
+          CmdSetMoveDirection( movement );
      }
 
      [Command( requiresAuthority = false )]

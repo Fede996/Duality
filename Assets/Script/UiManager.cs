@@ -65,6 +65,8 @@ public class UiManager : MonoBehaviour
      public GameObject gameOver;
      public GameObject lifePanel;
      public GameObject lifePrefab;
+     public GameObject fuel;
+     public Scrollbar fuelBar;
 
      [Header( "Animation" )]
      public AnimationClip[] clips;
@@ -506,7 +508,7 @@ public class UiManager : MonoBehaviour
 
      public void SetPoints( int value )
      {
-          points.text = value.ToString();
+          //points.text = value.ToString();
      }
 
      public void ShowHitmarker()
@@ -517,6 +519,11 @@ public class UiManager : MonoBehaviour
      public void ShowDamageOverlay()
      {
           anim.Play( "UI_damage" );
+     }
+
+     public void SetFuel( float value )
+     {
+          fuelBar.size = value;
      }
 
      public void SetFireMode( string mode )
@@ -588,11 +595,13 @@ public class UiManager : MonoBehaviour
           {
                sight.SetActive( true );
                weaponInfo.SetActive( true );
+               fuel.SetActive( false );
           }
           else
           {
                sight.SetActive( false );
                weaponInfo.SetActive( false );
+               fuel.SetActive( true );
           }
      }
 

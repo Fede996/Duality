@@ -7,28 +7,27 @@ using Mirror;
 public class TestaPointsTarget : DestroyableTarget
 {
      [Header( "Settings" )]
-     [SerializeField] private int points = 1;
-
-     private SharedCharacter player;
+     public float stamina = 1000;
      public GameObject rechargeSphere;
-     
-     
      
      [Server]
      public override void OnHit()
      {
-          player = FindObjectOfType<SharedCharacter>();
-          
-          player.TestaPoints += points;
-          player.stamina = 2000;
+          RpcAddStamina( stamina );
 
-          
-          
-          Instantiate(rechargeSphere, transform.position, Quaternion.identity);
-          
-          
-          
-          
+          GameObject o = Instantiate( rechargeSphere, transform.position, Quaternion.identity );
+          NetworkServer.Spawn( o );
+
           base.OnHit();
+     }
+
+     [ClientRpc]
+     private void RpcAddStamina( float value )
+     {
+          SharedCharacter player = FindObjectOfType<SharedCharacter>();
+          if( player.localRole == Role.Legs )
+          {
+               player.currentStamina += value;
+          }
      }
 }

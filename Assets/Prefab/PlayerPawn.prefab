@@ -2051,8 +2051,10 @@ MonoBehaviour:
   timeBetweenHits: 1
   knockbackMode: 0
   bullets: 20
-  stamina: 2000
-  staminaCost: 0
+  maxStamina: 2000
+  staminaCost: 100
+  fatiguedSpeedMultiplier: 0.5
+  currentStamina: 100
   headCameraSocket: {fileID: 5579281804888155970}
   legsCameraSocket: {fileID: 5579281804613768412}
   mechHead: {fileID: 4503495187699121360}

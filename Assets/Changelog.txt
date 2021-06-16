@@ -103,3 +103,12 @@ c. aggiunto effetto grafico quando si viene colpiti;
 d. modificata visualizzazione delle vite;
 
 e. aggiunti drop di exp e monete ai nemici;
+
+
+<=== 16/06/2021 | Fede ======================>
+
+a. modificata dinamica della stamina (fuel);
+
+b. aggiunto indicatore della stamina (fuel) sull'interfaccia in game;
+
+c. modificato collectibles che ricarica la stamina (fuel plant);
