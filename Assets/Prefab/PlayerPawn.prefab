@@ -2083,9 +2083,10 @@ MonoBehaviour:
   cameraTransform: {fileID: 5579281804888155970}
   damage: 20
   autoFire: 0
-  shotDelay: 0.2
   range: 100
-  numberOfBullets: 20
+  baseShotDelay: 0.2
+  fatiguedShotDelay: 1.2
+  maxAmmo: 100
   muzzlePrefab: {fileID: 1336949550903370, guid: 4543ab5e3d405ec40a8d4e9aa5165030, type: 3}
   muzzleTransforms:
   - {fileID: 2427329463328016165}

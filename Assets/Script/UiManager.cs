@@ -67,6 +67,9 @@ public class UiManager : MonoBehaviour
      public GameObject lifePrefab;
      public GameObject fuel;
      public Scrollbar fuelBar;
+     public GameObject ammo;
+     public Scrollbar ammoBar;
+     public Text ammoText;
 
      [Header( "Animation" )]
      public AnimationClip[] clips;
@@ -526,6 +529,12 @@ public class UiManager : MonoBehaviour
           fuelBar.size = value;
      }
 
+     public void SetAmmo( int value, int max )
+     {
+          ammoBar.size = ( float )value / ( float )max;
+          ammoText.text = $"{value} / {max}";
+     }
+
      public void SetFireMode( string mode )
      {
           fireMode.text = mode;
@@ -596,12 +605,15 @@ public class UiManager : MonoBehaviour
                sight.SetActive( true );
                weaponInfo.SetActive( true );
                fuel.SetActive( false );
+               ammo.SetActive( true );
           }
           else
           {
                sight.SetActive( false );
                weaponInfo.SetActive( false );
                fuel.SetActive( true );
+               SetFuel( 1 );
+               ammo.SetActive( false );
           }
      }
 

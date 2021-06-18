@@ -10,19 +10,24 @@ public class Weapon : NetworkBehaviour
      [SerializeField] private Transform cameraTransform;
 
      [Header( "Settings" )]
-     [SerializeField] private float damage = 20f;
-     [SerializeField] public bool autoFire = true;
-     [SerializeField] private float shotDelay = .5f;
-     [SerializeField] private float range = 100f;
-     public int numberOfBullets = 20;
-     
+     public float damage = 20f;
+     public bool autoFire = false;
+     public float range = 100f;
+
+     [Header( "Ammo settings" )]
+     public float baseShotDelay = .5f;
+     public float fatiguedShotDelay = 2f;
+     public int maxAmmo = 100;
+     private float shotDelay;
+     private int ammo;
+
      [Header( "Muzzle Flash" )]
-     [SerializeField] private GameObject muzzlePrefab;
-     [SerializeField] private Transform[] muzzleTransforms;
-     [SerializeField] private AudioSource muzzleSoundSource;
-     [SerializeField] private AudioClip muzzleSound;
-     [SerializeField] private Vector2 audioPitch = new Vector2(.9f, 1.1f);
-          
+     public GameObject muzzlePrefab;
+     public Transform[] muzzleTransforms;
+     public AudioSource muzzleSoundSource;
+     public AudioClip muzzleSound;
+     public Vector2 audioPitch = new Vector2( .9f, 1.1f );
+
      public bool isFiring = false;
 
      private float timeLastFired;
@@ -36,13 +41,17 @@ public class Weapon : NetworkBehaviour
           UI = FindObjectOfType<UiManager>();
           player = GetComponentInParent<SharedCharacter>();
 
+          ammo = maxAmmo;
+          UI.SetAmmo( ammo, maxAmmo );
+          shotDelay = baseShotDelay;
+
           if( muzzleSoundSource != null )
                muzzleSoundSource.clip = muzzleSound;
      }
 
      private void FixedUpdate()
      {
-          if( autoFire && isFiring && ( ( timeLastFired + shotDelay ) <= Time.time ) )
+          if( autoFire && isFiring )
           {
                FireWeapon();
           }
@@ -52,12 +61,18 @@ public class Weapon : NetworkBehaviour
 
      public void FireWeapon()
      {
-          timeLastFired = Time.time;
-
-          if (numberOfBullets != 0)
+          if( ( timeLastFired + shotDelay ) <= Time.time )
           {
-               numberOfBullets--;
+               timeLastFired = Time.time;
                CmdFireWeapon( cameraTransform.position, cameraTransform.forward );
+
+               if( ammo > 0 )
+               {
+                    ammo--;
+                    UI.SetAmmo( ammo, maxAmmo );
+               }
+
+               shotDelay = ammo == 0 ? fatiguedShotDelay : baseShotDelay;
 
                foreach( Transform parent in muzzleTransforms )
                {
@@ -72,19 +87,11 @@ public class Weapon : NetworkBehaviour
           }
      }
 
-     public void ToggleFire()
-     {
-          autoFire = !autoFire;
-          UI.SetFireMode( autoFire ? "AUTO" : "SINGLE" );
-     }
-
-     // =====================================================================
-
      [Command( requiresAuthority = false )]
      private void CmdFireWeapon( Vector3 position, Vector3 forward )
      {
           bool displayHitmarker = false;
-          
+
           if( Physics.Raycast( position, forward, out RaycastHit hit, range ) )
           {
                Target target = hit.collider.GetComponent<Target>();
@@ -119,7 +126,7 @@ public class Weapon : NetworkBehaviour
                {
                     muzzleSoundSource.pitch = Random.Range( audioPitch.x, audioPitch.y );
                     muzzleSoundSource.Play();
-               } 
+               }
           }
           else
           {
@@ -127,6 +134,29 @@ public class Weapon : NetworkBehaviour
                {
                     UI.ShowHitmarker();
                }
+          }
+     }
+
+     public void ToggleFire()
+     {
+          autoFire = !autoFire;
+          UI.SetFireMode( autoFire ? "AUTO" : "SINGLE" );
+     }
+
+     [Server]
+     public void AddAmmo( int value )
+     {
+          RpcAddAmmo( value );
+          ammo = Mathf.Min( ammo + value, maxAmmo );
+     }
+
+     [ClientRpc]
+     private void RpcAddAmmo( int value )
+     {
+          if( player.localRole == Role.Head )
+          {
+               ammo = Mathf.Min( ammo + value, maxAmmo );
+               UI.SetAmmo( ammo, maxAmmo );
           }
      }
 }

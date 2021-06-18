@@ -8,8 +8,7 @@ using System;
 public class GambePointsTarget : DestroyableTarget
 {
      [Header( "Settings" )]
-     public int points = 1;
-     public int ammo = 20;
+     public int ammo = 40;
 
      private void OnTriggerEnter( Collider other )
      {
@@ -17,8 +16,7 @@ public class GambePointsTarget : DestroyableTarget
           {
                if( other.CompareTag( "Player" ) )
                {
-                    other.GetComponent<Weapon>().numberOfBullets += ammo;
-                    other.GetComponent<SharedCharacter>().GambePoints += points;
+                    other.GetComponent<Weapon>().AddAmmo( ammo );
                     base.OnHit();
                } 
           }

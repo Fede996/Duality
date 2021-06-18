@@ -112,3 +112,12 @@ a. modificata dinamica della stamina (fuel);
 b. aggiunto indicatore della stamina (fuel) sull'interfaccia in game;
 
 c. modificato collectibles che ricarica la stamina (fuel plant);
+
+
+<=== 18/06/2021 | Fede ======================>
+
+a. modificata dinamica delle munizioni (ammo)
+
+b. aggiunto indicatore munizioni sull'interfaccia in game (solo testa);
+
+c. modificato collectible che ricarica le munizioni (ammo box);

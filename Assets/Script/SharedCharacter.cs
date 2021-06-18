@@ -86,7 +86,6 @@ public class SharedCharacter : NetworkBehaviour
                Camera.main.transform.parent = legsCameraSocket;
                Camera.main.transform.Reset();
                currentStamina = maxStamina;
-               UI.SetFuel( 1 );
           }
 
           initialized = true;
