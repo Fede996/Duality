@@ -24,7 +24,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 123943392493906216}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.16, z: 0}
+  m_LocalPosition: {x: 0, y: 0.11, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2899456595040926370}
@@ -760,7 +760,7 @@ GameObject:
   - component: {fileID: 6215788938772329133}
   - component: {fileID: 6215788938771230829}
   - component: {fileID: 3956064098496263332}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lantern
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -775,7 +775,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6215788938773163693}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8, y: 0, z: 0}
+  m_LocalPosition: {x: -8, y: 0.1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 8989328460659416768}
@@ -837,7 +837,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6215788938773163693}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b7496270b94045b45b6ec4f3e332d05b, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -949,7 +949,7 @@ GameObject:
   - component: {fileID: 8219207783010239091}
   - component: {fileID: 8219207783009140915}
   - component: {fileID: 2148644336483508224}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Lantern (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -964,7 +964,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8219207783006887539}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8, y: 0, z: 0}
+  m_LocalPosition: {x: 8, y: 0.1, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children: []
   m_Father: {fileID: 8989328460659416768}
@@ -1026,7 +1026,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8219207783006887539}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b7496270b94045b45b6ec4f3e332d05b, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2

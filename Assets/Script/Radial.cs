@@ -34,7 +34,7 @@ public class Radial : ChaserEnemy
           base.Update();
      }
 
-     private void SpawnProjectile( int numberOfProjectiles )
+     protected virtual void SpawnProjectile( int numberOfProjectiles )
      {
           float angleStep = 360f / numberOfProjectiles;
           float angle = 0f;

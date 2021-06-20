@@ -264,7 +264,7 @@ BoxCollider:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7383594343725919838}
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 13400000, guid: b7496270b94045b45b6ec4f3e332d05b, type: 2}
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
@@ -423,7 +423,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2804454117624162194, guid: 3f715a4c9a83c65498139958a09b4431, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 2804454117624162194, guid: 3f715a4c9a83c65498139958a09b4431, type: 3}
       propertyPath: m_LocalPosition.z
@@ -475,6 +475,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Lantern (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 05bac6d97fdc58743b7c6b0e8b7c0c9f, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 05bac6d97fdc58743b7c6b0e8b7c0c9f, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -497,7 +501,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 05bac6d97fdc58743b7c6b0e8b7c0c9f, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.1
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 05bac6d97fdc58743b7c6b0e8b7c0c9f, type: 3}
       propertyPath: m_LocalPosition.z

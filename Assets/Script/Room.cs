@@ -134,7 +134,7 @@ public class Room : NetworkBehaviour
 
           List<NavMeshBuildSource> sources = new List<NavMeshBuildSource>();
           Bounds bounds = new Bounds( transform.position, new Vector3( roomSize.x, navMeshHeight, roomSize.y ) );
-          NavMeshBuilder.CollectSources( bounds, LayerMask.GetMask( "Default", "Ground" ), NavMeshCollectGeometry.RenderMeshes, 0, new List<NavMeshBuildMarkup>(), sources );
+          NavMeshBuilder.CollectSources( bounds, LayerMask.GetMask( "Default", "Ground" ), NavMeshCollectGeometry.PhysicsColliders, 0, new List<NavMeshBuildMarkup>(), sources );
 
           NavMeshData navMesh = NavMeshBuilder.BuildNavMeshData( settings, sources, bounds, Vector3.zero, Quaternion.identity );
           NavMesh.RemoveAllNavMeshData();

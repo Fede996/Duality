@@ -105,9 +105,9 @@ public class LobbyRoomPlayer : NetworkRoomPlayer
      }
 
      [Command]
-     public void CmdStartGame( string sceneName )
+     public void CmdStartGame( string sceneName, bool debug )
      {
-          ( ( LobbyRoomManager )NetworkManager.singleton ).StartGame( sceneName );
+          ( ( LobbyRoomManager )NetworkManager.singleton ).StartGame( sceneName, true );
      }
 
      [Server]

@@ -41,7 +41,7 @@ public class ShooterEnemy : ChaserEnemy
      // =====================================================================
 
      [Server]
-     private void ShootBullet()
+     protected virtual void ShootBullet()
      {
           GameObject projectile = Instantiate( bulletPrefab, transform.position, Quaternion.identity, null );
           Bullet bullet = projectile.GetComponent<Bullet>();
@@ -54,6 +54,7 @@ public class ShooterEnemy : ChaserEnemy
           Vector3 direction = ( player.position - transform.position );
           direction.y = 0;
           bullet.initialVelocity = direction.normalized * bulletSpeed;
+          transform.LookAt( player.transform, Vector3.up );
 
           NetworkServer.Spawn( projectile );
      }

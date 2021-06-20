@@ -121,3 +121,10 @@ a. modificata dinamica delle munizioni (ammo)
 b. aggiunto indicatore munizioni sull'interfaccia in game (solo testa);
 
 c. modificato collectible che ricarica le munizioni (ammo box);
+
+
+<=== 20/06/2021 | Fede ======================>
+
+a. aggiunti nemici con modelli (chomper / spitter / grenadier);
+
+b. migliorato menu principale in ottica di "release";

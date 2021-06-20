@@ -13,7 +13,7 @@ public class Enemy : SolidTarget
      public float rewardExp;
      public float rewardCash;
 
-     private float health;
+     protected float health;
 
      protected virtual void Start()
      {
@@ -47,7 +47,7 @@ public class Enemy : SolidTarget
      // =====================================================================
 
      [Server]
-     public void TakeDamage( float damage )
+     public virtual void TakeDamage( float damage )
      {
           health -= damage;
 

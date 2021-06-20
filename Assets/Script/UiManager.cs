@@ -12,6 +12,7 @@ public class UiManager : MonoBehaviour
 {
      [Header( "Settings" )]
      public float playerDataSyncTime = 1f;
+     public bool debug = false;
 
      [Header( "Login page" )]
      public GameObject desktop;
@@ -33,8 +34,6 @@ public class UiManager : MonoBehaviour
      public Text readyP1;
      public Text leaderP1;
      public Image imageP1;
-     //public GameObject headP1;
-     //public GameObject legsP1;
      public Slider colorSlider;
      public GameObject UiPlayer2;
      public Text nameP2;
@@ -42,6 +41,8 @@ public class UiManager : MonoBehaviour
      public Text readyP2;
      public Text leaderP2;
      public Image imageP2;
+     private PlayerSelection selectorP1;
+     private PlayerSelection selectorP2;
 
      [Header( "Esc menu" )]
      public GameObject escMenu;
@@ -328,30 +329,26 @@ public class UiManager : MonoBehaviour
 
      public void SetupLobby( bool leader, bool setDirty = true )
      {
+          selectorP1 = GameObject.Find( "Player selection 1" ).GetComponent<PlayerSelection>();
+          selectorP2 = GameObject.Find( "Player selection 2" ).GetComponent<PlayerSelection>();
           colorSlider.value = playerData.color;
           roleP1.text = playerData.role;
-          //if( playerData.role == "HEAD" )
-          //{
-          //     headP1.SetActive( true );
-          //     legsP1.SetActive( false );
-          //}
-          //else
-          //{
-          //     headP1.SetActive( false );
-          //     legsP1.SetActive( true );
-          //}
+          selectorP1.SetRole( playerData.role );
           readyP1.text = "<color=red>NOT READY</color>";
 
           if( leader )
           {
                startButton.gameObject.SetActive( true );
-               levelList.gameObject.SetActive( true );
-               levelList.options.Clear();
-               for( int i = 1; i < SceneManager.sceneCountInBuildSettings; i++ )
+               if( debug )
                {
-                    levelList.options.Add( new Dropdown.OptionData( Path.GetFileNameWithoutExtension( SceneUtility.GetScenePathByBuildIndex( i ) ) ) );
+                    levelList.gameObject.SetActive( true );
+                    levelList.options.Clear();
+                    for( int i = 1; i < SceneManager.sceneCountInBuildSettings; i++ )
+                    {
+                         levelList.options.Add( new Dropdown.OptionData( Path.GetFileNameWithoutExtension( SceneUtility.GetScenePathByBuildIndex( i ) ) ) );
+                    }
+                    levelList.RefreshShownValue(); 
                }
-               levelList.RefreshShownValue();
                leaderP1.enabled = true;
           }
           else
@@ -368,23 +365,28 @@ public class UiManager : MonoBehaviour
      {
           nameP2.text = "Waiting player...";
           roleP2.text = "HEAD";
+          selectorP2.SetRole( "HEAD" );
           readyP2.text = "<color=red>NOT READY</color>";
           leaderP2.enabled = false;
           imageP2.color = new Color( 0.2f, 0.2f, 0.2f );
+          selectorP2.SetColor( imageP2.color );
      }
 
      public void UpdatePlayer2( UserData playerData )
      {
           nameP2.text = playerData.username;
           roleP2.text = playerData.role;
+          selectorP2.SetRole( playerData.role );
           readyP2.text = playerData.ready ? "<color=green>READY</color>" : "<color=red>NOT READY</color>";
           leaderP2.enabled = playerData.leader;
           imageP2.color = Color.HSVToRGB( playerData.color, 0.8f, 0.8f );
+          selectorP2.SetColor( imageP2.color );
      }
 
      public void OnColorSliderChanged()
      {
           imageP1.color = Color.HSVToRGB( colorSlider.value, 0.8f, 0.8f );
+          selectorP1.SetColor( imageP1.color );
           playerData.color = colorSlider.value;
           dirty = true;
      }
@@ -393,16 +395,7 @@ public class UiManager : MonoBehaviour
      {
           playerData.role = playerData.role == "HEAD" ? "LEGS" : "HEAD";
           roleP1.text = playerData.role;
-          //if( playerData.role == "HEAD" )
-          //{
-          //     headP1.SetActive( true );
-          //     legsP1.SetActive( false );
-          //}
-          //else
-          //{
-          //     headP1.SetActive( false );
-          //     legsP1.SetActive( true );
-          //}
+          selectorP1.SetRole( playerData.role );
           dirty = true;
      }
 
@@ -416,7 +409,15 @@ public class UiManager : MonoBehaviour
 
      public void OnButtonStart()
      {
-          roomPlayer.CmdStartGame( levelList.captionText.text );
+          if( debug )
+          {
+               roomPlayer.CmdStartGame( levelList.captionText.text, true );
+          }
+          else
+          {
+               roomPlayer.CmdStartGame( "Procedural dungeon", false );
+          }
+
      }
 
      public void OnButtonBack()

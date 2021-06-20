@@ -52,6 +52,8 @@ public class SharedCharacter : NetworkBehaviour
      public Transform mechHead;
      public Transform mechLegs;
      public MeshRenderer hideInHead;
+     public Material headMaterial;
+     public Material legsMaterial;
 
      [HideInInspector] public Weapon weapon;
      private Animator animator;
@@ -406,6 +408,10 @@ public class SharedCharacter : NetworkBehaviour
      public int GambePoints = 0;
      [SyncVar( hook = nameof( OnLivesChanged ) )]
      public int lives = 5;
+     [SyncVar( hook = nameof( OnHeadHueChanged ) )]
+     public float headHue;
+     [SyncVar( hook = nameof( OnLegsHueChanged ) )]
+     public float legsHue;
 
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {
@@ -426,5 +432,45 @@ public class SharedCharacter : NetworkBehaviour
      private void OnLivesChanged( int oldValue, int newValue )
      {
           UI.SetLives( newValue );
+     }
+
+     public void AddStamina( float value )
+     {
+          currentStamina = Mathf.Min( maxStamina, currentStamina + value );
+          UI.SetFuel( currentStamina / maxStamina );
+     }
+
+     public void SetHue( float value, Role role )
+     {
+          if( role == Role.Head )
+          {
+               CmdSetHeadHue( value );
+          }
+          else
+          {
+               CmdSetLegsHue( value );
+          }
+     }
+
+     [Command( requiresAuthority = false )]
+     public void CmdSetHeadHue( float value )
+     {
+          headHue = value;
+     }
+
+     [Command( requiresAuthority = false )]
+     public void CmdSetLegsHue( float value )
+     {
+          legsHue = value;
+     }
+
+     private void OnHeadHueChanged( float oldValue, float newValue )
+     {
+          headMaterial.color = Color.HSVToRGB( newValue, 0.8f, 0.8f );
+     }
+
+     private void OnLegsHueChanged( float oldValue, float newValue )
+     {
+          legsMaterial.color = Color.HSVToRGB( newValue, 0.8f, 0.8f );
      }
 }

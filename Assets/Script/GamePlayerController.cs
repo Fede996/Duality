@@ -65,6 +65,7 @@ public class GamePlayerController : NetworkBehaviour
 
                UI.SetupGameUI( role );
                player.Init( role );
+               player.SetHue( playerData.color, role );
           }
      }
 

@@ -137,19 +137,22 @@ public class LobbyRoomManager : NetworkRoomManager
      // =====================================================================
 
      [Server]
-     public bool StartGame( string sceneName )
+     public bool StartGame( string sceneName, bool debug )
      {
-          //if( numPlayers != 2 )
-          //{
-          //     Debug.LogError( $"Number of player must be 2! ==> {numPlayers}" );
-          //     return false;
-          //}
+          if( !debug )
+          {
+               if( numPlayers != 2 )
+               {
+                    Debug.LogError( $"Number of player must be 2!" );
+                    return false;
+               }
 
-          //if( ( ( LobbyRoomPlayer )roomSlots[0] ).playerData.role == ( ( LobbyRoomPlayer )roomSlots[1] ).playerData.role )
-          //{
-          //     Debug.LogError( "Players must have different roles!" );
-          //     return false;
-          //}
+               if( ( ( LobbyRoomPlayer )roomSlots[0] ).playerData.role == ( ( LobbyRoomPlayer )roomSlots[1] ).playerData.role )
+               {
+                    Debug.LogError( "Players must have different roles!" );
+                    return false;
+               } 
+          }
 
           if( !allPlayersReady ) return false;
 

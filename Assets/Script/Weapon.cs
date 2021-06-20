@@ -147,7 +147,11 @@ public class Weapon : NetworkBehaviour
      public void AddAmmo( int value )
      {
           RpcAddAmmo( value );
-          ammo = Mathf.Min( ammo + value, maxAmmo );
+          if( player.localRole == Role.Head )
+          {
+               ammo = Mathf.Min( ammo + value, maxAmmo );
+               UI.SetAmmo( ammo, maxAmmo );
+          }
      }
 
      [ClientRpc]

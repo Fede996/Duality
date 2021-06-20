@@ -12,7 +12,7 @@ public class ChaserEnemy : Enemy
      [Header( "Movement" )]
      public float movementSpeed;
 
-     private NavMeshAgent agent;
+     protected NavMeshAgent agent;
      protected Transform player;
      
      // =====================================================================
@@ -24,6 +24,7 @@ public class ChaserEnemy : Enemy
                player = FindObjectOfType<SharedCharacter>().transform;
 
                agent = GetComponent<NavMeshAgent>();
+               agent.enabled = true;
                agent.speed = movementSpeed; 
           }
           

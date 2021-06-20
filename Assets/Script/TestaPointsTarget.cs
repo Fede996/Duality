@@ -14,6 +14,11 @@ public class TestaPointsTarget : DestroyableTarget
      public override void OnHit()
      {
           RpcAddStamina( stamina );
+          SharedCharacter player = FindObjectOfType<SharedCharacter>();
+          if( player.localRole == Role.Legs )
+          {
+               player.AddStamina( stamina );
+          }
 
           GameObject o = Instantiate( rechargeSphere, transform.position, Quaternion.identity );
           NetworkServer.Spawn( o );
@@ -27,7 +32,7 @@ public class TestaPointsTarget : DestroyableTarget
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
           if( player.localRole == Role.Legs )
           {
-               player.currentStamina += value;
+               player.AddStamina( value );
           }
      }
 }
