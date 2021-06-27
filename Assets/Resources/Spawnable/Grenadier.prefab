@@ -177,9 +177,9 @@ MonoBehaviour:
   rewardCash: 5
   movementSpeed: 0
   numberOfProjectiles: 4
-  projectileSpeed: 10
+  projectileSpeed: 7
   projectilePrefab: {fileID: 908232412765883618, guid: 76e22b78380823e4ba9978e79d25ee5c, type: 3}
-  frequency: 0.3
+  frequency: 0.5
   radialSpeed: 30
 --- !u!114 &7820791710379956854
 MonoBehaviour:
