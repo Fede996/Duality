@@ -415,7 +415,7 @@ public class UiManager : MonoBehaviour
           }
           else
           {
-               roomPlayer.CmdStartGame( "Procedural dungeon", false );
+               roomPlayer.CmdStartGame( "Procedural dungeon Debug", false );
           }
 
      }

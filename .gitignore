@@ -74,3 +74,8 @@ ProjectSettings/ProjectVersion.txt
 UserSettings/EditorUserSettings.asset
 UserSettings/EditorUserSettings.asset
 ProjectSettings/ProjectVersion.txt
+UserSettings/EditorUserSettings.asset
+ProjectSettings/Packages/com.unity.probuilder/Settings.json
+Packages/packages-lock.json
+Assets/Material/Legs.mat
+Assets/Material/Player1.mat
