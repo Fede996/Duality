@@ -13,7 +13,7 @@ public class UiManager : MonoBehaviour
      [Header( "Settings" )]
      public float playerDataSyncTime = 1f;
      public bool debug = false;
-
+     public bool debugScene = false;
      [Header( "Login page" )]
      public GameObject desktop;
      public InputField username;
@@ -409,13 +409,13 @@ public class UiManager : MonoBehaviour
 
      public void OnButtonStart()
      {
-          if( debug )
+          if (debugScene)
           {
-               roomPlayer.CmdStartGame( levelList.captionText.text, true );
+               roomPlayer.CmdStartGame("Procedural dungeon Debug", false);
           }
           else
           {
-               roomPlayer.CmdStartGame( "Procedural dungeon Debug", false );
+               roomPlayer.CmdStartGame( "Procedural dungeon", false );
           }
 
      }
