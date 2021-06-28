@@ -55,6 +55,8 @@ public class SharedCharacter : NetworkBehaviour
      public Material headMaterial;
      public Material legsMaterial;
 
+     
+     
      [HideInInspector] public Weapon weapon;
      private Animator animator;
      private Rigidbody _rigidbody;

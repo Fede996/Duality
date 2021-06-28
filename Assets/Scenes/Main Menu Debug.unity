@@ -11976,6 +11976,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerDataSyncTime: 1
   debug: 0
+  debugScene: 1
   desktop: {fileID: 466600429}
   username: {fileID: 522006242}
   rememberMe: {fileID: 847081605}

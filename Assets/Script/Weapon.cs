@@ -21,6 +21,9 @@ public class Weapon : NetworkBehaviour
      private float shotDelay;
      private int ammo;
 
+    
+     
+     
      [Header( "Muzzle Flash" )]
      public GameObject muzzlePrefab;
      public Transform[] muzzleTransforms;
@@ -136,6 +139,8 @@ public class Weapon : NetworkBehaviour
                }
           }
      }
+
+     
 
      public void ToggleFire()
      {
