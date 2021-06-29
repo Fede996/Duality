@@ -223,8 +223,8 @@ MonoBehaviour:
   roomPrefab: {fileID: 7323076034446573692, guid: 895404d1fe2895648bfb1ead238a27c5, type: 3}
   roomSize: {x: 32, y: 18}
   possibleRoomContents: []
-  startRoomContent: {fileID: 7323076034446573692, guid: 6de26a224ffdb8749b37ead033ae1a1a, type: 3}
-  endRoomContent: {fileID: 7323076034446573692, guid: 6de26a224ffdb8749b37ead033ae1a1a, type: 3}
+  startRoomContent: {fileID: 7323076034446573692, guid: a411b23b109623444bfce65e5f132ef8, type: 3}
+  endRoomContent: {fileID: 7323076034446573692, guid: a411b23b109623444bfce65e5f132ef8, type: 3}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

@@ -21,7 +21,8 @@ public class Weapon : NetworkBehaviour
      private float shotDelay;
      private int ammo;
 
-    
+     [Header((" Torchlight reference "))] public Light headLight;
+     public Light bodyLight;
      
      
      [Header( "Muzzle Flash" )]
@@ -140,7 +141,12 @@ public class Weapon : NetworkBehaviour
           }
      }
 
-     
+     public void ToggleTorchLight()
+     {
+          headLight.enabled = !headLight.enabled;
+          bodyLight.enabled = !bodyLight.enabled;
+
+     }
 
      public void ToggleFire()
      {

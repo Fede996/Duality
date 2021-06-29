@@ -88,13 +88,17 @@ public class GamePlayerController : NetworkBehaviour
                if( Input.GetButtonDown( "ToggleFire" ) )
                     player.weapon.ToggleFire();
 
+               if (Input.GetButtonDown("ToggleTorchlight"))
+                    player.weapon.ToggleTorchLight();
+
+
                if( Input.GetButton( "Grenade" ) )
                {
                     // Mostro la traiettoria della granata
                     if( Input.GetButtonDown( "Fire" ) )
                     {
                          //Sparo la granata
-                         //Farò lo spawn della granata nella posizione del player
+                         //FarÃ² lo spawn della granata nella posizione del player
                          //Cancello la traiettoria
                          ThrowGrenade();
                          return;
