@@ -42,11 +42,11 @@ public class Radial : ChaserEnemy
           for( int i = 0; i < numberOfProjectiles; i++ )
           {
                float projectileDirXPosition = startPoint.x + Mathf.Sin( ( angle + transform.rotation.y * Mathf.PI *radialSpeed ) * Mathf.PI  / 180 ) * radius;
-               float projectileDirYPosition = startPoint.y + Mathf.Cos( ( angle + transform.rotation.y * Mathf.PI * radialSpeed ) * Mathf.PI  / 180 ) * radius;
+               float projectileDirZPosition = startPoint.z + Mathf.Cos( ( angle + transform.rotation.y * Mathf.PI * radialSpeed ) * Mathf.PI  / 180 ) * radius;
 
                //Debug.Log(transform.rotation.y * Mathf.PI * radialSpeed);
 
-               Vector3 projectileVector = new Vector3( projectileDirXPosition, projectileDirYPosition, 0 );
+               Vector3 projectileVector = new Vector3( projectileDirXPosition, 0, projectileDirZPosition );
                Vector3 projectileMoveDirection = ( projectileVector - startPoint ).normalized * projectileSpeed;
 
                GameObject tmpObj = Instantiate( projectilePrefab, startPoint , Quaternion.identity );
@@ -54,7 +54,7 @@ public class Radial : ChaserEnemy
                bullet.damage = damage;
                bullet.knockbackIntensity = knockbackIntensity;
                bullet.parent = GetComponent<Collider>();
-               bullet.initialVelocity = new Vector3( projectileMoveDirection.x, 0, projectileMoveDirection.y );
+               bullet.initialVelocity = new Vector3( projectileMoveDirection.x, 0, projectileMoveDirection.z );
 
                NetworkServer.Spawn( tmpObj );
 
