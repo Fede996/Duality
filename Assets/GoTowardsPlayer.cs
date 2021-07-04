@@ -24,9 +24,17 @@ public class GoTowardsPlayer : NetworkBehaviour
 
      private void OnTriggerEnter( Collider other )
      {
-          if( other.CompareTag( "Player" ) )
+          
+          if ( other.gameObject.CompareTag("Player"))
           {
-               Destroy( gameObject );
+               SharedCharacter player = other.gameObject.GetComponent<SharedCharacter>();
+               if( player != null )
+                    player.HeadWins();
+
           }
+
+          NetworkServer.Destroy( gameObject );
+          
+         
      }
 }

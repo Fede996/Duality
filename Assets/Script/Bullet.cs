@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using Mirror.Examples.Chat;
 
 [RequireComponent( typeof( Rigidbody ) )]
 [RequireComponent( typeof( Collider ) )]
@@ -14,6 +15,7 @@ public class Bullet : NetworkBehaviour
      [SyncVar] public Vector3 initialVelocity;
      public Collider parent;
 
+     public bool isDeadlyBullet = false;
      // =====================================================================
 
      private void Start()
@@ -52,7 +54,8 @@ public class Bullet : NetworkBehaviour
                          player.TakeDamage( damage, knockback );
                }
 
-               NetworkServer.Destroy( gameObject );
+
+               
           }
      }
 

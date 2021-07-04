@@ -206,6 +206,14 @@ public class SharedCharacter : NetworkBehaviour
      }
 
      [Server]
+     public void HeadWins()
+     {
+
+          Die();
+
+     }
+
+     [Server]
      public void TakeDamage( int damage, Vector3 knockback )
      {
           if( _invincibilityFrame <= 0 )
