@@ -14,6 +14,8 @@ public class Weapon : NetworkBehaviour
      public bool autoFire = false;
      public float range = 100f;
 
+     public GameObject m_shotPrefab;
+     
      [Header( "Ammo settings" )]
      public float baseShotDelay = .5f;
      public float fatiguedShotDelay = 2f;
@@ -37,7 +39,8 @@ public class Weapon : NetworkBehaviour
      private float timeLastFired;
      private UiManager UI;
      private SharedCharacter player;
-
+     private bool alternateMuzzle = false;
+     
      // =====================================================================
 
      private void Start()
@@ -78,10 +81,11 @@ public class Weapon : NetworkBehaviour
 
                shotDelay = ammo == 0 ? fatiguedShotDelay : baseShotDelay;
 
-               foreach( Transform parent in muzzleTransforms )
+               /*foreach( Transform parent in muzzleTransforms )
                {
-                    Instantiate( muzzlePrefab, parent );
-               }
+                    
+                    //Instantiate( muzzlePrefab, parent );
+               }*/
 
                if( muzzleSoundSource != null )
                {
@@ -98,6 +102,15 @@ public class Weapon : NetworkBehaviour
 
           if( Physics.Raycast( position, forward, out RaycastHit hit, range ) )
           {
+               
+               
+               GameObject laser = GameObject.Instantiate(m_shotPrefab, alternateMuzzle ? muzzleTransforms[0].transform.position : muzzleTransforms[1].transform.position, cameraTransform.rotation) as GameObject;
+
+               alternateMuzzle = !alternateMuzzle;
+               
+               laser.GetComponent<ShotBehavior>().setTarget(hit.point);
+               GameObject.Destroy(laser, 2f);
+               
                Target target = hit.collider.GetComponent<Target>();
                if( target != null )
                {
@@ -123,6 +136,7 @@ public class Weapon : NetworkBehaviour
           {
                foreach( Transform parent in muzzleTransforms )
                {
+                    
                     Instantiate( muzzlePrefab, parent );
                }
 
