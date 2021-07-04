@@ -207,11 +207,6 @@ MonoBehaviour:
   roomSize: {x: 32, y: 18}
   possibleRoomContents:
   - {fileID: 7323076034446573692, guid: eb7d1629c75b77f4fa6fc5c99451240b, type: 3}
-  - {fileID: 7323076034446573692, guid: a411b23b109623444bfce65e5f132ef8, type: 3}
-  - {fileID: 7323076034446573692, guid: 903a83a6fda841446b372d818813f1b6, type: 3}
-  - {fileID: 7323076034446573692, guid: cc2691ecc3dfe664e99eb3c688fe7e84, type: 3}
-  - {fileID: 7323076034446573692, guid: 6de26a224ffdb8749b37ead033ae1a1a, type: 3}
-  - {fileID: 7323076034446573692, guid: bc9d7a470a42bda4f95f8fcc1cfb0d8d, type: 3}
   startRoomContent: {fileID: 7323076034446573692, guid: 69c0d1e0fcc4d9b4d87df96dcea9ab92, type: 3}
   endRoomContent: {fileID: 7323076034446573692, guid: ca1e7787eb18df041a67913fa3d21b55, type: 3}
 --- !u!114 &739045816
