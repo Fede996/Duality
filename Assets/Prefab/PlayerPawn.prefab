@@ -626,7 +626,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2063715040030712742}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 2
   m_Shape: 0
@@ -965,7 +965,7 @@ Light:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2457353415339880255}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 10
   m_Type: 0
   m_Shape: 0
@@ -2402,7 +2402,7 @@ MonoBehaviour:
   syncInterval: 0.1
   cameraTransform: {fileID: 5579281804888155970}
   damage: 20
-  autoFire: 0
+  autoFire: 1
   range: 100
   m_shotPrefab: {fileID: 136330, guid: 9a0c3383523899643a8d0661cfaca4e4, type: 3}
   baseShotDelay: 0.2
