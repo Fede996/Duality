@@ -26,13 +26,13 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Procedural dungeon.unity
     guid: 5e8554da06b81774d9c93fc0e8669972
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Performance Test.unity
     guid: cc62b941e86d704479487e50c75e0e78
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Main Menu Debug.unity
     guid: 6d375df3d475e2a4aaee4e0b41b9c717
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/Procedural dungeon Debug.unity
     guid: a149f092e4f85314eb6c304d9599d28c
   m_configObjects: {}
