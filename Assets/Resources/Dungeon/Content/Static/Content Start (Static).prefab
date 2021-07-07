@@ -291,7 +291,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4794801223576216794}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 8.49}
+  m_LocalPosition: {x: 0, y: 0, z: 7.21}
   m_LocalScale: {x: 0.75153, y: 0.75153, z: 0.75153}
   m_Children: []
   m_Father: {fileID: 1314799308290461094}
@@ -363,7 +363,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Protect    the team
+  m_text: Find the exit
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 3330326bb63265c4185a493fa8fdffb8, type: 2}
   m_sharedMaterial: {fileID: 8275128540698207031, guid: 3330326bb63265c4185a493fa8fdffb8, type: 2}
