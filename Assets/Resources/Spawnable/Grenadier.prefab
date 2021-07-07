@@ -169,7 +169,7 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   impactEffect: {fileID: 100002, guid: 5614ee4ff08dcea438185f980ecae043, type: 3}
-  maxHealth: 200
+  maxHealth: 100
   damage: 1
   knockbackIntensity: 1000
   needToKillToComplete: 1
