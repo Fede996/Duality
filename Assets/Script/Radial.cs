@@ -15,21 +15,25 @@ public class Radial : ChaserEnemy
      private const float radius = 3f;
      private Vector3 startPoint;
      private float elapsed = 0;
+     protected bool alive = true;
 
      protected override void Update()
      {
           if( !isServer ) return;
 
-          elapsed += Time.deltaTime;
-          if( frequency - elapsed <= 0 )
+          if( alive )
           {
-               startPoint = transform.position;
-               SpawnProjectile( numberOfProjectiles );
+               elapsed += Time.deltaTime;
+               if( frequency - elapsed <= 0 )
+               {
+                    startPoint = transform.position;
+                    SpawnProjectile( numberOfProjectiles );
 
-               elapsed = 0;
+                    elapsed = 0;
+               }
+
+               transform.Rotate( 0f, Time.deltaTime * radialSpeed, 0f ); 
           }
-
-          transform.Rotate( 0f, Time.deltaTime * radialSpeed, 0f );
 
           base.Update();
      }

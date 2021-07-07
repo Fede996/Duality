@@ -46,7 +46,7 @@ public class Room : NetworkBehaviour
                content.Load();
                BuildNavMesh();
 
-               foreach( Door door in content.childObjects.Select( o => o.GetComponent<Door>() ) )
+               foreach( Door door in content.childObjects.Where( o => o != null ).Select( o => o.GetComponent<Door>() ) )
                {
                     if( door != null )
                     {

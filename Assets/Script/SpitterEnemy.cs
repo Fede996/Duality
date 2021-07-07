@@ -49,6 +49,10 @@ public class SpitterEnemy : ShooterEnemy
      [Server]
      private IEnumerator Die()
      {
+          agent.speed = 0;
+          firing = false;
+          GetComponent<Collider>().enabled = false;
+          anim.StopPlayback();
           anim.Play( "ChomperDie" );
 
           foreach( GamePlayerController player in FindObjectsOfType<GamePlayerController>() )
@@ -57,7 +61,7 @@ public class SpitterEnemy : ShooterEnemy
                player.gainedCash += rewardCash;
           }
 
-          yield return new WaitForSecondsRealtime( 2 );
+          yield return new WaitForSecondsRealtime( 1 );
           NetworkServer.Destroy( gameObject );
      }
 

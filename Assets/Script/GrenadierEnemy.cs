@@ -49,7 +49,11 @@ public class GrenadierEnemy : Radial
      [Server]
      private IEnumerator Die()
      {
-          anim.Play( "GrenadierDie" );
+          agent.speed = 0;
+          alive = false;
+          GetComponent<Collider>().enabled = false;
+          anim.StopPlayback();
+          anim.Play( "GrenadierDeath" );
 
           foreach( GamePlayerController player in FindObjectsOfType<GamePlayerController>() )
           {
@@ -57,7 +61,7 @@ public class GrenadierEnemy : Radial
                player.gainedCash += rewardCash;
           }
 
-          yield return new WaitForSecondsRealtime( 5 );
+          yield return new WaitForSecondsRealtime( 4.5f );
           NetworkServer.Destroy( gameObject );
      }
 

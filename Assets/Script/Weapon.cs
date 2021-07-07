@@ -81,11 +81,10 @@ public class Weapon : NetworkBehaviour
 
                shotDelay = ammo == 0 ? fatiguedShotDelay : baseShotDelay;
 
-               /*foreach( Transform parent in muzzleTransforms )
-               {
-                    
-                    //Instantiate( muzzlePrefab, parent );
-               }*/
+               //foreach( Transform parent in muzzleTransforms )
+               //{
+               //     Instantiate( muzzlePrefab, parent );
+               //}
 
                if( muzzleSoundSource != null )
                {
@@ -102,15 +101,12 @@ public class Weapon : NetworkBehaviour
 
           if( Physics.Raycast( position, forward, out RaycastHit hit, range ) )
           {
-               
-               
-               GameObject laser = GameObject.Instantiate(m_shotPrefab, alternateMuzzle ? muzzleTransforms[0].transform.position : muzzleTransforms[1].transform.position, cameraTransform.rotation) as GameObject;
-
+               GameObject laser = Instantiate( m_shotPrefab, alternateMuzzle ? muzzleTransforms[0].transform.position : muzzleTransforms[1].transform.position, cameraTransform.rotation );
                alternateMuzzle = !alternateMuzzle;
-               
-               laser.GetComponent<ShotBehavior>().setTarget(hit.point);
-               GameObject.Destroy(laser, 2f);
-               
+               laser.GetComponent<ShotBehavior>().setTarget( hit.point );
+               NetworkServer.Spawn( laser );
+               StartCoroutine( WaitAndDestroy( 2, laser ) );
+
                Target target = hit.collider.GetComponent<Target>();
                if( target != null )
                {
@@ -129,16 +125,23 @@ public class Weapon : NetworkBehaviour
           RpcFireWeapon( displayHitmarker );
      }
 
+     [Server]
+     private IEnumerator WaitAndDestroy( float seconds, GameObject o )
+     {
+          yield return new WaitForSecondsRealtime( seconds );
+
+          NetworkServer.Destroy( o );
+     }
+
      [ClientRpc]
      private void RpcFireWeapon( bool displayHitmarker )
      {
           if( player.localRole == Role.Legs )
           {
-               foreach( Transform parent in muzzleTransforms )
-               {
-                    
-                    Instantiate( muzzlePrefab, parent );
-               }
+               //foreach( Transform parent in muzzleTransforms )
+               //{
+               //     Instantiate( muzzlePrefab, parent );
+               //}
 
                if( muzzleSoundSource != null )
                {
@@ -157,9 +160,26 @@ public class Weapon : NetworkBehaviour
 
      public void ToggleTorchLight()
      {
+          CmdToggleTorchLight();
+
           headLight.enabled = !headLight.enabled;
           bodyLight.enabled = !bodyLight.enabled;
+     }
 
+     [Command( requiresAuthority = false )]
+     private void CmdToggleTorchLight()
+     {
+          RpcToggleTorchLight();
+     }
+
+     [ClientRpc]
+     private void RpcToggleTorchLight()
+     {
+          if( player.localRole == Role.Legs )
+          {
+               headLight.enabled = !headLight.enabled;
+               bodyLight.enabled = !bodyLight.enabled; 
+          }
      }
 
      public void ToggleFire()

@@ -11,6 +11,7 @@ public class ShooterEnemy : ChaserEnemy
      public float delayBetweenShots;
 
      private float timeToNextShot;
+     protected bool firing = true;
 
      // =====================================================================
 
@@ -27,14 +28,17 @@ public class ShooterEnemy : ChaserEnemy
 
           base.Update();
 
-          if( timeToNextShot > 0 )
+          if( firing )
           {
-               timeToNextShot -= Time.deltaTime;
-          }
-          else
-          {
-               ShootBullet();
-               timeToNextShot = delayBetweenShots;
+               if( timeToNextShot > 0 )
+               {
+                    timeToNextShot -= Time.deltaTime;
+               }
+               else
+               {
+                    ShootBullet();
+                    timeToNextShot = delayBetweenShots;
+               } 
           }
      }
 

@@ -11976,6 +11976,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerDataSyncTime: 1
   debug: 0
+  debugScene: 0
   desktop: {fileID: 466600429}
   username: {fileID: 522006242}
   rememberMe: {fileID: 847081605}
@@ -16505,6 +16506,7 @@ MonoBehaviour:
   - {fileID: 7323076034446573692, guid: 895404d1fe2895648bfb1ead238a27c5, type: 3}
   - {fileID: 9071619075924234358, guid: c263c6140e0d70a45a5a877124e00441, type: 3}
   - {fileID: 908232412765883618, guid: 76e22b78380823e4ba9978e79d25ee5c, type: 3}
+  - {fileID: 136330, guid: 9a0c3383523899643a8d0661cfaca4e4, type: 3}
   showRoomGUI: 0
   minPlayers: 1
   roomPlayerPrefab: {fileID: 8036302773801158395, guid: 5cdf1612af346a14bbf5b53ceaac75bf, type: 3}
