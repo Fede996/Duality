@@ -55,7 +55,7 @@ public class SharedCharacter : NetworkBehaviour
      public Material headMaterial;
      public Material legsMaterial;
 
-     
+     public AudioSource rechargeStaminaAudioSource;
      
      [HideInInspector] public Weapon weapon;
      private Animator animator;
@@ -437,7 +437,8 @@ public class SharedCharacter : NetworkBehaviour
      }
 
      public void AddStamina( float value )
-     {
+     { 
+          rechargeStaminaAudioSource.Play();
           currentStamina = Mathf.Min( maxStamina, currentStamina + value );
           UI.SetFuel( currentStamina / maxStamina );
      }

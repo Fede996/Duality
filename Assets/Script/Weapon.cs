@@ -31,6 +31,8 @@ public class Weapon : NetworkBehaviour
      public GameObject muzzlePrefab;
      public Transform[] muzzleTransforms;
      public AudioSource muzzleSoundSource;
+     public AudioSource rechargeAmmoAudioSource;
+     
      public AudioClip muzzleSound;
      public Vector2 audioPitch = new Vector2( .9f, 1.1f );
 
@@ -192,6 +194,7 @@ public class Weapon : NetworkBehaviour
      public void AddAmmo( int value )
      {
           RpcAddAmmo( value );
+          rechargeAmmoAudioSource.Play();
           if( player.localRole == Role.Head )
           {
                ammo = Mathf.Min( ammo + value, maxAmmo );
