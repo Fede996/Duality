@@ -8,6 +8,9 @@ public class GrenadierEnemy : Radial
 {
      private Animator anim;
 
+     public AudioSource AudioSourceHit;
+     public AudioSource AudioSourceDie;
+     
      protected override void Start()
      {
           if( isServer )
@@ -34,6 +37,9 @@ public class GrenadierEnemy : Radial
      [Server]
      public override void TakeDamage( float damage )
      {
+          
+          AudioSourceHit.Play();
+          
           health -= damage;
 
           if( health <= 0 )
@@ -49,6 +55,9 @@ public class GrenadierEnemy : Radial
      [Server]
      private IEnumerator Die()
      {
+          
+          AudioSourceDie.Play();
+          
           agent.speed = 0;
           alive = false;
           GetComponent<Collider>().enabled = false;

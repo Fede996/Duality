@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2306412098502021144}
   - component: {fileID: 5195307991131682857}
   m_Layer: 0
-  m_Name: AudioSourceBornDie
+  m_Name: AudioSourceDie
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -311,6 +311,8 @@ MonoBehaviour:
   projectilePrefab: {fileID: 908232412765883618, guid: 76e22b78380823e4ba9978e79d25ee5c, type: 3}
   frequency: 0.5
   radialSpeed: 30
+  AudioSourceHit: {fileID: 2869693880771390830}
+  AudioSourceDie: {fileID: 5195307991131682857}
 --- !u!114 &7820791710379956854
 MonoBehaviour:
   m_ObjectHideFlags: 0
