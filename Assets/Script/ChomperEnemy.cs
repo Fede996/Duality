@@ -8,6 +8,10 @@ public class ChomperEnemy : ChaserEnemy
 {
      private Animator anim;
 
+     public AudioSource AudioSourceHit;
+     public AudioSource AudioSourceDie;
+     
+     
      protected override void Start()
      {
           if( isServer )
@@ -34,6 +38,9 @@ public class ChomperEnemy : ChaserEnemy
      [Server]
      public override void TakeDamage( float damage )
      {
+          
+          AudioSourceHit.Play();
+          
           health -= damage;
 
           if( health <= 0 )
@@ -51,6 +58,7 @@ public class ChomperEnemy : ChaserEnemy
      {
           agent.speed = 0;
           GetComponent<Collider>().enabled = false;
+          AudioSourceDie.Play();
           anim.StopPlayback();
           anim.Play( "ChomperDie" );
 
