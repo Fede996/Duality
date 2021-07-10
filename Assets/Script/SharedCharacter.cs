@@ -80,7 +80,7 @@ public class SharedCharacter : NetworkBehaviour
           isSolo = solo;
           OnLivesChanged( lives, lives );
 
-          if( playerRole == Role.Head )
+          if( playerRole == Role.Head || isSolo )
           {
                Camera.main.transform.parent = headCameraSocket;
                Camera.main.transform.Reset();
