@@ -424,7 +424,7 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( localRole == Role.Head )
           {
-               UI.SetPoints( newValue );
+               UI.SetPoints( newValue, true);
           }
      }
 
@@ -432,7 +432,7 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( localRole == Role.Legs )
           {
-               UI.SetPoints( newValue );
+               UI.SetPoints( newValue, false);
           }
      }
 
@@ -457,11 +457,19 @@ public class SharedCharacter : NetworkBehaviour
 
      public void AddPoints(int value, bool isHead)
      {
-          if (isHead)
+          if (isHead) {
                TestaPoints += value;
-          else GambePoints += value;
+               UI.SetPoints(TestaPoints, isHead);
+          }
+          else {
+               GambePoints += value;
+               UI.SetPoints(GambePoints, isHead);
+          }
 
-           
+          
+
+
+
           Debug.Log("PUNTI TESTA: " + TestaPoints);
           Debug.Log("PUNTI GAMBE: " + GambePoints);
 
