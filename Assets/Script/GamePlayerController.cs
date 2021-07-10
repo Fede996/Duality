@@ -128,8 +128,11 @@ public class GamePlayerController : NetworkBehaviour
                Vector3 movement = Vector3.zero;
                if( isSolo )
                {
-                    Vector3 newForward = new Vector3( player.headCameraSocket.transform.forward.x, 0, player.headCameraSocket.transform.forward.z ).normalized;
-                    movement = ( newForward * vertical + player.headCameraSocket.transform.right * horizontal ).normalized;
+                    if( player.headCameraSocket != null )
+                    {
+                         Vector3 newForward = new Vector3( player.headCameraSocket.transform.forward.x, 0, player.headCameraSocket.transform.forward.z ).normalized;
+                         movement = ( newForward * vertical + player.headCameraSocket.transform.right * horizontal ).normalized; 
+                    }
                }
                else
                     movement = new Vector3( horizontal, 0, vertical ).normalized;

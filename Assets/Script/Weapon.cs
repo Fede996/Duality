@@ -31,7 +31,6 @@ public class Weapon : NetworkBehaviour
      public GameObject muzzlePrefab;
      public Transform[] muzzleTransforms;
      public AudioSource muzzleSoundSource;
-     public AudioSource rechargeAmmoAudioSource;
      
      public AudioClip muzzleSound;
      public Vector2 audioPitch = new Vector2( .9f, 1.1f );
@@ -141,7 +140,7 @@ public class Weapon : NetworkBehaviour
      [ClientRpc]
      private void RpcFireWeapon( bool displayHitmarker )
      {
-          if( player.localRole == Role.Legs )
+          if( player.localRole == Role.Legs && !player.isSolo )
           {
                //foreach( Transform parent in muzzleTransforms )
                //{
@@ -180,7 +179,7 @@ public class Weapon : NetworkBehaviour
      [ClientRpc]
      private void RpcToggleTorchLight()
      {
-          if( player.localRole == Role.Legs )
+          if( player.localRole == Role.Legs && !player.isSolo )
           {
                headLight.enabled = !headLight.enabled;
                bodyLight.enabled = !bodyLight.enabled; 
@@ -200,7 +199,6 @@ public class Weapon : NetworkBehaviour
                RechargeAmmoSound.Play();
           
           RpcAddAmmo( value );
-          rechargeAmmoAudioSource.Play();
 
           if( player.localRole == Role.Head || player.isSolo )
           {

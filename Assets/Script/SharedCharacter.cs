@@ -80,7 +80,7 @@ public class SharedCharacter : NetworkBehaviour
           isSolo = solo;
           OnLivesChanged( lives, lives );
 
-          if( playerRole == Role.Head )
+          if( playerRole == Role.Head || isSolo )
           {
                Camera.main.transform.parent = headCameraSocket;
                Camera.main.transform.Reset();
@@ -183,7 +183,7 @@ public class SharedCharacter : NetworkBehaviour
           }
 
           // solo per client
-          if( isClient && localRole == Role.Legs )
+          if( isClient && localRole == Role.Legs && !isSolo )
           {
                mechHead.rotation = Quaternion.Euler( mechHead.rotation.eulerAngles.x, Mathf.LerpAngle( mechHead.rotation.eulerAngles.y, turn, Time.deltaTime * 10 ), mechHead.rotation.eulerAngles.z );
           }
@@ -314,7 +314,9 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( headCameraSocket != null && headCameraSocket.transform != null )
                headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 0, 0 );
-          mechHead.Rotate( Vector3.up * turnAmount );
+          
+          if( mechHead != null )
+               mechHead.Rotate( Vector3.up * turnAmount );
      }
 
      private IEnumerator UpdateRotation()
@@ -422,7 +424,7 @@ public class SharedCharacter : NetworkBehaviour
 
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {
-          if( localRole == Role.Head )
+          if( localRole == Role.Head && !isSolo )
           {
                UI.SetPoints( newValue );
           }
@@ -430,7 +432,7 @@ public class SharedCharacter : NetworkBehaviour
 
      private void OnGambePointsChanged( int oldValue, int newValue )
      {
-          if( localRole == Role.Legs )
+          if( localRole == Role.Legs && !isSolo )
           {
                UI.SetPoints( newValue );
           }
