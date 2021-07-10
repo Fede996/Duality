@@ -46,7 +46,7 @@ public class SharedCharacter : NetworkBehaviour
      public float fatiguedSpeedMultiplier = 0.1f;
      public float currentStamina;
      public AudioSource RechargeStaminaAudioSource;
-     
+     public AudioSource TakeDamageAudioSource;
      
      [Header( "References" )]
      public Transform headCameraSocket;
@@ -210,6 +210,10 @@ public class SharedCharacter : NetworkBehaviour
      [Server]
      public void TakeDamage( int damage, Vector3 knockback )
      {
+          
+          if(TakeDamageAudioSource != null)
+               TakeDamageAudioSource.Play();
+          
           if( _invincibilityFrame <= 0 )
           {
                lives -= damage;
@@ -231,6 +235,9 @@ public class SharedCharacter : NetworkBehaviour
      [ClientRpc]
      private void RpcTakeDamage()
      {
+          if(TakeDamageAudioSource != null)
+               TakeDamageAudioSource.Play();
+          
           UI.ShowDamageOverlay();
      }
 
