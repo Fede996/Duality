@@ -197,14 +197,18 @@ public class Weapon : NetworkBehaviour
      {
           if(RechargeAmmoSound != null)
                RechargeAmmoSound.Play();
-          
+
           RpcAddAmmo( value );
 
-          if( player.localRole == Role.Head || player.isSolo )
+          if(rechargeAmmoAudioSource != null)
+               rechargeAmmoAudioSource.Play(); 
+
+          if ( player.localRole == Role.Head || player.isSolo )
           {
                ammo = Mathf.Min( ammo + value, maxAmmo );
                UI.SetAmmo( ammo, maxAmmo );
           }
+
      }
 
      [ClientRpc]

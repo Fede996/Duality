@@ -79,4 +79,7 @@ ProjectSettings/Packages/com.unity.probuilder/Settings.json
 Packages/packages-lock.json
 Assets/Material/Legs.mat
 Assets/Material/Player1.mat
+Assets/Material/Head.mat
+Assets/Material/Legs.mat
+Assets/Material/Player2.mat
 UserSettings/EditorUserSettings.asset

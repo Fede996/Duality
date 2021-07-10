@@ -89,6 +89,8 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   stamina: 1000
+  points: 100
+  isPoint: 0
   rechargeSphere: {fileID: 9071619075924234358, guid: c263c6140e0d70a45a5a877124e00441, type: 3}
 --- !u!114 &-9160556729012563045
 MonoBehaviour:

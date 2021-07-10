@@ -60,7 +60,9 @@ public class UiManager : MonoBehaviour
 
      [Header( "Game" )]
      public GameObject gameUiRoot;
-     public Text points;
+     public GameObject points;
+     public Text pointsHead;
+     public Text pointsLegs;  
      public GameObject sight;
      public GameObject weaponInfo;
      public Text fireMode;
@@ -561,9 +563,12 @@ public class UiManager : MonoBehaviour
           }
      }
 
-     public void SetPoints( int value )
+     public void SetPoints( int value , bool isHead)
      {
-          //points.text = value.ToString();
+          if(isHead) 
+               pointsHead.text = value.ToString();
+          else
+               pointsLegs.text = value.ToString();
      }
 
      public void ShowHitmarker()
@@ -708,6 +713,7 @@ public class UiManager : MonoBehaviour
                fuel.SetActive( true );
                SetFuel( 1 );
                ammo.SetActive( true );
+               //points.SetActive(false);
           }
           else if( playerRole == Role.Head )
           {
