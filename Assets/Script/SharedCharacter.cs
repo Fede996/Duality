@@ -54,7 +54,7 @@ public class SharedCharacter : NetworkBehaviour
      public MeshRenderer hideInHead;
      public Material headMaterial;
      public Material legsMaterial;
-
+     public AudioSource rechargeStaminaAudioSource;
      
      
      [HideInInspector] public Weapon weapon;
@@ -436,8 +436,18 @@ public class SharedCharacter : NetworkBehaviour
           UI.SetLives( newValue );
      }
 
+     public void makeRechargeSound()
+     {
+          if(rechargeStaminaAudioSource != null)
+               rechargeStaminaAudioSource.Play();
+          
+          
+     }
+
      public void AddStamina( float value )
      {
+          
+          
           currentStamina = Mathf.Min( maxStamina, currentStamina + value );
           UI.SetFuel( currentStamina / maxStamina );
      }

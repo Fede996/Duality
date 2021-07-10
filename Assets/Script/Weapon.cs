@@ -30,6 +30,7 @@ public class Weapon : NetworkBehaviour
      [Header( "Muzzle Flash" )]
      public GameObject muzzlePrefab;
      public Transform[] muzzleTransforms;
+     public AudioSource rechargeAmmoAudioSource;
      public AudioSource muzzleSoundSource;
      public AudioClip muzzleSound;
      public Vector2 audioPitch = new Vector2( .9f, 1.1f );
@@ -191,6 +192,10 @@ public class Weapon : NetworkBehaviour
      [Server]
      public void AddAmmo( int value )
      {
+          if(rechargeAmmoAudioSource != null)
+               rechargeAmmoAudioSource.Play();
+          
+          
           RpcAddAmmo( value );
           if( player.localRole == Role.Head )
           {
@@ -201,7 +206,10 @@ public class Weapon : NetworkBehaviour
 
      [ClientRpc]
      private void RpcAddAmmo( int value )
-     {
+     {    
+          if(rechargeAmmoAudioSource != null)
+               rechargeAmmoAudioSource.Play();
+          
           if( player.localRole == Role.Head )
           {
                ammo = Mathf.Min( ammo + value, maxAmmo );
