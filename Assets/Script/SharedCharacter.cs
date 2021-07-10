@@ -57,7 +57,7 @@ public class SharedCharacter : NetworkBehaviour
      public Material headMaterial;
      public Material legsMaterial;
 
-     
+     public AudioSource rechargeStaminaAudioSource;
      
      [HideInInspector] public Weapon weapon;
      private Animator animator;
@@ -72,10 +72,12 @@ public class SharedCharacter : NetworkBehaviour
 
      public Role localRole;
      public bool initialized = false;
+     public bool isSolo = false;
 
-     public void Init( Role playerRole )
+     public void Init( Role playerRole, bool solo )
      {
           localRole = playerRole;
+          isSolo = solo;
           OnLivesChanged( lives, lives );
 
           if( playerRole == Role.Head )
@@ -91,8 +93,8 @@ public class SharedCharacter : NetworkBehaviour
           {
                Camera.main.transform.parent = legsCameraSocket;
                Camera.main.transform.Reset();
-               currentStamina = maxStamina;
           }
+          currentStamina = maxStamina;
 
           initialized = true;
      }
@@ -106,7 +108,7 @@ public class SharedCharacter : NetworkBehaviour
           }
 
           Camera.main.transform.parent = null;
-          if( localRole == Role.Legs )
+          if( localRole == Role.Legs && !isSolo )
           {
                Camera.main.orthographic = false;
                DontDestroyOnLoad( Camera.main.gameObject );
@@ -123,7 +125,7 @@ public class SharedCharacter : NetworkBehaviour
      private void RpcOnEndLevel( bool gameOver )
      {
           Camera.main.transform.parent = null;
-          if( localRole == Role.Legs )
+          if( localRole == Role.Legs && !isSolo )
           {
                Camera.main.orthographic = false;
                DontDestroyOnLoad( Camera.main.gameObject );
@@ -310,7 +312,8 @@ public class SharedCharacter : NetworkBehaviour
 
      public void Rotate( float turnAmount, float tilt )
      {
-          headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 0, 0 );
+          if( headCameraSocket != null && headCameraSocket.transform != null )
+               headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 0, 0 );
           mechHead.Rotate( Vector3.up * turnAmount );
      }
 
@@ -341,7 +344,7 @@ public class SharedCharacter : NetworkBehaviour
      [ClientRpc]
      private void RpcUpdateRotation( float turn )
      {
-          if( localRole == Role.Legs )
+          if( localRole == Role.Legs && !isSolo )
           {
                this.turn = turn;
           }
@@ -445,14 +448,33 @@ public class SharedCharacter : NetworkBehaviour
      }
 
      public void AddStamina( float value )
-     {
+     {    
+          if( rechargeStaminaAudioSource != null )
+               rechargeStaminaAudioSource.Play();
           currentStamina = Mathf.Min( maxStamina, currentStamina + value );
           UI.SetFuel( currentStamina / maxStamina );
      }
 
+     public void AddPoints(int value, bool isHead)
+     {
+          if (isHead)
+               TestaPoints += value;
+          else GambePoints += value;
+
+           
+          Debug.Log("PUNTI TESTA: " + TestaPoints);
+          Debug.Log("PUNTI GAMBE: " + GambePoints);
+
+     }
+
      public void SetHue( float value, Role role )
      {
-          if( role == Role.Head )
+          if( isSolo )
+          {
+               CmdSetHeadHue( value );
+               CmdSetLegsHue( value );
+          }
+          else if( role == Role.Head )
           {
                CmdSetHeadHue( value );
           }

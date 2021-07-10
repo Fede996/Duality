@@ -9,6 +9,8 @@ public class GambePointsTarget : DestroyableTarget
 {
      [Header( "Settings" )]
      public int ammo = 40;
+     public int points = 1000;
+     public bool isPoint = false;
 
      private void OnTriggerEnter( Collider other )
      {
@@ -16,8 +18,17 @@ public class GambePointsTarget : DestroyableTarget
           {
                if( other.CompareTag( "Player" ) )
                {
-                    other.GetComponent<Weapon>().AddAmmo( ammo );
-                    base.OnHit();
+                    if (!isPoint) 
+                    {
+                         other.GetComponent<Weapon>().AddAmmo(ammo);
+                         base.OnHit();
+                    }
+                    else
+                    {
+                         SharedCharacter player = FindObjectOfType<SharedCharacter>();
+                         player.AddPoints(points, false);
+                         base.OnHit();
+                    }
                } 
           }
      }

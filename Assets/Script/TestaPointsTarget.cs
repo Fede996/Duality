@@ -9,25 +9,42 @@ public class TestaPointsTarget : DestroyableTarget
 {
      [Header( "Settings" )]
      public float stamina = 1000;
+     public int points = 1000;
+     public bool isPoint = false;
      public GameObject rechargeSphere;
-     
+
      [Server]
      public override void OnHit()
      {
-          RpcAddStamina( stamina );
-          SharedCharacter player = FindObjectOfType<SharedCharacter>();
-          
-          player.playRechargeStaminaSound();
-          
-          if( player.localRole == Role.Legs )
+          if( !isPoint )
           {
-               player.AddStamina( stamina );
+               RpcAddStamina( stamina );
+               SharedCharacter player = FindObjectOfType<SharedCharacter>();
+               if( player.localRole == Role.Legs || player.isSolo )
+               {
+                    player.AddStamina( stamina );
+               }
+
+               GameObject o = Instantiate( rechargeSphere, transform.position, Quaternion.identity );
+               NetworkServer.Spawn( o );
+
+               base.OnHit();
           }
+          else
+          {
+               RpcAddPoints( points );
+               SharedCharacter player = FindObjectOfType<SharedCharacter>();
+               if( player.localRole == Role.Head )
+               {
+                    player.AddPoints( points, true );
+               }
 
-          GameObject o = Instantiate( rechargeSphere, transform.position, Quaternion.identity );
-          NetworkServer.Spawn( o );
+               GameObject o = Instantiate( rechargeSphere, transform.position, Quaternion.identity );
+               NetworkServer.Spawn( o );
 
-          base.OnHit();
+               base.OnHit();
+
+          }
      }
 
      [ClientRpc]
@@ -42,6 +59,16 @@ public class TestaPointsTarget : DestroyableTarget
           if( player.localRole == Role.Legs )
           {
                player.AddStamina( value );
+          }
+     }
+
+     [ClientRpc]
+     private void RpcAddPoints( int value )
+     {
+          SharedCharacter player = FindObjectOfType<SharedCharacter>();
+          if( player.localRole == Role.Head )
+          {
+               player.AddPoints( value, true );
           }
      }
 }
