@@ -46,7 +46,7 @@ public class SharedCharacter : NetworkBehaviour
      public float fatiguedSpeedMultiplier = 0.1f;
      public float currentStamina;
      public AudioSource RechargeStaminaAudioSource;
-     
+     public AudioSource TakeDamageAudioSource;
      
      [Header( "References" )]
      public Transform headCameraSocket;
@@ -57,7 +57,7 @@ public class SharedCharacter : NetworkBehaviour
      public Material headMaterial;
      public Material legsMaterial;
 
-     public AudioSource rechargeStaminaAudioSource;
+     
      
      [HideInInspector] public Weapon weapon;
      private Animator animator;
@@ -80,7 +80,7 @@ public class SharedCharacter : NetworkBehaviour
           isSolo = solo;
           OnLivesChanged( lives, lives );
 
-          if( playerRole == Role.Head )
+          if( playerRole == Role.Head || isSolo )
           {
                Camera.main.transform.parent = headCameraSocket;
                Camera.main.transform.Reset();
@@ -212,6 +212,10 @@ public class SharedCharacter : NetworkBehaviour
      [Server]
      public void TakeDamage( int damage, Vector3 knockback )
      {
+          
+          if(TakeDamageAudioSource != null)
+               TakeDamageAudioSource.Play();
+          
           if( _invincibilityFrame <= 0 )
           {
                lives -= damage;
@@ -233,6 +237,9 @@ public class SharedCharacter : NetworkBehaviour
      [ClientRpc]
      private void RpcTakeDamage()
      {
+          if(TakeDamageAudioSource != null)
+               TakeDamageAudioSource.Play();
+          
           UI.ShowDamageOverlay();
      }
 
@@ -449,8 +456,8 @@ public class SharedCharacter : NetworkBehaviour
 
      public void AddStamina( float value )
      {    
-          if( rechargeStaminaAudioSource != null )
-               rechargeStaminaAudioSource.Play();
+          if( RechargeStaminaAudioSource != null )
+               RechargeStaminaAudioSource.Play();
           currentStamina = Mathf.Min( maxStamina, currentStamina + value );
           UI.SetFuel( currentStamina / maxStamina );
      }
