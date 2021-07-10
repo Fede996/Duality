@@ -7,7 +7,8 @@ using Mirror;
 public class SpitterEnemy : ShooterEnemy
 {
      private Animator anim;
-
+     public AudioSource HitAudioSource;
+     public AudioSource DieAudioSource;
      protected override void Start()
      {
           if( isServer )
@@ -34,6 +35,10 @@ public class SpitterEnemy : ShooterEnemy
      [Server]
      public override void TakeDamage( float damage )
      {
+          RpcTakeDamage();
+          if(HitAudioSource != null)
+               HitAudioSource.Play();
+          
           health -= damage;
 
           if( health <= 0 )
@@ -46,9 +51,20 @@ public class SpitterEnemy : ShooterEnemy
           }
      }
 
+     [ClientRpc]
+     private void RpcTakeDamage()
+     {
+          if( HitAudioSource != null )
+               HitAudioSource.Play();
+     }
+
      [Server]
      private IEnumerator Die()
      {
+          RpcDie();
+          if(DieAudioSource != null)
+               DieAudioSource.Play();
+          
           agent.speed = 0;
           firing = false;
           GetComponent<Collider>().enabled = false;
@@ -63,6 +79,13 @@ public class SpitterEnemy : ShooterEnemy
 
           yield return new WaitForSecondsRealtime( 1 );
           NetworkServer.Destroy( gameObject );
+     }
+
+     [ClientRpc]
+     private void RpcDie()
+     {
+          if( DieAudioSource != null )
+               DieAudioSource.Play();
      }
 
      [Server]

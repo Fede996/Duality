@@ -254,9 +254,11 @@ public class UiManager : MonoBehaviour
      // ------------
 
      private bool isHost = false;
+     public bool isSolo = false;
 
      public void OnButtonConnect()
      {
+          isSolo = false;
           if( !access.Connect( serverIp.text ) )
           {
                Debug.LogWarning( "Please insert a valid IP address!" );
@@ -285,6 +287,7 @@ public class UiManager : MonoBehaviour
 
      public void OnButtonServer()
      {
+          isSolo = false;
           isHost = false;
           access.OpenServer();
      }
@@ -311,6 +314,15 @@ public class UiManager : MonoBehaviour
 
      public void OnButtonHost()
      {
+          isSolo = false;
+          isHost = true;
+          access.Host();
+     }
+
+     public void OnButtonSolo()
+     {
+          // to do...
+          isSolo = true;
           isHost = true;
           access.Host();
      }
@@ -330,11 +342,27 @@ public class UiManager : MonoBehaviour
      public void SetupLobby( bool leader, bool setDirty = true )
      {
           selectorP1 = GameObject.Find( "Player selection 1" ).GetComponent<PlayerSelection>();
-          selectorP2 = GameObject.Find( "Player selection 2" ).GetComponent<PlayerSelection>();
           colorSlider.value = playerData.color;
-          roleP1.text = playerData.role;
-          selectorP1.SetRole( playerData.role );
-          readyP1.text = "<color=red>NOT READY</color>";
+
+          if( isSolo )
+          {
+               UiPlayer2.SetActive( false );
+               roleP1.transform.parent.gameObject.SetActive( false );
+               readyP1.transform.parent.gameObject.SetActive( false );
+
+               StartCoroutine( WaitAndSetReady() );
+          }
+          else
+          {
+               UiPlayer2.SetActive( true );
+               roleP1.transform.parent.gameObject.SetActive( true );
+               readyP1.transform.parent.gameObject.SetActive( true );
+
+               selectorP2 = GameObject.Find( "Player selection 2" ).GetComponent<PlayerSelection>();
+               roleP1.text = playerData.role;
+               selectorP1.SetRole( playerData.role );
+               readyP1.text = "<color=red>NOT READY</color>";
+          }
 
           if( leader )
           {
@@ -347,7 +375,7 @@ public class UiManager : MonoBehaviour
                     {
                          levelList.options.Add( new Dropdown.OptionData( Path.GetFileNameWithoutExtension( SceneUtility.GetScenePathByBuildIndex( i ) ) ) );
                     }
-                    levelList.RefreshShownValue(); 
+                    levelList.RefreshShownValue();
                }
                leaderP1.enabled = true;
           }
@@ -359,6 +387,13 @@ public class UiManager : MonoBehaviour
           }
 
           dirty = setDirty;
+     }
+
+     private IEnumerator WaitAndSetReady()
+     {
+          yield return new WaitForSecondsRealtime( 0.5f );
+
+          OnButtonReady();
      }
 
      public void ResetPlayer2()
@@ -409,15 +444,14 @@ public class UiManager : MonoBehaviour
 
      public void OnButtonStart()
      {
-          if (debugScene)
+          if( debugScene )
           {
-               roomPlayer.CmdStartGame("Procedural dungeon Debug", false);
+               roomPlayer.CmdStartGame( "Procedural dungeon Debug", false );
           }
           else
           {
                roomPlayer.CmdStartGame( "Procedural dungeon", false );
           }
-
      }
 
      public void OnButtonBack()
@@ -601,7 +635,16 @@ public class UiManager : MonoBehaviour
      public void SetupGameUI( Role playerRole )
      {
           gameUiRoot.SetActive( true );
-          if( playerRole == Role.Head )
+
+          if( isSolo )
+          {
+               sight.SetActive( true );
+               weaponInfo.SetActive( true );
+               fuel.SetActive( true );
+               SetFuel( 1 );
+               ammo.SetActive( true );
+          }
+          else if( playerRole == Role.Head )
           {
                sight.SetActive( true );
                weaponInfo.SetActive( true );

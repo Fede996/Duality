@@ -191,7 +191,7 @@ public class Room : NetworkBehaviour
           {
                if( player.initialized )
                {
-                    if( player.localRole == Role.Legs )
+                    if( player.localRole == Role.Legs && !player.isSolo )
                     {
                          Camera.main.transform.parent = roomCameraSocket;
                          Camera.main.transform.Reset();

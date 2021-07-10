@@ -49,6 +49,7 @@ public class GamePlayerController : NetworkBehaviour
      {
           player = FindObjectOfType<SharedCharacter>();
           UI = FindObjectOfType<UiManager>();
+          isSolo = UI.isSolo;
           if( playerData.role == "HEAD" )
           {
                role = Role.Head;
@@ -64,18 +65,19 @@ public class GamePlayerController : NetworkBehaviour
                Cursor.visible = false;
 
                UI.SetupGameUI( role );
-               player.Init( role );
+               player.Init( role, isSolo );
                player.SetHue( playerData.color, role );
           }
      }
 
      private bool disableInput = false;
+     private bool isSolo = false;
 
      protected virtual void Update()
      {
           if( !isLocalPlayer || disableInput ) return;
 
-          if( role == Role.Head )
+          if( role == Role.Head || isSolo )
           {
                float mouseX = Input.GetAxis( "Mouse X" ) * sensitivityX;
                float mouseY = Input.GetAxis( "Mouse Y" ) * sensitivityY;
@@ -117,12 +119,20 @@ public class GamePlayerController : NetworkBehaviour
 
                //Cancello la traiettoria
           }
-          else
+
+          if( role == Role.Legs || isSolo )
           {
                float horizontal = Input.GetAxis( "Horizontal" );
                float vertical = Input.GetAxis( "Vertical" );
 
-               Vector3 movement = new Vector3( horizontal, 0, vertical ).normalized;
+               Vector3 movement = Vector3.zero;
+               if( isSolo )
+               {
+                    Vector3 newForward = new Vector3( player.headCameraSocket.transform.forward.x, 0, player.headCameraSocket.transform.forward.z ).normalized;
+                    movement = ( newForward * vertical + player.headCameraSocket.transform.right * horizontal ).normalized;
+               }
+               else
+                    movement = new Vector3( horizontal, 0, vertical ).normalized;
 
                player.Move( movement );
           }
