@@ -21,11 +21,13 @@ public class TestaPointsTarget : DestroyableTarget
           if (!isPoint)
           { 
                RpcAddStamina(stamina);
+               RpcAddPoints(points);
                SharedCharacter player = FindObjectOfType<SharedCharacter>();
                if (player.localRole == Role.Legs)
                {
                     player.AddStamina(stamina);
                }
+               else player.AddPoints(points, true);
 
                GameObject o = Instantiate(rechargeSphere, transform.position, Quaternion.identity);
                NetworkServer.Spawn(o);
