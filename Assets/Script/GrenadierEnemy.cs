@@ -7,6 +7,9 @@ using Mirror;
 public class GrenadierEnemy : Radial
 {
      private Animator anim;
+     public AudioSource HitAudioSource;
+     public AudioSource DieAudioSource;
+
 
      protected override void Start()
      {
@@ -34,6 +37,10 @@ public class GrenadierEnemy : Radial
      [Server]
      public override void TakeDamage( float damage )
      {
+          
+          if(HitAudioSource != null)
+               HitAudioSource.Play();
+          
           health -= damage;
 
           if( health <= 0 )
@@ -49,6 +56,10 @@ public class GrenadierEnemy : Radial
      [Server]
      private IEnumerator Die()
      {
+          
+          if(DieAudioSource != null)
+               DieAudioSource.Play();
+          
           agent.speed = 0;
           alive = false;
           GetComponent<Collider>().enabled = false;

@@ -34,6 +34,8 @@ public class Weapon : NetworkBehaviour
      public AudioClip muzzleSound;
      public Vector2 audioPitch = new Vector2( .9f, 1.1f );
 
+     public AudioSource RechargeAmmoSound;
+     
      public bool isFiring = false;
 
      private float timeLastFired;
@@ -191,6 +193,9 @@ public class Weapon : NetworkBehaviour
      [Server]
      public void AddAmmo( int value )
      {
+          if(RechargeAmmoSound != null)
+               RechargeAmmoSound.Play();
+          
           RpcAddAmmo( value );
           if( player.localRole == Role.Head )
           {
@@ -202,6 +207,9 @@ public class Weapon : NetworkBehaviour
      [ClientRpc]
      private void RpcAddAmmo( int value )
      {
+          if(RechargeAmmoSound != null)
+               RechargeAmmoSound.Play();
+          
           if( player.localRole == Role.Head )
           {
                ammo = Mathf.Min( ammo + value, maxAmmo );

@@ -7,7 +7,8 @@ using Mirror;
 public class SpitterEnemy : ShooterEnemy
 {
      private Animator anim;
-
+     public AudioSource HitAudioSource;
+     public AudioSource DieAudioSource;
      protected override void Start()
      {
           if( isServer )
@@ -34,6 +35,10 @@ public class SpitterEnemy : ShooterEnemy
      [Server]
      public override void TakeDamage( float damage )
      {
+          
+          if(HitAudioSource != null)
+               HitAudioSource.Play();
+          
           health -= damage;
 
           if( health <= 0 )
@@ -49,6 +54,10 @@ public class SpitterEnemy : ShooterEnemy
      [Server]
      private IEnumerator Die()
      {
+          
+          if(DieAudioSource != null)
+               DieAudioSource.Play();
+          
           agent.speed = 0;
           firing = false;
           GetComponent<Collider>().enabled = false;

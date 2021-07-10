@@ -45,7 +45,9 @@ public class SharedCharacter : NetworkBehaviour
      public float staminaCost = 100;
      public float fatiguedSpeedMultiplier = 0.1f;
      public float currentStamina;
-
+     public AudioSource RechargeStaminaAudioSource;
+     
+     
      [Header( "References" )]
      public Transform headCameraSocket;
      public Transform legsCameraSocket;
@@ -434,6 +436,12 @@ public class SharedCharacter : NetworkBehaviour
      private void OnLivesChanged( int oldValue, int newValue )
      {
           UI.SetLives( newValue );
+     }
+
+     public void playRechargeStaminaSound()
+     {
+          if (RechargeStaminaAudioSource != null) 
+               RechargeStaminaAudioSource.Play();
      }
 
      public void AddStamina( float value )

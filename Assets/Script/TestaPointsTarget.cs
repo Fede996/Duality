@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
+using Mirror.Examples.Chat;
 
 [RequireComponent( typeof( Collider ) )]
 public class TestaPointsTarget : DestroyableTarget
@@ -15,6 +16,9 @@ public class TestaPointsTarget : DestroyableTarget
      {
           RpcAddStamina( stamina );
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
+          
+          player.playRechargeStaminaSound();
+          
           if( player.localRole == Role.Legs )
           {
                player.AddStamina( stamina );
@@ -29,7 +33,12 @@ public class TestaPointsTarget : DestroyableTarget
      [ClientRpc]
      private void RpcAddStamina( float value )
      {
+          
+          
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
+          
+          player.playRechargeStaminaSound();
+          
           if( player.localRole == Role.Legs )
           {
                player.AddStamina( value );
