@@ -442,6 +442,18 @@ public class SharedCharacter : NetworkBehaviour
           UI.SetFuel( currentStamina / maxStamina );
      }
 
+     public void AddPoints(int value, bool isHead)
+     {
+          if (isHead)
+               TestaPoints += value;
+          else GambePoints += value;
+
+           
+          Debug.Log("PUNTI TESTA: " + TestaPoints);
+          Debug.Log("PUNTI GAMBE: " + GambePoints);
+
+     }
+
      public void SetHue( float value, Role role )
      {
           if( role == Role.Head )
