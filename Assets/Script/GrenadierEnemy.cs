@@ -37,7 +37,7 @@ public class GrenadierEnemy : Radial
      [Server]
      public override void TakeDamage( float damage )
      {
-          
+          RpcTakeDamage();
           if(HitAudioSource != null)
                HitAudioSource.Play();
           
@@ -53,10 +53,17 @@ public class GrenadierEnemy : Radial
           }
      }
 
+     [ClientRpc]
+     private void RpcTakeDamage()
+     {
+          if( HitAudioSource != null )
+               HitAudioSource.Play();
+     }
+
      [Server]
      private IEnumerator Die()
      {
-          
+          RpcDie();
           if(DieAudioSource != null)
                DieAudioSource.Play();
           
@@ -74,6 +81,13 @@ public class GrenadierEnemy : Radial
 
           yield return new WaitForSecondsRealtime( 4.5f );
           NetworkServer.Destroy( gameObject );
+     }
+
+     [ClientRpc]
+     private void RpcDie()
+     {
+          if( DieAudioSource != null )
+               DieAudioSource.Play();
      }
 
      [Server]
