@@ -14,6 +14,7 @@ public class TestaPointsTarget : DestroyableTarget
      
      [Server]
      public override void OnHit()
+     {
 
 
 
@@ -51,7 +52,7 @@ public class TestaPointsTarget : DestroyableTarget
      private void RpcAddStamina( float value )
      {
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
-          if( player.localRole == Role.Legs || player.isSolo )
+          if( player.localRole == Role.Legs )
           {
                player.AddStamina( value );
           }
