@@ -132,7 +132,8 @@ public class Weapon : NetworkBehaviour
      {
           yield return new WaitForSecondsRealtime( seconds );
 
-          NetworkServer.Destroy( o );
+          if( o != null )
+               NetworkServer.Destroy( o );
      }
 
      [ClientRpc]
@@ -195,7 +196,8 @@ public class Weapon : NetworkBehaviour
      {
           RpcAddAmmo( value );
           rechargeAmmoAudioSource.Play();
-          if( player.localRole == Role.Head )
+
+          if( player.localRole == Role.Head || player.isSolo )
           {
                ammo = Mathf.Min( ammo + value, maxAmmo );
                UI.SetAmmo( ammo, maxAmmo );
@@ -205,7 +207,7 @@ public class Weapon : NetworkBehaviour
      [ClientRpc]
      private void RpcAddAmmo( int value )
      {
-          if( player.localRole == Role.Head )
+          if( player.localRole == Role.Head || player.isSolo )
           {
                ammo = Mathf.Min( ammo + value, maxAmmo );
                UI.SetAmmo( ammo, maxAmmo );

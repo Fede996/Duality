@@ -37,8 +37,8 @@ public class SpitterEnemy : ShooterEnemy
      [Server]
      public override void TakeDamage( float damage )
      {
-          
-          AudioSourceHit.Play();
+          if( AudioSourceHit != null )
+               AudioSourceHit.Play();
           
           health -= damage;
 
@@ -55,8 +55,8 @@ public class SpitterEnemy : ShooterEnemy
      [Server]
      private IEnumerator Die()
      {
-          
-          AudioSourceDie.Play();
+          if( AudioSourceDie != null )
+               AudioSourceDie.Play();
           
           agent.speed = 0;
           firing = false;
