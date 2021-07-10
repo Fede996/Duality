@@ -37,8 +37,8 @@ public class ChomperEnemy : ChaserEnemy
      [Server]
      public override void TakeDamage( float damage )
      {
-          
-          if(HitAudioSource != null)
+          RpcTakeDamage();
+          if( HitAudioSource != null )
                HitAudioSource.Play();
           
           health -= damage;
@@ -53,14 +53,19 @@ public class ChomperEnemy : ChaserEnemy
           }
      }
 
+     [ClientRpc]
+     private void RpcTakeDamage()
+     {
+          if( HitAudioSource != null )
+               HitAudioSource.Play();
+     }
+
      [Server]
      private IEnumerator Die()
      {
-          
-          if(DieAudioSource!=null)
+          RpcDie();
+          if( DieAudioSource!=null )
                DieAudioSource.Play();
-               
-               
           
           agent.speed = 0;
           GetComponent<Collider>().enabled = false;
@@ -75,5 +80,12 @@ public class ChomperEnemy : ChaserEnemy
 
           yield return new WaitForSecondsRealtime( 1 );
           NetworkServer.Destroy( gameObject );          
+     }
+
+     [ClientRpc]
+     private void RpcDie()
+     {
+          if( DieAudioSource != null )
+               DieAudioSource.Play();
      }
 }

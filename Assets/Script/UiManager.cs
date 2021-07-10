@@ -391,7 +391,7 @@ public class UiManager : MonoBehaviour
 
      private IEnumerator WaitAndSetReady()
      {
-          yield return new WaitForSecondsRealtime( 1 );
+          yield return new WaitForSecondsRealtime( 0.5f );
 
           OnButtonReady();
      }

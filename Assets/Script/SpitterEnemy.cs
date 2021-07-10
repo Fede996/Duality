@@ -35,7 +35,7 @@ public class SpitterEnemy : ShooterEnemy
      [Server]
      public override void TakeDamage( float damage )
      {
-          
+          RpcTakeDamage();
           if(HitAudioSource != null)
                HitAudioSource.Play();
           
@@ -51,10 +51,17 @@ public class SpitterEnemy : ShooterEnemy
           }
      }
 
+     [ClientRpc]
+     private void RpcTakeDamage()
+     {
+          if( HitAudioSource != null )
+               HitAudioSource.Play();
+     }
+
      [Server]
      private IEnumerator Die()
      {
-          
+          RpcDie();
           if(DieAudioSource != null)
                DieAudioSource.Play();
           
@@ -72,6 +79,13 @@ public class SpitterEnemy : ShooterEnemy
 
           yield return new WaitForSecondsRealtime( 1 );
           NetworkServer.Destroy( gameObject );
+     }
+
+     [ClientRpc]
+     private void RpcDie()
+     {
+          if( DieAudioSource != null )
+               DieAudioSource.Play();
      }
 
      [Server]
