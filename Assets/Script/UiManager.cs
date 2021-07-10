@@ -648,7 +648,7 @@ public class UiManager : MonoBehaviour
                fuel.SetActive( true );
                SetFuel( 1 );
                ammo.SetActive( true );
-               //points.SetActive(false);
+               points.SetActive(false);
           }
           else if( playerRole == Role.Head )
           {
