@@ -722,6 +722,7 @@ public class UiManager : MonoBehaviour
                weaponInfo.SetActive( true );
                fuel.SetActive( false );
                ammo.SetActive( true );
+               points.SetActive( true );
           }
           else
           {
@@ -730,7 +731,11 @@ public class UiManager : MonoBehaviour
                fuel.SetActive( true );
                SetFuel( 1 );
                ammo.SetActive( false );
+               points.SetActive( true );
           }
+
+          SetPoints( 0, true );
+          SetPoints( 0, false );
      }
 
      public void UpdatePlayerData()
