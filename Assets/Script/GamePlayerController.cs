@@ -90,7 +90,7 @@ public class GamePlayerController : NetworkBehaviour
                if( Input.GetButtonDown( "ToggleFire" ) )
                     player.weapon.ToggleFire();
 
-               if( Input.GetButtonDown( "ToggleTorchlight" ) )
+               if (Input.GetButtonDown("ToggleTorchlight"))
                     player.weapon.ToggleTorchLight();
 
 
@@ -131,7 +131,7 @@ public class GamePlayerController : NetworkBehaviour
                     if( player.headCameraSocket != null )
                     {
                          Vector3 newForward = new Vector3( player.headCameraSocket.transform.forward.x, 0, player.headCameraSocket.transform.forward.z ).normalized;
-                         movement = ( newForward * vertical + player.headCameraSocket.transform.right * horizontal ).normalized;
+                         movement = ( newForward * vertical + player.headCameraSocket.transform.right * horizontal ).normalized; 
                     }
                }
                else
@@ -170,36 +170,6 @@ public class GamePlayerController : NetworkBehaviour
                     GetRewards();
                }
           }
-     }
-
-     [Server]
-     public void ShowWinner()
-     {
-          RpcShowWinner();
-
-          foreach( GamePlayerController controller in FindObjectsOfType<GamePlayerController>() )
-          {
-               controller.DisableInput();
-          }
-
-          UI.endLevel.SetActive( true );
-          UI.SetWinner();
-          Cursor.lockState = CursorLockMode.Confined;
-          Cursor.visible = true;
-     }
-
-     [ClientRpc]
-     private void RpcShowWinner()
-     {
-          foreach( GamePlayerController controller in FindObjectsOfType<GamePlayerController>() )
-          {
-               controller.DisableInput();
-          }
-
-          UI.endLevel.SetActive( true );
-          UI.SetWinner();
-          Cursor.lockState = CursorLockMode.Confined;
-          Cursor.visible = true;
      }
 
      private void GetRewards()
