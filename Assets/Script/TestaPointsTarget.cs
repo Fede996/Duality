@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Mirror;
-using Mirror.Examples.Chat;
 
 [RequireComponent( typeof( Collider ) )]
 public class TestaPointsTarget : DestroyableTarget
@@ -12,35 +11,39 @@ public class TestaPointsTarget : DestroyableTarget
      public int points = 1000;
      public bool isPoint = false;
      public GameObject rechargeSphere;
-
+     
      [Server]
      public override void OnHit()
      {
-          if( !isPoint )
-          {
-               RpcAddStamina( stamina );
-               SharedCharacter player = FindObjectOfType<SharedCharacter>();
-               if( player.localRole == Role.Legs || player.isSolo )
-               {
-                    player.AddStamina( stamina );
-               }
 
-               GameObject o = Instantiate( rechargeSphere, transform.position, Quaternion.identity );
-               NetworkServer.Spawn( o );
+
+
+          if (!isPoint)
+          { 
+               RpcAddStamina(stamina);
+               RpcAddPoints(points);
+               SharedCharacter player = FindObjectOfType<SharedCharacter>();
+               if (player.localRole == Role.Legs)
+               {
+                    player.AddStamina(stamina);
+               }
+               else player.AddPoints(points, true);
+
+               GameObject o = Instantiate(rechargeSphere, transform.position, Quaternion.identity);
+               NetworkServer.Spawn(o);
 
                base.OnHit();
-          }
-          else
+          } else
           {
-               RpcAddPoints( points );
+               RpcAddPoints(points);
                SharedCharacter player = FindObjectOfType<SharedCharacter>();
                if( player.localRole == Role.Head && !player.isSolo )
                {
-                    player.AddPoints( points, true );
+                    player.AddPoints(points, true);
                }
 
-               GameObject o = Instantiate( rechargeSphere, transform.position, Quaternion.identity );
-               NetworkServer.Spawn( o );
+               GameObject o = Instantiate(rechargeSphere, transform.position, Quaternion.identity);
+               NetworkServer.Spawn(o); 
 
                base.OnHit();
 
@@ -50,8 +53,6 @@ public class TestaPointsTarget : DestroyableTarget
      [ClientRpc]
      private void RpcAddStamina( float value )
      {
-          
-          
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
           
           player.playRechargeStaminaSound();
@@ -63,12 +64,12 @@ public class TestaPointsTarget : DestroyableTarget
      }
 
      [ClientRpc]
-     private void RpcAddPoints( int value )
+     private void RpcAddPoints(int value)
      {
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
           if( player.localRole == Role.Head && !player.isSolo )
           {
-               player.AddPoints( value, true );
+               player.AddPoints(value, true); 
           }
      }
 }

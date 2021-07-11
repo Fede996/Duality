@@ -9,8 +9,9 @@ public class GambePointsTarget : DestroyableTarget
 {
      [Header( "Settings" )]
      public int ammo = 40;
-     public int points = 1000;
+     public int points = 100;
      public bool isPoint = false;
+     public GameObject explosionSphere;
 
      private void OnTriggerEnter( Collider other )
      {
@@ -21,7 +22,9 @@ public class GambePointsTarget : DestroyableTarget
                     if (!isPoint) 
                     {
                          other.GetComponent<Weapon>().AddAmmo(ammo);
-                         base.OnHit();
+                         SharedCharacter player = FindObjectOfType<SharedCharacter>();
+                         player.AddPoints(points, false);
+                         base.OnHit(); 
                     }
                     else
                     {
@@ -34,5 +37,15 @@ public class GambePointsTarget : DestroyableTarget
      }
 
      [Server]
-     public override void OnHit() { }
+     public override void OnHit()
+     {
+          
+          GameObject o = Instantiate(explosionSphere, transform.position, Quaternion.identity);
+          NetworkServer.Spawn(o);
+
+          base.OnHit();
+
+          
+     }
+
 }

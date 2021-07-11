@@ -89,6 +89,9 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0.1
   ammo: 30
+  points: 100
+  isPoint: 0
+  explosionSphere: {fileID: 8864142203544746398, guid: 0ac4542534da61f4d83e0886093ebb92, type: 3}
 --- !u!114 &2942656908425320706
 MonoBehaviour:
   m_ObjectHideFlags: 0
