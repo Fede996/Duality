@@ -11,39 +11,40 @@ public class TestaPointsTarget : DestroyableTarget
      public int points = 1000;
      public bool isPoint = false;
      public GameObject rechargeSphere;
-     
+
      [Server]
      public override void OnHit()
      {
 
 
 
-          if (!isPoint)
-          { 
-               RpcAddStamina(stamina);
-               RpcAddPoints(points);
+          if( !isPoint )
+          {
+               RpcAddStamina( stamina );
+               RpcAddPoints( points );
                SharedCharacter player = FindObjectOfType<SharedCharacter>();
-               if (player.localRole == Role.Legs)
+               if( player.localRole == Role.Legs || player.isSolo )
                {
-                    player.AddStamina(stamina);
+                    player.AddStamina( stamina );
                }
-               else player.AddPoints(points, true);
+               else player.AddPoints( points, true );
 
                GameObject o = Instantiate(rechargeSphere, transform.position, Quaternion.identity);
-               NetworkServer.Spawn(o);
+               NetworkServer.Spawn( o );
 
                base.OnHit();
-          } else
+          }
+          else
           {
-               RpcAddPoints(points);
+               RpcAddPoints( points );
                SharedCharacter player = FindObjectOfType<SharedCharacter>();
                if( player.localRole == Role.Head && !player.isSolo )
                {
-                    player.AddPoints(points, true);
+                    player.AddPoints( points, true );
                }
 
                GameObject o = Instantiate(rechargeSphere, transform.position, Quaternion.identity);
-               NetworkServer.Spawn(o); 
+               NetworkServer.Spawn( o );
 
                base.OnHit();
 
@@ -54,9 +55,9 @@ public class TestaPointsTarget : DestroyableTarget
      private void RpcAddStamina( float value )
      {
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
-          
+
           player.playRechargeStaminaSound();
-          
+
           if( player.localRole == Role.Legs || player.isSolo )
           {
                player.AddStamina( value );
@@ -64,12 +65,12 @@ public class TestaPointsTarget : DestroyableTarget
      }
 
      [ClientRpc]
-     private void RpcAddPoints(int value)
+     private void RpcAddPoints( int value )
      {
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
           if( player.localRole == Role.Head && !player.isSolo )
           {
-               player.AddPoints(value, true); 
+               player.AddPoints( value, true );
           }
      }
 }

@@ -11,7 +11,6 @@ public class GambePointsTarget : DestroyableTarget
      public int ammo = 40;
      public int points = 100;
      public bool isPoint = false;
-     public GameObject explosionSphere;
 
      private void OnTriggerEnter( Collider other )
      {
@@ -35,17 +34,4 @@ public class GambePointsTarget : DestroyableTarget
                } 
           }
      }
-
-     [Server]
-     public override void OnHit()
-     {
-          
-          GameObject o = Instantiate(explosionSphere, transform.position, Quaternion.identity);
-          NetworkServer.Spawn(o);
-
-          base.OnHit();
-
-          
-     }
-
 }
