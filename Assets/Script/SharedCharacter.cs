@@ -462,7 +462,6 @@ public class SharedCharacter : NetworkBehaviour
           if (isHead)
                TestaPoints += value;
           else GambePoints += value;
-
            
           Debug.Log("PUNTI TESTA: " + TestaPoints);
           Debug.Log("PUNTI GAMBE: " + GambePoints);

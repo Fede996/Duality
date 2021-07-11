@@ -89,11 +89,17 @@ public class CameraController : MonoBehaviour
 
           if( DataLoader.globalData.firstLaunch )
           {
-               Debug.Log( "Hey! Seems like you are new to this office...\n" +
-                          "Please have a seet at your new desk.\n" +
-                          "You can unlock your desktop by pressing the 'Interact' button:\n" +
-                          "[E] on keyboard;\n" +
-                          "[X] on PS4 controller;\n" );
+               UI.ShowDialogue( "Nathan",
+                                "Hey, welcome on board! I see you already familiarized with the coffee machine...",
+                                "I am Nathan, leader of the \"Extermination and clean up\" department of RoboCorp Inc.",
+
+                                "As you may know, after the Intergalactic Colonial War, the Human Empire came out victorious; " +
+                                "we managed to drive away the vast majority of the alien tribes from our territories...",
+                                "...but a moltitude of tiny nests of resilient ones, are still alive and active inside our borders!",
+                                "Our mission is to ensure the security of our land by cleaning up these resistent outposts, and maybe make a little profit while doing that also!",
+
+                                "Now let me guide you through the first steps of your daily routine:\n" +
+                                "first of all, unlock your pc by pressing the 'Interaction' [E] key..." ) ;
           }
      }
 

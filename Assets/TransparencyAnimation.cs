@@ -8,7 +8,7 @@ public class TransparencyAnimation : MonoBehaviour
     private Color color;
     private Color endColor;
     private Color startColor;
-    private bool inTransition = false;
+    //private bool inTransition = false;
 
     public bool debugAnimation = false;
     
@@ -61,7 +61,7 @@ public class TransparencyAnimation : MonoBehaviour
     public void startAnimation()
     {
 
-        inTransition = true;
+        //inTransition = true;
 
     }
     

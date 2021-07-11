@@ -56,6 +56,7 @@ public class UiManager : MonoBehaviour
      public Toggle statsToggle;
      public GameObject statsPanel;
      public Toggle postProcessingToggle;
+     public Toggle introToggle;
 
      [Header( "Game" )]
      public GameObject gameUiRoot;
@@ -71,6 +72,11 @@ public class UiManager : MonoBehaviour
      public GameObject ammo;
      public Scrollbar ammoBar;
      public Text ammoText;
+
+     [Header( "Dialogue system" )]
+     public Animator dialogueAnimator;
+     public Text dialogueText;
+     public Text speakerName;
 
      [Header( "Animation" )]
      public AnimationClip[] clips;
@@ -131,6 +137,11 @@ public class UiManager : MonoBehaviour
                     roomPlayer.UpdatePlayerData();
                     dirty = false;
                }
+          }
+
+          if( Input.GetKeyDown( KeyCode.Return ) )
+          {
+               ShowNextSentence();
           }
 
           if( Input.GetButtonDown( "Cancel" ) )
@@ -527,6 +538,12 @@ public class UiManager : MonoBehaviour
           GetComponentInParent<PostProcessLayer>().enabled = postProcessingToggle.isOn;
      }
 
+     public void OnToggleIntro()
+     {
+          DataLoader.replayIntro = introToggle.isOn;
+          DataLoader.globalData.Save( introToggle.isOn );
+     }
+
      // Game UI page
      // ------------
 
@@ -580,6 +597,53 @@ public class UiManager : MonoBehaviour
           FindObjectOfType<SharedCharacter>().CmdReturnToLobby( false );
      }
 
+     // Dialogue system
+     // ---------------
+
+     private Queue<string> sentences = new Queue<string>();
+     
+     public void ShowDialogue( string name, params string[] sentences )
+     {
+          this.sentences.Clear();
+          foreach( string s in sentences )
+               this.sentences.Enqueue( s );
+
+          speakerName.text = name;
+          dialogueText.text = "";    
+          dialogueAnimator.SetBool( "isOpen", true );
+          ShowNextSentence();
+     }
+
+     private IEnumerator TypeSentence( string sentence )
+     {
+          dialogueText.text = "";
+          foreach( char letter in sentence.ToCharArray() )
+          {
+               dialogueText.text += letter;
+               yield return new WaitForSecondsRealtime( 0.01f );
+          }
+     }
+
+     public void ShowNextSentence()
+     {
+          if( sentences.Count > 0 )
+          {
+               //dialogueText.text = sentences.Dequeue();
+               StopAllCoroutines();
+               StartCoroutine( TypeSentence( sentences.Dequeue() ) );
+          }
+          else
+          {
+               CloseDialogue();
+          }
+     }
+
+     public void CloseDialogue()
+     {
+          dialogueText.text = "";
+          dialogueAnimator.SetBool( "isOpen", false );
+     }
+
      // ==================================================================================
      // Animations
 
@@ -593,9 +657,9 @@ public class UiManager : MonoBehaviour
           player.OnUnlockAnimationEnded();
           if( DataLoader.globalData.firstLaunch )
           {
-               loginButton.interactable = false;
-               Debug.Log( "Create your first local account!\n" +
-                          "You can share your desktop with multiple people, they just need to have a local account.\n" );
+               ShowDialogue( "Nathan",
+                             "Nice! Since you are new, you will need to create a new local account.",
+                             "Insert your name and click the 'Create' button. \nOnce you are done, use the 'Log in' button to access your work area." );
           }
      }
 
@@ -603,12 +667,13 @@ public class UiManager : MonoBehaviour
      {
           if( DataLoader.globalData.firstLaunch )
           {
-               Debug.Log( "This is your Main Page;\n" +
-                          "From here you can JOIN your colleagues and start EXPEDITIONS.\n" +
-                          "Remember that you always need a partner,\n" +
-                          "otherwise you won't be able to pilot our MECHS!\n" );
-
-               Debug.Log( "The CONNECT button will let you join one of our MATCHING server.\n" );
+               ShowDialogue( "Nathan",
+                             "This is the EXPEDITION page, your most important working tool!",
+                             "From here you are able to take part in clean up missions.\n" +
+                             "You can either choose to travel with a partner or venture alone.",
+                             "The JOIN PARTY button will let you join one of your colleagues' expeditions;",
+                             "The CREATE PARTY button will give you the lead of your own party, but you will still have to wait for a partner to join it before starting the expedition;",
+                             "The VENTURE SOLO button will let you start the expedition alone!" );
           }
      }
 

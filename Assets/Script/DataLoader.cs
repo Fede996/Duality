@@ -7,7 +7,8 @@ using Mirror;
 
 public class DataLoader : MonoBehaviour
 {
-     public bool clearPlayerPrefs = true;
+     public bool clearPlayerPrefs;
+     public static bool replayIntro = false;
 
      // ==================================================================================
      // Global data
@@ -31,7 +32,7 @@ public class DataLoader : MonoBehaviour
 
      public void SaveGlobalData()
      {
-          globalData.Save();
+          globalData.Save( replayIntro );
      }
 
      // ==================================================================================
@@ -185,11 +186,11 @@ public class GlobalData
      public bool    rememberMe     = false;
      public string  lastUsername   = "";
 
-     public void Save()
+     public void Save( bool replayIntro = false )
      {
           bool temp = firstLaunch;
 
-          firstLaunch = false;
+          firstLaunch = replayIntro;
           PlayerPrefs.SetString( "GlobalData", JsonUtility.ToJson( this ) );
           PlayerPrefs.Save();
 
