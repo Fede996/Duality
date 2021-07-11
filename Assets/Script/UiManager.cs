@@ -67,6 +67,8 @@ public class UiManager : MonoBehaviour
      public GameObject weaponInfo;
      public Text fireMode;
      public GameObject gameOver;
+     public GameObject endLevel;
+     public Text winnerText;
      public GameObject lifePanel;
      public GameObject lifePrefab;
      public GameObject fuel;
@@ -598,6 +600,11 @@ public class UiManager : MonoBehaviour
           fireMode.text = mode;
      }
 
+     public void SetWinner()
+     {
+          winnerText.text = "The winner is " + ( int.Parse( pointsHead.text ) > int.Parse( pointsLegs.text ) ? "HEAD" : "LEGS" );
+     }
+
      public void OnButtonReturnToLobby()
      {
           FindObjectOfType<SharedCharacter>().CmdReturnToLobby( false );
@@ -695,6 +702,7 @@ public class UiManager : MonoBehaviour
      {
           desktop.SetActive( true );
           gameOver.SetActive( false );
+          endLevel.SetActive( false );
           gameUiRoot.SetActive( false );
      }
 
@@ -722,6 +730,7 @@ public class UiManager : MonoBehaviour
                weaponInfo.SetActive( true );
                fuel.SetActive( false );
                ammo.SetActive( true );
+               points.SetActive( true );
           }
           else
           {
@@ -730,7 +739,11 @@ public class UiManager : MonoBehaviour
                fuel.SetActive( true );
                SetFuel( 1 );
                ammo.SetActive( false );
+               points.SetActive( true );
           }
+
+          SetPoints( 0, true );
+          SetPoints( 0, false );
      }
 
      public void UpdatePlayerData()
