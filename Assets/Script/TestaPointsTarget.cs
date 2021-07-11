@@ -25,6 +25,7 @@ public class TestaPointsTarget : DestroyableTarget
                SharedCharacter player = FindObjectOfType<SharedCharacter>();
                if (player.localRole == Role.Legs || player.isSolo)
                {
+                    player.playRechargeStaminaSound();
                     player.AddStamina(stamina); 
                }
                else player.AddPoints(points, true);
@@ -53,7 +54,13 @@ public class TestaPointsTarget : DestroyableTarget
      [ClientRpc]
      private void RpcAddStamina( float value )
      {
+          
+          
+          
           SharedCharacter player = FindObjectOfType<SharedCharacter>();
+          
+          player.playRechargeStaminaSound();
+          
           if( player.localRole == Role.Legs )
           {
                player.AddStamina( value );
