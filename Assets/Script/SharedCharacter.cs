@@ -47,7 +47,7 @@ public class SharedCharacter : NetworkBehaviour
      public float currentStamina;
      public AudioSource RechargeStaminaAudioSource;
      public AudioSource TakeDamageAudioSource;
-     
+
      [Header( "References" )]
      public Transform headCameraSocket;
      public Transform legsCameraSocket;
@@ -56,7 +56,7 @@ public class SharedCharacter : NetworkBehaviour
      public MeshRenderer hideInHead;
      public Material headMaterial;
      public Material legsMaterial;
-     
+
      [HideInInspector] public Weapon weapon;
      private Animator animator;
      private Rigidbody _rigidbody;
@@ -210,12 +210,10 @@ public class SharedCharacter : NetworkBehaviour
      [Server]
      public void TakeDamage( int damage, Vector3 knockback )
      {
-          
-          if(TakeDamageAudioSource != null)
-               TakeDamageAudioSource.Play();
-          
-          if( _invincibilityFrame <= 0 )
+          if( _invincibilityFrame <= 0 && lives >= 0 )
           {
+               if( TakeDamageAudioSource != null )
+                    TakeDamageAudioSource.Play();
                lives -= damage;
 
                if( lives == 0 )
@@ -235,9 +233,9 @@ public class SharedCharacter : NetworkBehaviour
      [ClientRpc]
      private void RpcTakeDamage()
      {
-          if(TakeDamageAudioSource != null)
+          if( TakeDamageAudioSource != null )
                TakeDamageAudioSource.Play();
-          
+
           UI.ShowDamageOverlay();
      }
 
@@ -319,7 +317,7 @@ public class SharedCharacter : NetworkBehaviour
      {
           if( headCameraSocket != null && headCameraSocket.transform != null )
                headCameraSocket.transform.localRotation = Quaternion.Euler( tilt, 0, 0 );
-          
+
           if( mechHead != null )
                mechHead.Rotate( Vector3.up * turnAmount );
      }
@@ -429,18 +427,12 @@ public class SharedCharacter : NetworkBehaviour
 
      private void OnTestaPointsChanged( int oldValue, int newValue )
      {
-          if( localRole == Role.Head && !isSolo )
-          {
-               UI.SetPoints( newValue, true);
-          }
+          UI.SetPoints( newValue, true );
      }
 
      private void OnGambePointsChanged( int oldValue, int newValue )
      {
-          if( localRole == Role.Legs && !isSolo )
-          {
-               UI.SetPoints( newValue, false);
-          }
+          UI.SetPoints( newValue, false );
      }
 
      private void OnLivesChanged( int oldValue, int newValue )
@@ -450,35 +442,33 @@ public class SharedCharacter : NetworkBehaviour
 
      public void playRechargeStaminaSound()
      {
-          if (RechargeStaminaAudioSource != null) 
+          if( RechargeStaminaAudioSource != null )
                RechargeStaminaAudioSource.Play();
      }
 
      public void AddStamina( float value )
-     {    
+     {
           if( RechargeStaminaAudioSource != null )
                RechargeStaminaAudioSource.Play();
           currentStamina = Mathf.Min( maxStamina, currentStamina + value );
           UI.SetFuel( currentStamina / maxStamina );
      }
 
-     public void AddPoints(int value, bool isHead)
+     public void AddPoints( int value, bool isHead )
      {
-          if (isHead) {
+          if( isHead )
+          {
                TestaPoints += value;
-               UI.SetPoints(TestaPoints, isHead);
+               UI.SetPoints( TestaPoints, isHead );
           }
-          else {
+          else
+          {
                GambePoints += value;
-               UI.SetPoints(GambePoints, isHead);
+               UI.SetPoints( GambePoints, isHead );
           }
 
-          
-
-
-
-          Debug.Log("PUNTI TESTA: " + TestaPoints);
-          Debug.Log("PUNTI GAMBE: " + GambePoints);
+          Debug.Log( "PUNTI TESTA: " + TestaPoints );
+          Debug.Log( "PUNTI GAMBE: " + GambePoints );
 
      }
 

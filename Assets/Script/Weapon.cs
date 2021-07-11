@@ -53,6 +53,7 @@ public class Weapon : NetworkBehaviour
 
           ammo = maxAmmo;
           UI.SetAmmo( ammo, maxAmmo );
+          UI.SetFireMode( autoFire ? "AUTO" : "SINGLE" );
           shotDelay = baseShotDelay;
 
           if( muzzleSoundSource != null )
@@ -199,9 +200,6 @@ public class Weapon : NetworkBehaviour
                RechargeAmmoSound.Play();
 
           RpcAddAmmo( value );
-
-          if(rechargeAmmoAudioSource != null)
-               rechargeAmmoAudioSource.Play(); 
 
           if ( player.localRole == Role.Head || player.isSolo )
           {

@@ -1679,6 +1679,7 @@ GameObject:
   - component: {fileID: 267796999}
   - component: {fileID: 267797001}
   - component: {fileID: 267797000}
+  - component: {fileID: 267797002}
   m_Layer: 0
   m_Name: Damage
   m_TagString: Untagged
@@ -1743,6 +1744,22 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 267796998}
   m_CullTransparentMesh: 1
+--- !u!111 &267797002
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 267796998}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 7400000, guid: 41fd59bea266e154a856b7174ed8f04d, type: 2}
+  m_Animations:
+  - {fileID: 7400000, guid: 41fd59bea266e154a856b7174ed8f04d, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
 --- !u!1 &291630934
 GameObject:
   m_ObjectHideFlags: 0
@@ -6751,7 +6768,6 @@ GameObject:
   - component: {fileID: 751195890}
   - component: {fileID: 751195893}
   - component: {fileID: 751195892}
-  - component: {fileID: 751195891}
   m_Layer: 0
   m_Name: Points
   m_TagString: Untagged
@@ -6780,22 +6796,6 @@ RectTransform:
   m_AnchoredPosition: {x: -110, y: -65.00007}
   m_SizeDelta: {x: 300, y: 110}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &751195891
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 751195889}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b3fb63570076f144d8ed613e140a1bad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  rtt: {fileID: 1376296533}
-  standardDeviation: {fileID: 1999357263}
-  fps: {fileID: 0}
-  interval: 3
 --- !u!114 &751195892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -11360,7 +11360,7 @@ GameObject:
   - component: {fileID: 1376296534}
   - component: {fileID: 1376296533}
   m_Layer: 0
-  m_Name: RTT
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13396,6 +13396,7 @@ MonoBehaviour:
   ammo: {fileID: 404895844}
   ammoBar: {fileID: 184850278}
   ammoText: {fileID: 237851878}
+  damageAnim: {fileID: 267797002}
   dialogueAnimator: {fileID: 678244761}
   dialogueText: {fileID: 96641380}
   speakerName: {fileID: 2043811169}
@@ -13410,6 +13411,7 @@ MonoBehaviour:
   - {fileID: 7400000, guid: fd30537e6d5271540bf232c56d5ba8fe, type: 2}
   - {fileID: 7400000, guid: c77971c19e272d24d92b899ffe3abbfb, type: 2}
   - {fileID: 7400000, guid: d3af67dd018b8bb42847255d43ad48ff, type: 2}
+  - {fileID: 7400000, guid: 41fd59bea266e154a856b7174ed8f04d, type: 2}
   roomPlayer: {fileID: 0}
   isSolo: 0
 --- !u!111 &1708911268
@@ -13432,7 +13434,6 @@ Animation:
   - {fileID: 7400000, guid: 95a21b8f7d5a11f48979b994864143c8, type: 2}
   - {fileID: 7400000, guid: fd30537e6d5271540bf232c56d5ba8fe, type: 2}
   - {fileID: 7400000, guid: c77971c19e272d24d92b899ffe3abbfb, type: 2}
-  - {fileID: 7400000, guid: d3af67dd018b8bb42847255d43ad48ff, type: 2}
   m_WrapMode: 0
   m_PlayAutomatically: 0
   m_AnimatePhysics: 0
@@ -14947,7 +14948,7 @@ GameObject:
   - component: {fileID: 1999357264}
   - component: {fileID: 1999357263}
   m_Layer: 0
-  m_Name: Deviation
+  m_Name: Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -74,6 +74,7 @@ public class UiManager : MonoBehaviour
      public GameObject ammo;
      public Scrollbar ammoBar;
      public Text ammoText;
+     public Animation damageAnim;
 
      [Header( "Dialogue system" )]
      public Animator dialogueAnimator;
@@ -578,7 +579,7 @@ public class UiManager : MonoBehaviour
 
      public void ShowDamageOverlay()
      {
-          anim.Play( "UI_damage" );
+          damageAnim.Play();
      }
 
      public void SetFuel( float value )
