@@ -23,9 +23,9 @@ public class TestaPointsTarget : DestroyableTarget
                RpcAddStamina(stamina);
                RpcAddPoints(points);
                SharedCharacter player = FindObjectOfType<SharedCharacter>();
-               if (player.localRole == Role.Legs)
+               if (player.localRole == Role.Legs || player.isSolo)
                {
-                    player.AddStamina(stamina);
+                    player.AddStamina(stamina); 
                }
                else player.AddPoints(points, true);
 
