@@ -25,6 +25,8 @@ Here are a few lines from the game's [pitch document](https://github.com/MattCam
 >
 > Like The Binding of Isaac, with two players controlling the same character, in an alien invasion scenario, on PC.
 
+You can also check the [teaser trailer](https://youtu.be/xMN1NHNClaM).
+
 ## Game Features
 
 - Play the same character from two different perspective (legs/head)
