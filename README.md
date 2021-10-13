@@ -1,36 +1,31 @@
 # Duality
 
-**Duality is a videogame developed in Unity**
+Duality is a videogame developed in Unity.<br/>
+Download and play [here](https://ciaosonocampa.itch.io/duality)!
 
-### Developers:
+## Developers
 
-Bear's Liar Studio:
+A videogame from **Bear's Lair Studio**.
 
-- Simone Vuillermoz (Programmer, Game Designer)
-- Giorgio da Vià (Visual Artist)
-- Federico Raso (Lead Programmer)
-- Simone Cavallo (Programmer, Game Designer)
-- Matteo Campanini (Programmer, Game Designer, Sound Designer)
+- [Simone Vuillermoz](https://github.com/valparahiso) (Programmer, Game Designer)
+- [Giorgio da Vià](https://github.com/Giodavi96) (Visual Artist)
+- [Federico Raso](https://github.com/Fede996) (Lead Programmer)
+- [Simone Cavallo](https://github.com/LeSimo) (Programmer, Game Designer)
+- [Matteo Campanini](https://github.com/MattCamp44) (Programmer, Game Designer, Sound Designer)
 
 ## Description
 
 This videogame was developed for Game Design & Gamification course at Politecnico of Torino.
 
-Here are a few lines from the game's pitch document:
+Here are a few lines from the game's [pitch document](https://github.com/MattCamp44/GamePitchDocumentDuality):
 
-We want players to cooperate and compete in a fast-paced gameplay, operating on
-interdependent decisions and, engaging them in selfish vs “good of the team” decision
-making.
+> We want players to cooperate and compete in a fast-paced gameplay, operating on interdependent decisions and, engaging them in selfish vs “good of the team” decision making.
+>
+> The game includes procedurally generated dungeons, diverse mechanics, and a progression system.
+>
+> Like The Binding of Isaac, with two players controlling the same character, in an alien invasion scenario, on PC.
 
-The game includes procedurally generated dungeons, diverse mechanics, and a
-progression system.
-
-Like The Binding of Isaac, with two players controlling the same character, in an alien
-invasion scenario, on PC
-
-[Video]
-
-### Game Features:
+## Game Features
 
 - Play the same character from two different perspective (legs/head)
 - Procedurally generated levels in a 3D dungeon environment
@@ -40,13 +35,10 @@ invasion scenario, on PC
 - Custom made 3D models, textures and animations
 - Custom made soundtrack and sound effects
 
-**Note**
-
-Some media files necessary to build this project are not present in this repository.
+***Note***: *Some media files necessary to build this project are not present in this repository.*
 
 ## Tools
 
-The game has been developed using [Unity](https://unity.com/), [Microsoft Visual Studio](https://visualstudio.microsoft.com/), [Blender](https://www.blender.org/)
+The game has been developed using [Unity](https://unity.com/), [Microsoft Visual Studio](https://visualstudio.microsoft.com/), [Blender](https://www.blender.org/).
 
-### [License](https://github.com/Fede996/FATC/blob/main/LICENSE.md)
-
+*See license file [here](https://github.com/Fede996/FATC/blob/main/LICENSE.md).*
